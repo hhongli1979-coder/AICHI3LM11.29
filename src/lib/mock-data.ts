@@ -1,4 +1,4 @@
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModel, AIModelType } from './types';
 
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
@@ -8,6 +8,38 @@ export const NETWORKS = {
   optimism: { name: 'Optimism', color: '#FF0420', icon: '◉' },
   avalanche: { name: 'Avalanche', color: '#E84142', icon: '▲' },
 };
+
+export function generateAIModels(): AIModel[] {
+  return [
+    {
+      id: 'omnicore',
+      name: 'OmniCore AI',
+      description: '内置智能助手，专为加密钱包和DeFi操作优化',
+      icon: 'Robot',
+      capabilities: ['钱包管理', '交易分析', 'DeFi策略', '风险评估'],
+      isAdvanced: false,
+      status: 'online',
+    },
+    {
+      id: 'claude',
+      name: 'Claude 高级助手',
+      description: 'Anthropic Claude - 高级推理和复杂问题解决能力',
+      icon: 'Brain',
+      capabilities: ['高级推理', '代码分析', '策略规划', '风险建模', '多语言支持'],
+      isAdvanced: true,
+      status: 'online',
+    },
+    {
+      id: 'mxyejic',
+      name: 'MXYEJIC 专业版',
+      description: '企业级AI模型 - 专注金融和区块链领域的高级分析',
+      icon: 'Lightning',
+      capabilities: ['市场预测', '智能合约审计', '套利分析', '量化策略', '跨链桥接'],
+      isAdvanced: true,
+      status: 'online',
+    },
+  ];
+}
 
 export function generateMockWallets(): Wallet[] {
   return [
@@ -555,5 +587,41 @@ export function generateMockAIAssistantState(): AIAssistantState {
     memories: generateMockAIMemories(),
     capabilities: generateMockAICapabilities(),
     lastActiveAt: Date.now() - 4 * 60 * 1000,
+    currentModel: 'omnicore',
+    availableModels: generateAIModels(),
   };
+}
+
+export function generateAdvancedAIResponse(input: string, model: AIModelType): string {
+  const lowerInput = input.toLowerCase();
+  
+  const modelResponses: Record<AIModelType, Record<string, string>> = {
+    omnicore: {
+      default: '我是 OmniCore 内置助手。我可以帮助您管理钱包、交易和DeFi策略。请问有什么可以帮到您？',
+    },
+    claude: {
+      wallet: '🧠 **Claude 高级分析**\n\n我已对您的钱包进行了深度分析：\n\n**资产配置建议**:\n- 当前ETH占比过高(54%)，建议分散至稳定币\n- USDC存款可获得更好收益\n\n**风险评估**:\n- 整体投资组合风险等级: 中等\n- 建议增加对冲策略\n\n**优化建议**:\n1. 考虑使用Layer 2降低Gas费用\n2. 配置自动再平衡策略\n3. 设置止损阈值\n\n需要我详细解释任何建议吗？',
+      defi: '🧠 **Claude DeFi 深度分析**\n\n基于市场数据和您的风险偏好：\n\n**当前市场机会**:\n1. Aave V3 利率套利 - 预期收益 8.2%\n2. Curve 稳定币池 - 低风险 5.5% APY\n3. GMX 永续合约流动性 - 高收益但高风险\n\n**智能建议**:\n- 将30%闲置USDC投入Aave借贷\n- 使用剩余ETH进行Lido质押\n- 避免当前高波动的流动性池\n\n我可以帮您模拟这些策略的预期回报。',
+      risk: '🧠 **Claude 风险深度分析**\n\n**综合风险报告**:\n\n📊 **投资组合风险**: 6.2/10\n- 市场风险: 中等\n- 智能合约风险: 低\n- 流动性风险: 低\n\n⚠️ **潜在威胁**:\n1. tx-3 地址关联到可疑活动\n2. 部分DeFi协议审计未更新\n3. Gas价格波动影响\n\n✅ **安全措施**:\n- 多签钱包配置正确\n- 交易限额设置合理\n- 应急撤退路径已规划\n\n建议启用实时警报监控。',
+      default: '🧠 我是 Claude 高级助手。作为Anthropic的AI，我专长于：\n\n• 🔍 深度推理和复杂分析\n• 📊 金融策略规划\n• 🛡️ 风险建模和评估\n• 💡 创新解决方案设计\n\n我可以为您提供比基础AI更深入的分析和建议。请告诉我您需要什么帮助？',
+    },
+    mxyejic: {
+      wallet: '⚡ **MXYEJIC 专业分析**\n\n**量化钱包报告**:\n\n📈 **资产表现**:\n- 7日收益率: +2.34%\n- 30日收益率: +8.92%\n- 夏普比率: 1.42\n\n🔮 **预测模型**:\n- ETH 短期趋势: 看涨\n- BTC 相关性: 0.85\n- 波动率预测: 中等偏高\n\n💎 **优化机会**:\n1. 跨链套利机会 (ARB→OP): 0.3%\n2. 流动性挖矿效率可提升15%\n3. Gas优化节省潜力: $45/月\n\n需要执行任何优化操作吗？',
+      defi: '⚡ **MXYEJIC DeFi 量化分析**\n\n**收益优化报告**:\n\n🎯 **最优策略配置**:\n```\nAave V3 USDC: 40% (APY 5.2%)\nLido stETH: 35% (APY 3.8%)\nCurve 3Pool: 25% (APY 4.1%)\n预期综合收益: 4.47% APY\n```\n\n📊 **实时套利监控**:\n- DEX套利机会: 3个活跃\n- 闪电贷策略: 已就绪\n- MEV保护: 已启用\n\n🔄 **自动再平衡**:\n- 推荐频率: 每周\n- 预计节省: $127/月\n\n是否启用自动策略执行？',
+      risk: '⚡ **MXYEJIC 高级风险分析**\n\n**实时威胁检测**:\n\n🚨 **安全警报**: 2个\n1. tx-3 接收地址风险评分: 87/100 ⚠️\n   - Tornado Cash 关联: 可能\n   - 建议: 暂停交易\n\n2. 智能合约风险:\n   - Aave V3: ✅ 安全\n   - Lido: ✅ 安全\n   - Uniswap V3: ✅ 安全\n\n📊 **链上分析**:\n- 异常交易模式: 未检测\n- 鲸鱼活动: 正常\n- 协议TVL变化: 稳定\n\n🛡️ **防护建议**:\n- 启用交易延迟确认\n- 配置地址黑名单\n- 设置日交易限额',
+      default: '⚡ 我是 MXYEJIC 专业版助手。作为企业级AI模型，我专注于：\n\n• 📊 量化分析和市场预测\n• 🔍 智能合约审计\n• 💱 跨链套利分析\n• 🤖 自动化交易策略\n• 🔗 跨链桥接优化\n\n我采用先进的机器学习模型，为您提供专业级的金融分析。请告诉我您需要什么帮助？',
+    },
+  };
+
+  let responseKey = 'default';
+  if (lowerInput.includes('钱包') || lowerInput.includes('余额') || lowerInput.includes('wallet') || lowerInput.includes('balance')) {
+    responseKey = 'wallet';
+  } else if (lowerInput.includes('defi') || lowerInput.includes('策略') || lowerInput.includes('收益')) {
+    responseKey = 'defi';
+  } else if (lowerInput.includes('风险') || lowerInput.includes('分析') || lowerInput.includes('risk')) {
+    responseKey = 'risk';
+  }
+
+  const modelResponse = modelResponses[model];
+  return modelResponse[responseKey] || modelResponse['default'];
 }

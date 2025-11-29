@@ -8,6 +8,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Robot,
   Brain,
   ChatCircle,
@@ -20,12 +27,14 @@ import {
   Lightning,
   Memory,
   Gear,
+  CircleWavyCheck,
 } from '@phosphor-icons/react';
 import {
   generateMockAIAssistantState,
   formatTimeAgo,
+  generateAdvancedAIResponse,
 } from '@/lib/mock-data';
-import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
+import type { AIMessage, AIMemoryItem, AICapability, AIModelType, AIModel } from '@/lib/types';
 
 function getCapabilityIcon(iconName: string) {
   const icons: Record<string, React.ReactNode> = {
@@ -36,8 +45,31 @@ function getCapabilityIcon(iconName: string) {
     Wallet: <Wallet size={18} weight="duotone" />,
     ArrowsLeftRight: <ArrowsLeftRight size={18} weight="duotone" />,
     ShieldCheck: <ShieldCheck size={18} weight="duotone" />,
+    Lightning: <Lightning size={18} weight="duotone" />,
   };
   return icons[iconName] || <Sparkle size={18} weight="duotone" />;
+}
+
+function getModelIcon(iconName: string, size: number = 18) {
+  const icons: Record<string, React.ReactNode> = {
+    Brain: <Brain size={size} weight="duotone" />,
+    Robot: <Robot size={size} weight="duotone" />,
+    Lightning: <Lightning size={size} weight="duotone" />,
+  };
+  return icons[iconName] || <Robot size={size} weight="duotone" />;
+}
+
+function getModelColor(modelId: AIModelType): string {
+  switch (modelId) {
+    case 'omnicore':
+      return 'from-primary to-accent';
+    case 'claude':
+      return 'from-purple-500 to-pink-500';
+    case 'mxyejic':
+      return 'from-amber-500 to-orange-500';
+    default:
+      return 'from-gray-500 to-gray-600';
+  }
 }
 
 function getCategoryColor(category: string): string {
@@ -98,10 +130,14 @@ function getMemoryTypeLabel(type: string): string {
 
 interface MessageBubbleProps {
   message: AIMessage;
+  availableModels?: AIModel[];
 }
 
-function MessageBubble({ message }: MessageBubbleProps) {
+function MessageBubble({ message, availableModels }: MessageBubbleProps) {
   const isUser = message.role === 'user';
+  const model = availableModels?.find(m => m.id === message.model);
+  const modelName = model?.name || 'OmniCore AI';
+  const modelIcon = model?.icon || 'Robot';
   
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
@@ -114,8 +150,13 @@ function MessageBubble({ message }: MessageBubbleProps) {
       >
         {!isUser && (
           <div className="flex items-center gap-2 mb-2">
-            <Robot size={16} weight="duotone" className="text-primary" />
-            <span className="text-xs font-medium text-primary">OmniCore AI</span>
+            {getModelIcon(modelIcon, 16)}
+            <span className="text-xs font-medium text-primary">{modelName}</span>
+            {model?.isAdvanced && (
+              <Badge variant="secondary" className="text-xs py-0 px-1">
+                高级
+              </Badge>
+            )}
           </div>
         )}
         <div className="text-sm whitespace-pre-wrap">{message.content}</div>
@@ -219,6 +260,15 @@ export function AIAssistant() {
     }
   }, [state.currentConversation]);
 
+  const handleModelChange = (modelId: AIModelType) => {
+    setState((prev) => ({
+      ...prev,
+      currentModel: modelId,
+    }));
+  };
+
+  const currentModel = state.availableModels.find(m => m.id === state.currentModel);
+
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
 
@@ -238,14 +288,16 @@ export function AIAssistant() {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI response
+    // Simulate AI response based on selected model
+    const responseDelay = state.currentModel === 'omnicore' ? 1500 : 2000;
     setTimeout(() => {
       const aiResponse: AIMessage = {
         id: `msg-${Date.now()}`,
         role: 'assistant',
-        content: generateAIResponse(inputValue),
+        content: generateAdvancedAIResponse(inputValue, state.currentModel),
         timestamp: Date.now(),
         action: detectAction(inputValue),
+        model: state.currentModel,
       };
 
       setState((prev) => ({
@@ -254,7 +306,7 @@ export function AIAssistant() {
         lastActiveAt: Date.now(),
       }));
       setIsTyping(false);
-    }, 1500);
+    }, responseDelay);
   };
 
   const handleToggleCapability = (id: string) => {
@@ -272,29 +324,88 @@ export function AIAssistant() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-accent">
-            <Robot size={32} weight="duotone" className="text-white" />
+          <div className={`p-3 rounded-xl bg-gradient-to-br ${getModelColor(state.currentModel)}`}>
+            {getModelIcon(currentModel?.icon || 'Robot', 32)}
           </div>
           <div>
             <h2 className="text-3xl font-bold">AI 智能助手</h2>
             <p className="text-muted-foreground">
-              具备记忆、语言理解和全面控制能力的智能助手
+              高级机器人集成 - 支持多模型切换
             </p>
           </div>
         </div>
-        <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
-          <Sparkle size={14} weight="fill" />
-          {state.isActive ? '活跃中' : '休眠'}
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Select value={state.currentModel} onValueChange={(value) => handleModelChange(value as AIModelType)}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="选择AI模型" />
+            </SelectTrigger>
+            <SelectContent>
+              {state.availableModels.map((model) => (
+                <SelectItem key={model.id} value={model.id}>
+                  <div className="flex items-center gap-2">
+                    {getModelIcon(model.icon, 16)}
+                    <span>{model.name}</span>
+                    {model.isAdvanced && (
+                      <Badge variant="secondary" className="text-xs py-0 px-1 ml-1">
+                        高级
+                      </Badge>
+                    )}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
+            <Sparkle size={14} weight="fill" />
+            {state.isActive ? '活跃中' : '休眠'}
+          </Badge>
+        </div>
       </div>
 
+      {/* Model Info Card */}
+      {currentModel && (
+        <Card className="border-2 border-primary/20">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-4">
+              <div className={`p-2 rounded-lg bg-gradient-to-br ${getModelColor(state.currentModel)} text-white`}>
+                {getModelIcon(currentModel.icon, 24)}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold">{currentModel.name}</h3>
+                  {currentModel.isAdvanced && (
+                    <Badge variant="secondary" className="text-xs">高级模型</Badge>
+                  )}
+                  <Badge variant={currentModel.status === 'online' ? 'default' : 'destructive'} className="text-xs gap-1">
+                    <CircleWavyCheck size={12} weight="fill" />
+                    {currentModel.status === 'online' ? '在线' : '离线'}
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">{currentModel.description}</p>
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {currentModel.capabilities.map((cap) => (
+                    <Badge key={cap} variant="outline" className="text-xs">
+                      {cap}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Tabs defaultValue="chat" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
           <TabsTrigger value="chat" className="gap-2">
             <ChatCircle size={18} weight="duotone" />
             <span className="hidden sm:inline">对话</span>
+          </TabsTrigger>
+          <TabsTrigger value="models" className="gap-2">
+            <Robot size={18} weight="duotone" />
+            <span className="hidden sm:inline">模型</span>
           </TabsTrigger>
           <TabsTrigger value="memory" className="gap-2">
             <Memory size={18} weight="duotone" />
@@ -312,22 +423,28 @@ export function AIAssistant() {
               <CardTitle className="text-lg flex items-center gap-2">
                 <ChatCircle size={20} weight="duotone" />
                 智能对话
+                {currentModel && (
+                  <Badge variant="outline" className="ml-2 text-xs gap-1">
+                    {getModelIcon(currentModel.icon, 12)}
+                    {currentModel.name}
+                  </Badge>
+                )}
               </CardTitle>
               <CardDescription>
-                使用自然语言与 AI 助手交流，执行钱包操作
+                使用自然语言与 {currentModel?.name || 'AI'} 交流，执行钱包操作
               </CardDescription>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px] pr-4" ref={scrollRef}>
                 {state.currentConversation.map((message) => (
-                  <MessageBubble key={message.id} message={message} />
+                  <MessageBubble key={message.id} message={message} availableModels={state.availableModels} />
                 ))}
                 {isTyping && (
                   <div className="flex justify-start mb-4">
                     <div className="bg-muted rounded-2xl px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <Robot size={16} weight="duotone" className="text-primary animate-pulse" />
-                        <span className="text-sm text-muted-foreground">AI 正在思考...</span>
+                        {getModelIcon(currentModel?.icon || 'Robot', 16)}
+                        <span className="text-sm text-muted-foreground">{currentModel?.name || 'AI'} 正在思考...</span>
                       </div>
                     </div>
                   </div>
@@ -335,7 +452,7 @@ export function AIAssistant() {
               </ScrollArea>
               <div className="flex gap-2 mt-4">
                 <Input
-                  placeholder="输入您的问题或指令..."
+                  placeholder={`向 ${currentModel?.name || 'AI'} 提问...`}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -358,6 +475,106 @@ export function AIAssistant() {
                     {suggestion}
                   </Button>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="models" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Robot size={20} weight="duotone" className="text-primary" />
+                AI 模型管理
+              </CardTitle>
+              <CardDescription>
+                选择和配置高级AI机器人模型
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-3">
+                {state.availableModels.map((model) => (
+                  <Card 
+                    key={model.id} 
+                    className={`cursor-pointer transition-all hover:shadow-lg ${
+                      state.currentModel === model.id 
+                        ? 'ring-2 ring-primary border-primary' 
+                        : 'hover:border-primary/50'
+                    }`}
+                    onClick={() => handleModelChange(model.id)}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex flex-col items-center text-center">
+                        <div className={`p-4 rounded-2xl bg-gradient-to-br ${getModelColor(model.id)} text-white mb-4`}>
+                          {getModelIcon(model.icon, 40)}
+                        </div>
+                        <h3 className="font-bold text-lg mb-1">{model.name}</h3>
+                        <div className="flex items-center gap-2 mb-3">
+                          {model.isAdvanced && (
+                            <Badge variant="secondary" className="text-xs">高级</Badge>
+                          )}
+                          <Badge variant={model.status === 'online' ? 'default' : 'destructive'} className="text-xs gap-1">
+                            <CircleWavyCheck size={10} weight="fill" />
+                            {model.status === 'online' ? '在线' : '离线'}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4">{model.description}</p>
+                        <div className="flex flex-wrap gap-1 justify-center">
+                          {model.capabilities.slice(0, 3).map((cap) => (
+                            <Badge key={cap} variant="outline" className="text-xs">
+                              {cap}
+                            </Badge>
+                          ))}
+                          {model.capabilities.length > 3 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{model.capabilities.length - 3}
+                            </Badge>
+                          )}
+                        </div>
+                        {state.currentModel === model.id && (
+                          <Badge className="mt-4 gap-1">
+                            <Sparkle size={12} weight="fill" />
+                            当前使用
+                          </Badge>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              <div className="mt-6 p-4 bg-muted rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <Lightning size={16} weight="fill" className="text-amber-500" />
+                  <span className="font-medium text-sm">模型能力对比</span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-2">功能</th>
+                        {state.availableModels.map((model) => (
+                          <th key={model.id} className="text-center py-2">{model.name}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {['钱包管理', '风险评估', '高级推理', '市场预测', '智能合约审计'].map((feature) => (
+                        <tr key={feature} className="border-b border-border/50">
+                          <td className="py-2">{feature}</td>
+                          {state.availableModels.map((model) => (
+                            <td key={model.id} className="text-center py-2">
+                              {model.capabilities.includes(feature) ? (
+                                <CircleWavyCheck size={18} weight="fill" className="text-green-500 mx-auto" />
+                              ) : (
+                                <span className="text-muted-foreground">-</span>
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -485,29 +702,7 @@ export function AIAssistant() {
   );
 }
 
-// Helper functions for AI responses
-function generateAIResponse(input: string): string {
-  const lowerInput = input.toLowerCase();
-  
-  if (lowerInput.includes('钱包') || lowerInput.includes('余额') || lowerInput.includes('wallet') || lowerInput.includes('balance')) {
-    return '我已经检查了您的钱包状态。您目前有:\n\n💰 **总资产**: $231,690.75\n\n主要钱包:\n- Treasury Vault: $125,432 (Ethereum)\n- Operating Account: $23,234 (Polygon)\n- DeFi Strategy: $8,024 (Arbitrum)\n\n需要我执行什么操作吗？';
-  }
-  
-  if (lowerInput.includes('交易') || lowerInput.includes('转账') || lowerInput.includes('transaction') || lowerInput.includes('transfer')) {
-    return '我可以帮您创建新交易。请提供以下信息:\n\n1. 发送方钱包\n2. 接收地址\n3. 金额和代币\n4. 交易描述\n\n或者您可以说 "从Treasury Vault转账5000 USDC到供应商"，我会自动解析。';
-  }
-  
-  if (lowerInput.includes('风险') || lowerInput.includes('分析') || lowerInput.includes('risk') || lowerInput.includes('analysis')) {
-    return '🔍 **风险分析报告**\n\n当前待处理交易风险:\n\n⚠️ **高风险** - tx-3 (Operating Account)\n- 大额转账: 25,000 USDT\n- 首次收款地址\n- 建议: 验证收款方身份\n\n✅ **低风险** - tx-1 (Treasury Vault)\n- 已知收款方\n- 常规交易模式\n\n需要我提供更详细的分析吗？';
-  }
-  
-  if (lowerInput.includes('defi') || lowerInput.includes('策略') || lowerInput.includes('收益')) {
-    return '📊 **DeFi 策略建议**\n\n基于您的风险偏好，推荐:\n\n1. **稳定币借贷** (Aave V3)\n   - APY: 5.2%\n   - 风险: 低\n\n2. **ETH 质押** (Lido)\n   - APY: 3.8%\n   - 风险: 低\n\n3. **流动性挖矿** (Uniswap V3)\n   - APY: 12.5%\n   - 风险: 中\n\n需要我帮您配置自动投资策略吗？';
-  }
-  
-  return '感谢您的提问！我是 OmniCore 智能助手，可以帮助您:\n\n• 📊 查询和管理钱包\n• 💸 创建和签署交易\n• 🔍 分析交易风险\n• 📈 管理 DeFi 策略\n• ⚙️ 配置平台设置\n\n请告诉我您需要什么帮助？';
-}
-
+// Helper function for detecting AI actions
 function detectAction(input: string): AIMessage['action'] | undefined {
   const lowerInput = input.toLowerCase();
   
