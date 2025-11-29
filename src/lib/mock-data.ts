@@ -567,7 +567,7 @@ export function generateMockLlama4Models(): Llama4Model[] {
       name: 'Llama 4 Scout',
       parameters: '17B',
       experts: 16,
-      description: 'Llama 4 Scout 是一个高效的混合专家模型，拥有 170 亿参数和 16 个专家，专为文本和图像理解任务优化。',
+      description: 'Llama 4 Scout 是一个高效的混合专家模型，拥有 17B (170亿) 活跃参数和 16 个专家，专为文本和图像理解任务优化。',
       capabilities: [
         '原生多模态支持',
         '文本生成与理解',
@@ -586,7 +586,7 @@ export function generateMockLlama4Models(): Llama4Model[] {
       name: 'Llama 4 Maverick',
       parameters: '17B',
       experts: 128,
-      description: 'Llama 4 Maverick 是一个更强大的混合专家模型，拥有 170 亿参数和 128 个专家，在复杂推理任务中表现出色。',
+      description: 'Llama 4 Maverick 是一个更强大的混合专家模型，拥有 17B (170亿) 活跃参数和 128 个专家，在复杂推理任务中表现出色。',
       capabilities: [
         '原生多模态支持',
         '高级推理能力',

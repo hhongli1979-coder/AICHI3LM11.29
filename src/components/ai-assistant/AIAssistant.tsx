@@ -375,6 +375,7 @@ export function AIAssistant() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const trainingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const llama4Models = generateMockLlama4Models();
   const [fineTuneConfig, setFineTuneConfig] = useState(generateMockLlama4FineTuneConfig);
   const fineTuneGuide = generateLlama4FineTuneGuide();
@@ -384,6 +385,15 @@ export function AIAssistant() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [state.currentConversation]);
+
+  // Cleanup training interval on unmount
+  useEffect(() => {
+    return () => {
+      if (trainingIntervalRef.current) {
+        clearInterval(trainingIntervalRef.current);
+      }
+    };
+  }, []);
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
@@ -457,7 +467,7 @@ export function AIAssistant() {
       </div>
 
       <Tabs defaultValue="chat" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+        <TabsList className="flex flex-wrap w-full lg:w-auto lg:inline-flex">
           <TabsTrigger value="chat" className="gap-2">
             <ChatCircle size={18} weight="duotone" />
             <span className="hidden sm:inline">对话</span>
@@ -691,11 +701,14 @@ export function AIAssistant() {
               }));
               // Simulate training progress
               let progress = 0;
-              const interval = setInterval(() => {
+              trainingIntervalRef.current = setInterval(() => {
                 progress += Math.random() * 15;
                 if (progress >= 100) {
                   progress = 100;
-                  clearInterval(interval);
+                  if (trainingIntervalRef.current) {
+                    clearInterval(trainingIntervalRef.current);
+                    trainingIntervalRef.current = null;
+                  }
                   setFineTuneConfig(prev => ({
                     ...prev,
                     status: 'completed',
