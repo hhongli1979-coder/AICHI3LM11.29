@@ -20,12 +20,14 @@ import {
   Lightning,
   Memory,
   Gear,
+  Database,
 } from '@phosphor-icons/react';
 import {
   generateMockAIAssistantState,
   formatTimeAgo,
 } from '@/lib/mock-data';
 import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
+import { AIModelSettingsPanel } from './AIModelSettings';
 
 function getCapabilityIcon(iconName: string) {
   const icons: Record<string, React.ReactNode> = {
@@ -291,7 +293,7 @@ export function AIAssistant() {
       </div>
 
       <Tabs defaultValue="chat" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
           <TabsTrigger value="chat" className="gap-2">
             <ChatCircle size={18} weight="duotone" />
             <span className="hidden sm:inline">对话</span>
@@ -303,6 +305,10 @@ export function AIAssistant() {
           <TabsTrigger value="capabilities" className="gap-2">
             <Gear size={18} weight="duotone" />
             <span className="hidden sm:inline">能力</span>
+          </TabsTrigger>
+          <TabsTrigger value="models" className="gap-2">
+            <Database size={18} weight="duotone" />
+            <span className="hidden sm:inline">模型</span>
           </TabsTrigger>
         </TabsList>
 
@@ -479,6 +485,10 @@ export function AIAssistant() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="models" className="space-y-4">
+          <AIModelSettingsPanel />
         </TabsContent>
       </Tabs>
     </div>

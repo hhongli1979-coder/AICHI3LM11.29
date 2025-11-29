@@ -1,4 +1,4 @@
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
 
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
@@ -555,5 +555,88 @@ export function generateMockAIAssistantState(): AIAssistantState {
     memories: generateMockAIMemories(),
     capabilities: generateMockAICapabilities(),
     lastActiveAt: Date.now() - 4 * 60 * 1000,
+  };
+}
+
+// Native AI Model Configuration Mock Data - 原生态大模型配置
+
+export function generateMockAIModelConfigs(): AIModelConfig[] {
+  return [
+    {
+      id: 'model-1',
+      name: 'OmniCore 本地模型',
+      provider: 'local',
+      modelName: 'omnicore-7b',
+      apiEndpoint: 'http://localhost:11434/api/generate',
+      enabled: true,
+      isDefault: true,
+      maxTokens: 4096,
+      temperature: 0.7,
+      systemPrompt: '你是 OmniCore 钱包的智能助手，专注于加密货币钱包管理、DeFi 策略和风险分析。请用专业且友好的方式回答用户问题。',
+      createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'model-2',
+      name: 'Ollama Llama3',
+      provider: 'ollama',
+      modelName: 'llama3:8b',
+      apiEndpoint: 'http://localhost:11434/api/generate',
+      enabled: true,
+      isDefault: false,
+      maxTokens: 8192,
+      temperature: 0.8,
+      systemPrompt: '你是一个专业的加密货币和区块链顾问。',
+      createdAt: Date.now() - 20 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'model-3',
+      name: '自定义模型接口',
+      provider: 'custom',
+      modelName: 'custom-finance-llm',
+      apiEndpoint: 'https://api.your-company.com/v1/chat',
+      apiKey: 'sk-***',
+      enabled: false,
+      isDefault: false,
+      maxTokens: 2048,
+      temperature: 0.5,
+      systemPrompt: '你是金融科技领域的专家助手。',
+      createdAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockCustomEndpoints(): CustomEndpoint[] {
+  return [
+    {
+      id: 'endpoint-1',
+      name: '企业内部API',
+      url: 'https://internal-ai.company.com/v1/completions',
+      headers: {
+        'Authorization': 'Bearer ***',
+        'Content-Type': 'application/json',
+      },
+      enabled: true,
+    },
+    {
+      id: 'endpoint-2',
+      name: '测试环境',
+      url: 'http://192.168.1.100:8080/api/generate',
+      headers: {},
+      enabled: false,
+    },
+  ];
+}
+
+export function generateMockAIModelSettings(): AIModelSettings {
+  const models = generateMockAIModelConfigs();
+  return {
+    models,
+    defaultModelId: models[0].id,
+    enableLocalProcessing: true,
+    enableSecondaryDevelopment: true,
+    customEndpoints: generateMockCustomEndpoints(),
   };
 }
