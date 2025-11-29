@@ -19,11 +19,15 @@ interface ArchiveFile {
   size?: string;
 }
 
+// Configuration constants for AICHI3LM archives
+const ARCHIVE_VERSION = '20251129';
+const ARCHIVE_BASE_URL = 'http://127.0.0.1:8080';
+
 const ARCHIVE_FILES: ArchiveFile[] = [
   {
     id: 'core-tar',
-    name: 'AICHI3LM-core-20251129.tar.gz',
-    url: 'http://127.0.0.1:8080/AICHI3LM-core-20251129.tar.gz',
+    name: `AICHI3LM-core-${ARCHIVE_VERSION}.tar.gz`,
+    url: `${ARCHIVE_BASE_URL}/AICHI3LM-core-${ARCHIVE_VERSION}.tar.gz`,
     type: 'core',
     format: 'tar.gz',
     description: '核心包 - 包含完整的AICHI3LM核心组件',
@@ -31,8 +35,8 @@ const ARCHIVE_FILES: ArchiveFile[] = [
   },
   {
     id: 'minimal-zip',
-    name: 'AICHI3LM-minimal-20251129.zip',
-    url: 'http://127.0.0.1:8080/AICHI3LM-minimal-20251129.zip',
+    name: `AICHI3LM-minimal-${ARCHIVE_VERSION}.zip`,
+    url: `${ARCHIVE_BASE_URL}/AICHI3LM-minimal-${ARCHIVE_VERSION}.zip`,
     type: 'minimal',
     format: 'zip',
     description: '精简包 - 包含基础功能组件 (ZIP格式)',
@@ -40,8 +44,8 @@ const ARCHIVE_FILES: ArchiveFile[] = [
   },
   {
     id: 'minimal-tar',
-    name: 'AICHI3LM-minimal-20251129.tar.gz',
-    url: 'http://127.0.0.1:8080/AICHI3LM-minimal-20251129.tar.gz',
+    name: `AICHI3LM-minimal-${ARCHIVE_VERSION}.tar.gz`,
+    url: `${ARCHIVE_BASE_URL}/AICHI3LM-minimal-${ARCHIVE_VERSION}.tar.gz`,
     type: 'minimal',
     format: 'tar.gz',
     description: '精简包 - 包含基础功能组件 (TAR.GZ格式)',
@@ -49,8 +53,8 @@ const ARCHIVE_FILES: ArchiveFile[] = [
   },
   {
     id: 'source-tar',
-    name: 'AICHI3LM-source-20251129.tar.gz',
-    url: 'http://127.0.0.1:8080/AICHI3LM-source-20251129.tar.gz',
+    name: `AICHI3LM-source-${ARCHIVE_VERSION}.tar.gz`,
+    url: `${ARCHIVE_BASE_URL}/AICHI3LM-source-${ARCHIVE_VERSION}.tar.gz`,
     type: 'source',
     format: 'tar.gz',
     description: '源码包 - 包含完整源代码和开发工具',
@@ -112,9 +116,24 @@ interface ArchiveCardProps {
   archive: ArchiveFile;
 }
 
+function isValidDownloadUrl(url: string): boolean {
+  try {
+    const parsedUrl = new URL(url);
+    // Only allow http/https protocols and ensure URL starts with expected base
+    return (
+      (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') &&
+      url.startsWith(ARCHIVE_BASE_URL)
+    );
+  } catch {
+    return false;
+  }
+}
+
 function ArchiveCard({ archive }: ArchiveCardProps) {
   const handleDownload = () => {
-    window.open(archive.url, '_blank');
+    if (isValidDownloadUrl(archive.url)) {
+      window.open(archive.url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   return (
@@ -179,7 +198,7 @@ export function ArchiveDownloads() {
           </div>
         </div>
         <Badge variant="secondary" className="gap-1">
-          版本: 20251129
+          版本: {ARCHIVE_VERSION}
         </Badge>
       </div>
 
