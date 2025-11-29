@@ -219,7 +219,7 @@ export interface LLMConfig {
 }
 
 export interface LLMResponse {
-  content: string;
+  response: string;  // Ollama API returns 'response' field for streaming
   model: string;
   done: boolean;
   totalDuration?: number;

@@ -134,7 +134,7 @@ export function addMemory(memory: Omit<AIMemoryItem, 'id' | 'learnedAt' | 'usage
   const memories = getStoredMemories();
   const newMemory: AIMemoryItem = {
     ...memory,
-    id: `mem-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `mem-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
     learnedAt: Date.now(),
     usageCount: 0,
   };
