@@ -1,4 +1,4 @@
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, LLMModelConfig } from './types';
 
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
@@ -556,4 +556,48 @@ export function generateMockAIAssistantState(): AIAssistantState {
     capabilities: generateMockAICapabilities(),
     lastActiveAt: Date.now() - 4 * 60 * 1000,
   };
+}
+
+// LLM Model Configurations
+export function generateMockLLMConfigs(): LLMModelConfig[] {
+  return [
+    {
+      id: 'mock',
+      provider: 'mock',
+      name: '模拟模式',
+      description: '使用本地模拟响应（无需API密钥）',
+      enabled: true,
+      maxTokens: 2048,
+      temperature: 0.7,
+    },
+    {
+      id: 'iflytek-spark-13b',
+      provider: 'iflytek-spark',
+      name: '讯飞星火 13B',
+      description: '基于iFlytekSpark-13B的开源大语言模型，支持本地部署和二次开发定制',
+      modelVersion: '13B',
+      maxTokens: 4096,
+      temperature: 0.5,
+      enabled: false,
+    },
+    {
+      id: 'iflytek-spark-v3',
+      provider: 'iflytek-spark',
+      name: '讯飞星火 V3.5',
+      description: '讯飞星火认知大模型V3.5版本，支持联网搜索和长上下文',
+      modelVersion: 'v3.5',
+      maxTokens: 8192,
+      temperature: 0.5,
+      enabled: false,
+    },
+    {
+      id: 'custom-model',
+      provider: 'custom',
+      name: '自定义模型',
+      description: '连接自托管的本地大语言模型服务（支持OpenAI兼容API）',
+      maxTokens: 4096,
+      temperature: 0.7,
+      enabled: false,
+    },
+  ];
 }

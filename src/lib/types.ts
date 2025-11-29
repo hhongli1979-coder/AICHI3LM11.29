@@ -203,3 +203,55 @@ export interface AICapability {
   enabled: boolean;
   category: 'memory' | 'language' | 'control';
 }
+
+// LLM Model Integration Types
+
+export type LLMProvider = 'mock' | 'iflytek-spark' | 'openai' | 'custom';
+
+export interface LLMModelConfig {
+  id: string;
+  provider: LLMProvider;
+  name: string;
+  description: string;
+  apiEndpoint?: string;
+  apiKey?: string;
+  appId?: string;
+  apiSecret?: string;
+  modelVersion?: string;
+  maxTokens?: number;
+  temperature?: number;
+  enabled: boolean;
+}
+
+export interface IFlytekSparkConfig {
+  appId: string;
+  apiKey: string;
+  apiSecret: string;
+  modelVersion: 'v1.5' | 'v2.0' | 'v3.0' | 'v3.5' | 'v4.0' | '13B';
+  domain: string;
+  sparkUrl: string;
+}
+
+export interface LLMRequestMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
+
+export interface LLMRequest {
+  messages: LLMRequestMessage[];
+  maxTokens?: number;
+  temperature?: number;
+  topK?: number;
+  topP?: number;
+}
+
+export interface LLMResponse {
+  success: boolean;
+  content?: string;
+  error?: string;
+  usage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+}

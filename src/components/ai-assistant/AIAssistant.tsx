@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import {
   Robot,
   Brain,
@@ -20,12 +22,20 @@ import {
   Lightning,
   Memory,
   Gear,
+  CloudArrowUp,
+  Code,
+  Question,
+  Check,
+  Warning,
 } from '@phosphor-icons/react';
 import {
   generateMockAIAssistantState,
   formatTimeAgo,
+  generateMockLLMConfigs,
 } from '@/lib/mock-data';
-import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
+import { createLLMService, getIFlytekSparkSetupGuide } from '@/lib/llm-service';
+import type { AIMessage, AIMemoryItem, AICapability, LLMModelConfig } from '@/lib/types';
+import { toast } from 'sonner';
 
 function getCapabilityIcon(iconName: string) {
   const icons: Record<string, React.ReactNode> = {
@@ -212,6 +222,15 @@ export function AIAssistant() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [llmConfigs, setLlmConfigs] = useState<LLMModelConfig[]>(generateMockLLMConfigs);
+  const [selectedModelId, setSelectedModelId] = useState('mock');
+  const [showSetupGuide, setShowSetupGuide] = useState(false);
+
+  // Create LLM service instance
+  const llmService = useMemo(() => {
+    const config = llmConfigs.find(c => c.id === selectedModelId) || llmConfigs[0];
+    return createLLMService(config);
+  }, [llmConfigs, selectedModelId]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -219,7 +238,7 @@ export function AIAssistant() {
     }
   }, [state.currentConversation]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: AIMessage = {
@@ -238,8 +257,25 @@ export function AIAssistant() {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Use LLM service for response
+      const response = await llmService.chat(userMessage.content);
+      
+      const aiResponse: AIMessage = {
+        id: `msg-${Date.now()}`,
+        role: 'assistant',
+        content: response.success ? response.content! : `⚠️ ${response.error}\n\n${generateAIResponse(inputValue)}`,
+        timestamp: Date.now(),
+        action: detectAction(inputValue),
+      };
+
+      setState((prev) => ({
+        ...prev,
+        currentConversation: [...prev.currentConversation, aiResponse],
+        lastActiveAt: Date.now(),
+      }));
+    } catch {
+      // Fallback to local response
       const aiResponse: AIMessage = {
         id: `msg-${Date.now()}`,
         role: 'assistant',
@@ -253,8 +289,9 @@ export function AIAssistant() {
         currentConversation: [...prev.currentConversation, aiResponse],
         lastActiveAt: Date.now(),
       }));
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const handleToggleCapability = (id: string) => {
@@ -266,9 +303,25 @@ export function AIAssistant() {
     }));
   };
 
+  const handleSelectModel = (modelId: string) => {
+    setSelectedModelId(modelId);
+    const model = llmConfigs.find(c => c.id === modelId);
+    if (model) {
+      toast.success(`已切换到: ${model.name}`);
+    }
+  };
+
+  const handleUpdateModelConfig = (modelId: string, updates: Partial<LLMModelConfig>) => {
+    setLlmConfigs(prev => prev.map(config => 
+      config.id === modelId ? { ...config, ...updates } : config
+    ));
+  };
+
   const memoryCapabilities = state.capabilities.filter((c) => c.category === 'memory');
   const languageCapabilities = state.capabilities.filter((c) => c.category === 'language');
   const controlCapabilities = state.capabilities.filter((c) => c.category === 'control');
+
+  const selectedModel = llmConfigs.find(c => c.id === selectedModelId);
 
   return (
     <div className="space-y-6">
@@ -291,7 +344,7 @@ export function AIAssistant() {
       </div>
 
       <Tabs defaultValue="chat" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
           <TabsTrigger value="chat" className="gap-2">
             <ChatCircle size={18} weight="duotone" />
             <span className="hidden sm:inline">对话</span>
@@ -304,18 +357,30 @@ export function AIAssistant() {
             <Gear size={18} weight="duotone" />
             <span className="hidden sm:inline">能力</span>
           </TabsTrigger>
+          <TabsTrigger value="models" className="gap-2">
+            <Robot size={18} weight="duotone" />
+            <span className="hidden sm:inline">模型</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="chat" className="space-y-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <ChatCircle size={20} weight="duotone" />
-                智能对话
-              </CardTitle>
-              <CardDescription>
-                使用自然语言与 AI 助手交流，执行钱包操作
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ChatCircle size={20} weight="duotone" />
+                    智能对话
+                  </CardTitle>
+                  <CardDescription>
+                    使用自然语言与 AI 助手交流，执行钱包操作
+                  </CardDescription>
+                </div>
+                <Badge variant="outline" className="gap-1">
+                  <Robot size={12} />
+                  {selectedModel?.name || '模拟模式'}
+                </Badge>
+              </div>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px] pr-4" ref={scrollRef}>
@@ -479,6 +544,258 @@ export function AIAssistant() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="models" className="space-y-4">
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Model Selection */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Robot size={20} weight="duotone" className="text-primary" />
+                  可用模型
+                </CardTitle>
+                <CardDescription>
+                  选择AI助手使用的大语言模型
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {llmConfigs.map((config) => (
+                  <div
+                    key={config.id}
+                    className={`p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+                      selectedModelId === config.id
+                        ? 'border-primary bg-primary/5'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSelectModel(config.id)}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-3">
+                        <div className={`p-2 rounded-lg ${
+                          config.provider === 'iflytek-spark' 
+                            ? 'bg-blue-100 text-blue-700'
+                            : config.provider === 'custom'
+                            ? 'bg-purple-100 text-purple-700'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          {config.provider === 'iflytek-spark' ? (
+                            <CloudArrowUp size={20} weight="duotone" />
+                          ) : config.provider === 'custom' ? (
+                            <Code size={20} weight="duotone" />
+                          ) : (
+                            <Robot size={20} weight="duotone" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium flex items-center gap-2">
+                            {config.name}
+                            {selectedModelId === config.id && (
+                              <Check size={16} className="text-green-500" />
+                            )}
+                          </div>
+                          <div className="text-sm text-muted-foreground mt-1">
+                            {config.description}
+                          </div>
+                          {config.modelVersion && (
+                            <Badge variant="outline" className="mt-2 text-xs">
+                              版本: {config.modelVersion}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Model Configuration */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Gear size={20} weight="duotone" className="text-amber-500" />
+                  模型配置
+                </CardTitle>
+                <CardDescription>
+                  配置选定模型的参数
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {selectedModel && (
+                  <>
+                    {/* API Configuration for non-mock models */}
+                    {selectedModel.provider !== 'mock' && (
+                      <div className="space-y-4">
+                        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                          <div className="flex items-center gap-2 text-amber-700">
+                            <Warning size={16} weight="fill" />
+                            <span className="text-sm font-medium">需要配置API密钥</span>
+                          </div>
+                          <p className="text-xs text-amber-600 mt-1">
+                            {selectedModel.provider === 'iflytek-spark' 
+                              ? '请配置讯飞开放平台的API凭证'
+                              : '请配置自定义模型的API端点'}
+                          </p>
+                        </div>
+
+                        {selectedModel.provider === 'iflytek-spark' && (
+                          <>
+                            <div className="space-y-2">
+                              <Label htmlFor="appId">App ID</Label>
+                              <Input
+                                id="appId"
+                                placeholder="讯飞开放平台 App ID"
+                                value={selectedModel.appId || ''}
+                                onChange={(e) => handleUpdateModelConfig(selectedModel.id, { appId: e.target.value })}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="apiKey">API Key</Label>
+                              <Input
+                                id="apiKey"
+                                type="password"
+                                placeholder="API Key"
+                                value={selectedModel.apiKey || ''}
+                                onChange={(e) => handleUpdateModelConfig(selectedModel.id, { apiKey: e.target.value })}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="apiSecret">API Secret</Label>
+                              <Input
+                                id="apiSecret"
+                                type="password"
+                                placeholder="API Secret"
+                                value={selectedModel.apiSecret || ''}
+                                onChange={(e) => handleUpdateModelConfig(selectedModel.id, { apiSecret: e.target.value })}
+                              />
+                            </div>
+                          </>
+                        )}
+
+                        {selectedModel.provider === 'custom' && (
+                          <div className="space-y-2">
+                            <Label htmlFor="endpoint">API 端点</Label>
+                            <Input
+                              id="endpoint"
+                              placeholder="http://localhost:8000/v1/chat/completions"
+                              value={selectedModel.apiEndpoint || ''}
+                              onChange={(e) => handleUpdateModelConfig(selectedModel.id, { apiEndpoint: e.target.value })}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Common parameters */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <Label>最大令牌数</Label>
+                          <span className="text-sm text-muted-foreground">
+                            {selectedModel.maxTokens}
+                          </span>
+                        </div>
+                        <Slider
+                          value={[selectedModel.maxTokens || 2048]}
+                          min={256}
+                          max={8192}
+                          step={256}
+                          onValueChange={([value]) => handleUpdateModelConfig(selectedModel.id, { maxTokens: value })}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <Label>温度 (创造性)</Label>
+                          <span className="text-sm text-muted-foreground">
+                            {(selectedModel.temperature || 0.7).toFixed(1)}
+                          </span>
+                        </div>
+                        <Slider
+                          value={[(selectedModel.temperature || 0.7) * 100]}
+                          min={0}
+                          max={100}
+                          step={10}
+                          onValueChange={([value]) => handleUpdateModelConfig(selectedModel.id, { temperature: value / 100 })}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* iFlytek Spark Setup Guide */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Question size={20} weight="duotone" className="text-blue-500" />
+                讯飞星火13B 二次开发指南
+              </CardTitle>
+              <CardDescription>
+                了解如何部署和使用讯飞星火13B开源大模型
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSetupGuide(!showSetupGuide)}
+                    className="gap-2"
+                  >
+                    <Code size={18} weight="duotone" />
+                    {showSetupGuide ? '收起指南' : '查看部署指南'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => window.open('https://gitee.com/iflytekopensource/iFlytekSpark-13B', '_blank')}
+                    className="gap-2"
+                  >
+                    <CloudArrowUp size={18} weight="duotone" />
+                    访问Gitee仓库
+                  </Button>
+                </div>
+
+                {showSetupGuide && (
+                  <div className="p-4 bg-muted rounded-lg">
+                    <pre className="text-sm whitespace-pre-wrap font-mono overflow-x-auto">
+                      {getIFlytekSparkSetupGuide()}
+                    </pre>
+                  </div>
+                )}
+
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="p-4 border rounded-lg">
+                    <div className="font-medium mb-2">🔧 硬件要求</div>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• GPU: ≥24GB 显存</li>
+                      <li>• RAM: ≥64GB</li>
+                      <li>• 存储: ≥50GB SSD</li>
+                    </ul>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <div className="font-medium mb-2">📦 软件要求</div>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• Python 3.8+</li>
+                      <li>• PyTorch 2.0+</li>
+                      <li>• CUDA 11.8+</li>
+                    </ul>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <div className="font-medium mb-2">🚀 应用场景</div>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• 金融知识增强</li>
+                      <li>• 专业问答系统</li>
+                      <li>• 风控分析辅助</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
