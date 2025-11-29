@@ -293,6 +293,7 @@ export function AIAssistant() {
       </div>
 
       <Tabs defaultValue="chat" className="space-y-4">
+        {/* TabsList with 4 tabs: 对话, 记忆, 能力, 模型 */}
         <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
           <TabsTrigger value="chat" className="gap-2">
             <ChatCircle size={18} weight="duotone" />
