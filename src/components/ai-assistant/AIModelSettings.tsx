@@ -211,6 +211,14 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
       return;
     }
     
+    // Validate URL format for apiEndpoint
+    try {
+      new URL(formData.apiEndpoint);
+    } catch {
+      toast.error('请输入有效的API端点URL');
+      return;
+    }
+    
     onAdd({
       ...formData,
       enabled: true,
@@ -355,8 +363,15 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
                   <Input
                     id="maxTokens"
                     type="number"
+                    min={1}
+                    max={128000}
                     value={formData.maxTokens}
-                    onChange={(e) => setFormData({ ...formData, maxTokens: parseInt(e.target.value) || 4096 })}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value);
+                      if (!isNaN(value) && value > 0 && value <= 128000) {
+                        setFormData({ ...formData, maxTokens: value });
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -460,7 +475,7 @@ export function AIModelSettingsPanel() {
   const handleAddModel = (modelData: Omit<AIModelConfig, 'id' | 'createdAt' | 'updatedAt'>) => {
     const newModel: AIModelConfig = {
       ...modelData,
-      id: `model-${Date.now()}`,
+      id: `model-${crypto.randomUUID()}`,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
