@@ -203,3 +203,39 @@ export interface AICapability {
   enabled: boolean;
   category: 'memory' | 'language' | 'control';
 }
+
+// Native AI Model Configuration Types - 原生态大模型配置
+
+export type AIModelProvider = 'openai' | 'anthropic' | 'ollama' | 'custom' | 'local';
+
+export interface AIModelConfig {
+  id: string;
+  name: string;
+  provider: AIModelProvider;
+  modelName: string;
+  apiEndpoint: string;
+  apiKey?: string;
+  enabled: boolean;
+  isDefault: boolean;
+  maxTokens: number;
+  temperature: number;
+  systemPrompt: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface AIModelSettings {
+  models: AIModelConfig[];
+  defaultModelId: string | null;
+  enableLocalProcessing: boolean;
+  enableSecondaryDevelopment: boolean;
+  customEndpoints: CustomEndpoint[];
+}
+
+export interface CustomEndpoint {
+  id: string;
+  name: string;
+  url: string;
+  headers: Record<string, string>;
+  enabled: boolean;
+}
