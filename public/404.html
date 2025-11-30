@@ -10,7 +10,9 @@
         // This script redirects to the root index.html with the path encoded in the query string
         // The main app will then decode this and restore the intended route
         (function() {
-            var pathSegmentsToKeep = 0;
+            // For GitHub Pages subdirectory deployment (e.g., username.github.io/repo-name/)
+            // Set to 1 to keep the repo name in the path
+            var pathSegmentsToKeep = 1;
             var l = window.location;
             
             // Get the base path (for subdirectory deployments)
