@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Users, Plus, Trash, Shield, Mail, Crown, Eye, Edit } from '@phosphor-icons/react';
+import { Users, Plus, Trash, Shield, Envelope, Crown, Eye, PencilSimple } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { formatTimeAgo } from '@/lib/mock-data';
 
@@ -66,7 +66,7 @@ export function OrganizationSettings() {
     switch (role) {
       case 'owner': return <Crown size={16} weight="fill" className="text-yellow-600" />;
       case 'admin': return <Shield size={16} weight="fill" className="text-blue-600" />;
-      case 'signer': return <Edit size={16} weight="fill" className="text-green-600" />;
+      case 'signer': return <PencilSimple size={16} weight="fill" className="text-green-600" />;
       case 'viewer': return <Eye size={16} weight="fill" className="text-gray-600" />;
       default: return null;
     }
@@ -185,7 +185,7 @@ export function OrganizationSettings() {
                           Cancel
                         </Button>
                         <Button className="flex-1 gap-2" onClick={handleInviteMember}>
-                          <Mail size={16} weight="bold" />
+                          <Envelope size={16} weight="bold" />
                           Send Invitation
                         </Button>
                       </div>
@@ -284,7 +284,7 @@ export function OrganizationSettings() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Edit size={16} weight="fill" className="text-green-600 mt-0.5" />
+                    <PencilSimple size={16} weight="fill" className="text-green-600 mt-0.5" />
                     <div>
                       <div className="font-medium">Signer</div>
                       <div className="text-muted-foreground">Sign transactions and view wallets</div>
