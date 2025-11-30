@@ -77,3 +77,52 @@
 所以：
 - 2个独立项目：1个是AI模型，1个是钱包应用
 - aichi3lm 和 AICHI3LM11.29 是同一个项目的副本
+
+---
+
+## 如何合并仓库 / How to Merge Repositories
+
+### 建议：保留一个钱包仓库 / Recommendation: Keep one wallet repository
+
+由于 `aichi3lm` 和 `AICHI3LM11.29` 是相同的代码，建议：
+
+#### 方案 1：删除重复仓库 (推荐)
+1. 保留 **AICHI3LM11.29** (当前仓库)
+2. 删除 **aichi3lm** (重复的)
+3. 在 GitHub 设置中删除：Settings → Delete this repository
+
+#### 方案 2：合并所有项目到一个仓库
+如果想把 AI 模型 (AICHI2LM) 和钱包 (AICHI3LM11.29) 合并到一起：
+
+```bash
+# 在 AICHI3LM11.29 目录下创建 ai-model 文件夹
+mkdir ai-model
+
+# 克隆 AICHI2LM 内容到 ai-model 文件夹
+git clone https://github.com/hhongli1979-coder/AICHI2LM.git temp-ai
+cp -r temp-ai/* ai-model/
+rm -rf temp-ai
+
+# 提交更改
+git add ai-model/
+git commit -m "Add AICHI2LM AI model code"
+git push
+```
+
+#### 合并后的结构 / Merged Structure
+```
+AICHI3LM11.29/
+├── src/                    # OmniCore Wallet 前端代码
+├── ai-model/               # TeleChat AI 模型代码
+│   ├── deepspeed-telechat/
+│   ├── inference_telechat/
+│   ├── models/
+│   └── requirements.txt
+├── package.json
+└── vite.config.ts
+```
+
+### 注意 / Notes
+- 合并不同语言的项目可能会使仓库变得复杂
+- 建议保持 AI 模型 (Python) 和钱包应用 (TypeScript) 分开
+- 如果只是清理重复，删除 `aichi3lm` 即可
