@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, DownloadSimple } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -12,6 +12,7 @@ import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
 import { OrganizationSettings } from '@/components/organization/OrganizationSettings';
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
+import { ArchiveDownloads } from '@/components/downloads/ArchiveDownloads';
 import {
   generateMockWallets,
   generateMockTransactions,
@@ -109,7 +110,7 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-10">
             <TabsTrigger value="overview" className="gap-2">
               <ChartLine size={18} weight="duotone" />
               <span className="hidden sm:inline">Overview</span>
@@ -137,6 +138,10 @@ function App() {
             <TabsTrigger value="ai-assistant" className="gap-2">
               <Robot size={18} weight="duotone" />
               <span className="hidden sm:inline">AI助手</span>
+            </TabsTrigger>
+            <TabsTrigger value="downloads" className="gap-2">
+              <DownloadSimple size={18} weight="duotone" />
+              <span className="hidden sm:inline">下载</span>
             </TabsTrigger>
             <TabsTrigger value="addressbook" className="gap-2">
               <AddressBookIcon size={18} weight="duotone" />
@@ -245,6 +250,10 @@ function App() {
           
           <TabsContent value="ai-assistant" className="space-y-6">
             <AIAssistant />
+          </TabsContent>
+          
+          <TabsContent value="downloads" className="space-y-6">
+            <ArchiveDownloads />
           </TabsContent>
           
           <TabsContent value="addressbook" className="space-y-6">
