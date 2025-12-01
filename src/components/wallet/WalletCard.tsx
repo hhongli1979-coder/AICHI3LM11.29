@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { PaperPlaneTilt, Copy, QrCode, Users } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Copy, QrCode, Users, ShieldCheck, Key } from '@phosphor-icons/react';
 import type { Wallet } from '@/lib/types';
 import { formatAddress, formatCurrency, NETWORKS } from '@/lib/mock-data';
 import { toast } from 'sonner';
@@ -49,6 +49,12 @@ export function WalletCard({ wallet }: WalletCardProps) {
                 {wallet.requiredSignatures}/{wallet.signers?.length}
               </Badge>
             )}
+            {wallet.type === 'mpc' && wallet.mpcConfig && (
+              <Badge variant="secondary" className="flex items-center gap-1 bg-gradient-to-r from-violet-500/10 to-purple-500/10 text-violet-600 border-violet-300">
+                <ShieldCheck size={12} weight="bold" />
+                MPC {wallet.mpcConfig.threshold}/{wallet.mpcConfig.totalShares}
+              </Badge>
+            )}
           </div>
         </div>
       </CardHeader>
@@ -60,6 +66,39 @@ export function WalletCard({ wallet }: WalletCardProps) {
               {wallet.balance.native} {network.name === 'Ethereum' ? 'ETH' : network.name === 'Polygon' ? 'MATIC' : 'BNB'}
             </div>
           </div>
+          
+          {/* MPC Key Shares Info */}
+          {wallet.type === 'mpc' && wallet.mpcConfig && (
+            <div className="border-t pt-3 space-y-2">
+              <div className="text-xs font-medium text-muted-foreground uppercase flex items-center gap-1">
+                <Key size={12} weight="bold" />
+                Key Shares
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {wallet.mpcConfig.keyShares.map((share) => (
+                  <Badge
+                    key={share.id}
+                    variant="outline"
+                    className={`text-xs ${
+                      share.status === 'active' 
+                        ? 'border-green-300 bg-green-50 text-green-700' 
+                        : share.status === 'backup'
+                        ? 'border-yellow-300 bg-yellow-50 text-yellow-700'
+                        : 'border-red-300 bg-red-50 text-red-700'
+                    }`}
+                  >
+                    {share.partyName}
+                  </Badge>
+                ))}
+              </div>
+              {wallet.mpcConfig.recoveryEnabled && (
+                <div className="text-xs text-green-600 flex items-center gap-1">
+                  <ShieldCheck size={12} weight="bold" />
+                  Recovery enabled
+                </div>
+              )}
+            </div>
+          )}
           
           {wallet.tokens.length > 0 && (
             <div className="border-t pt-3 space-y-2">

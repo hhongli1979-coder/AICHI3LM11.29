@@ -8,14 +8,36 @@ export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
 
 export type UserRole = 'owner' | 'admin' | 'signer' | 'viewer';
 
+export type WalletType = 'single' | 'multisig' | 'mpc';
+
+export interface MPCKeyShare {
+  id: string;
+  partyId: string;
+  partyName: string;
+  status: 'active' | 'backup' | 'revoked';
+  deviceType: 'mobile' | 'hardware' | 'cloud' | 'server';
+  lastUsed?: number;
+  createdAt: number;
+}
+
+export interface MPCConfig {
+  threshold: number;
+  totalShares: number;
+  keyShares: MPCKeyShare[];
+  backupShares: number;
+  recoveryEnabled: boolean;
+  lastKeyRotation?: number;
+}
+
 export interface Wallet {
   id: string;
   name: string;
   address: string;
   network: BlockchainNetwork;
-  type: 'single' | 'multisig';
+  type: WalletType;
   signers?: string[];
   requiredSignatures?: number;
+  mpcConfig?: MPCConfig;
   balance: {
     native: string;
     usd: string;
