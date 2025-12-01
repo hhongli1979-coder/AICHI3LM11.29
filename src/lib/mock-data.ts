@@ -382,14 +382,14 @@ export function getStatusColor(status: string): string {
   }
 }
 
-// AI Assistant Mock Data
+// AI Assistant Mock Data - TeleChat-12B-V2
 
 export function generateMockAICapabilities(): AICapability[] {
   return [
     {
       id: 'cap-1',
       name: '对话记忆',
-      description: '记住用户偏好和历史交互，提供个性化服务',
+      description: '基于 TeleChat V2 记住用户偏好和历史交互，提供个性化服务',
       icon: 'Brain',
       enabled: true,
       category: 'memory',
@@ -397,7 +397,7 @@ export function generateMockAICapabilities(): AICapability[] {
     {
       id: 'cap-2',
       name: '交易模式学习',
-      description: '分析并学习用户的交易习惯和模式',
+      description: '利用 TeleChat V2 深度学习分析用户的交易习惯和模式',
       icon: 'ChartLine',
       enabled: true,
       category: 'memory',
@@ -405,7 +405,7 @@ export function generateMockAICapabilities(): AICapability[] {
     {
       id: 'cap-3',
       name: '自然语言理解',
-      description: '理解多语言输入，解析用户意图',
+      description: 'TeleChat-12B-V2 支持多语言理解，精准解析用户意图',
       icon: 'ChatCircle',
       enabled: true,
       category: 'language',
@@ -413,7 +413,7 @@ export function generateMockAICapabilities(): AICapability[] {
     {
       id: 'cap-4',
       name: '智能回复生成',
-      description: '生成上下文相关的智能回复',
+      description: '基于 TeleChat V2 优化的3万亿Token训练，生成高质量回复',
       icon: 'Robot',
       enabled: true,
       category: 'language',
@@ -445,7 +445,7 @@ export function generateMockAICapabilities(): AICapability[] {
     {
       id: 'cap-8',
       name: '风险分析',
-      description: '实时评估交易和地址风险',
+      description: 'TeleChat V2 增强的安全识别能力，实时评估交易和地址风险',
       icon: 'ShieldCheck',
       enabled: true,
       category: 'control',
@@ -508,7 +508,7 @@ export function generateMockAIConversation(): AIMessage[] {
     {
       id: 'msg-1',
       role: 'assistant',
-      content: '您好！我是 OmniCore 智能助手。我可以帮助您管理钱包、执行交易、分析风险，并根据您的历史操作提供个性化建议。请问有什么可以帮到您？',
+      content: '您好！我是基于星辰语义大模型 TeleChat-12B-V2 的智能助手。我可以帮助您管理钱包、执行交易、分析风险，并根据您的历史操作提供个性化建议。TeleChat V2 在数学能力、翻译能力和安全识别方面都有显著提升，请问有什么可以帮到您？',
       timestamp: Date.now() - 10 * 60 * 1000,
     },
     {

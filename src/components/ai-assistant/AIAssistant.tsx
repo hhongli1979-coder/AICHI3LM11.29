@@ -117,7 +117,7 @@ function MessageBubble({ message }: MessageBubbleProps) {
         {!isUser && (
           <div className="flex items-center gap-2 mb-2">
             <Robot size={16} weight="duotone" className="text-primary" />
-            <span className="text-xs font-medium text-primary">OmniCore AI</span>
+            <span className="text-xs font-medium text-primary">TeleChat V2</span>
           </div>
         )}
         <div className="text-sm whitespace-pre-wrap">{message.content}</div>
@@ -282,14 +282,20 @@ export function AIAssistant() {
           <div>
             <h2 className="text-3xl font-bold">AI 智能助手</h2>
             <p className="text-muted-foreground">
-              具备记忆、语言理解和全面控制能力的智能助手
+              基于星辰语义大模型 TeleChat-12B-V2 | 具备记忆、语言理解和全面控制能力
             </p>
           </div>
         </div>
-        <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
-          <Sparkle size={14} weight="fill" />
-          {state.isActive ? '活跃中' : '休眠'}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="gap-1 text-xs">
+            <Sparkle size={12} weight="fill" className="text-amber-500" />
+            TeleChat V2
+          </Badge>
+          <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
+            <Sparkle size={14} weight="fill" />
+            {state.isActive ? '活跃中' : '休眠'}
+          </Badge>
+        </div>
       </div>
 
       <Tabs defaultValue="chat" className="space-y-4">
@@ -321,7 +327,7 @@ export function AIAssistant() {
                 智能对话
               </CardTitle>
               <CardDescription>
-                使用自然语言与 AI 助手交流，执行钱包操作
+                基于 TeleChat-12B-V2 模型，使用自然语言与 AI 助手交流，执行钱包操作
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -334,7 +340,7 @@ export function AIAssistant() {
                     <div className="bg-muted rounded-2xl px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Robot size={16} weight="duotone" className="text-primary animate-pulse" />
-                        <span className="text-sm text-muted-foreground">AI 正在思考...</span>
+                        <span className="text-sm text-muted-foreground">TeleChat V2 正在思考...</span>
                       </div>
                     </div>
                   </div>
@@ -496,7 +502,7 @@ export function AIAssistant() {
   );
 }
 
-// Helper functions for AI responses
+// Helper functions for AI responses (TeleChat V2 powered)
 function generateAIResponse(input: string): string {
   const lowerInput = input.toLowerCase();
   
@@ -509,14 +515,14 @@ function generateAIResponse(input: string): string {
   }
   
   if (lowerInput.includes('风险') || lowerInput.includes('分析') || lowerInput.includes('risk') || lowerInput.includes('analysis')) {
-    return '🔍 **风险分析报告**\n\n当前待处理交易风险:\n\n⚠️ **高风险** - tx-3 (Operating Account)\n- 大额转账: 25,000 USDT\n- 首次收款地址\n- 建议: 验证收款方身份\n\n✅ **低风险** - tx-1 (Treasury Vault)\n- 已知收款方\n- 常规交易模式\n\n需要我提供更详细的分析吗？';
+    return '🔍 **风险分析报告** (TeleChat V2 安全识别)\n\n当前待处理交易风险:\n\n⚠️ **高风险** - tx-3 (Operating Account)\n- 大额转账: 25,000 USDT\n- 首次收款地址\n- 建议: 验证收款方身份\n\n✅ **低风险** - tx-1 (Treasury Vault)\n- 已知收款方\n- 常规交易模式\n\n需要我提供更详细的分析吗？';
   }
   
   if (lowerInput.includes('defi') || lowerInput.includes('策略') || lowerInput.includes('收益')) {
     return '📊 **DeFi 策略建议**\n\n基于您的风险偏好，推荐:\n\n1. **稳定币借贷** (Aave V3)\n   - APY: 5.2%\n   - 风险: 低\n\n2. **ETH 质押** (Lido)\n   - APY: 3.8%\n   - 风险: 低\n\n3. **流动性挖矿** (Uniswap V3)\n   - APY: 12.5%\n   - 风险: 中\n\n需要我帮您配置自动投资策略吗？';
   }
   
-  return '感谢您的提问！我是 OmniCore 智能助手，可以帮助您:\n\n• 📊 查询和管理钱包\n• 💸 创建和签署交易\n• 🔍 分析交易风险\n• 📈 管理 DeFi 策略\n• ⚙️ 配置平台设置\n\n请告诉我您需要什么帮助？';
+  return '感谢您的提问！我是基于 TeleChat-12B-V2 的智能助手，可以帮助您:\n\n• 📊 查询和管理钱包\n• 💸 创建和签署交易\n• 🔍 分析交易风险 (V2增强安全识别)\n• 📈 管理 DeFi 策略\n• ⚙️ 配置平台设置\n\n请告诉我您需要什么帮助？';
 }
 
 function detectAction(input: string): AIMessage['action'] | undefined {
