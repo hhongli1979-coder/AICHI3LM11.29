@@ -1,5 +1,28 @@
+/**
+ * OmniCore Wallet - Mock Data Generators
+ * 
+ * This file contains mock data generators and utility functions for the OmniCore Wallet platform.
+ * All mock data is used for frontend prototyping and development purposes.
+ * 
+ * @module mock-data
+ */
+
 import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
 
+// ============================================================================
+// Network Configuration
+// ============================================================================
+
+/**
+ * Supported blockchain networks with display information
+ * 
+ * @example
+ * ```typescript
+ * const network = NETWORKS['ethereum'];
+ * console.log(network.name); // 'Ethereum'
+ * console.log(network.color); // '#627EEA'
+ * ```
+ */
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
   polygon: { name: 'Polygon', color: '#8247E5', icon: '⬡' },
@@ -9,6 +32,21 @@ export const NETWORKS = {
   avalanche: { name: 'Avalanche', color: '#E84142', icon: '▲' },
 };
 
+// ============================================================================
+// Wallet Mock Data
+// ============================================================================
+
+/**
+ * Generate mock wallet data for development
+ * 
+ * @returns Array of mock Wallet objects
+ * 
+ * @example
+ * ```typescript
+ * const wallets = generateMockWallets();
+ * console.log(wallets.length); // 3
+ * ```
+ */
 export function generateMockWallets(): Wallet[] {
   return [
     {
@@ -286,6 +324,11 @@ export function generateMockOmniStats(): OmniTokenStats {
   };
 }
 
+/**
+ * Generate mock notification data
+ * 
+ * @returns Array of mock NotificationItem objects
+ */
 export function generateMockNotifications(): NotificationItem[] {
   return [
     {
@@ -326,10 +369,40 @@ export function generateMockNotifications(): NotificationItem[] {
   ];
 }
 
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+/**
+ * Format a blockchain address for display (truncated)
+ * 
+ * @param address - Full blockchain address
+ * @param chars - Number of characters to show at start/end (default: 4)
+ * @returns Truncated address string (e.g., "0x1234...5678")
+ * 
+ * @example
+ * ```typescript
+ * formatAddress('0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb');
+ * // Returns: "0x742d...0bEb"
+ * ```
+ */
 export function formatAddress(address: string, chars = 4): string {
   return `${address.slice(0, chars + 2)}...${address.slice(-chars)}`;
 }
 
+/**
+ * Format a number as currency
+ * 
+ * @param amount - Amount to format (string or number)
+ * @param currency - Currency code (default: 'USD')
+ * @returns Formatted currency string (e.g., "$1,234.56")
+ * 
+ * @example
+ * ```typescript
+ * formatCurrency(1234.56); // Returns: "$1,234.56"
+ * formatCurrency('1000', 'EUR'); // Returns: "€1,000.00"
+ * ```
+ */
 export function formatCurrency(amount: string | number, currency = 'USD'): string {
   const num = typeof amount === 'string' ? parseFloat(amount) : amount;
   return new Intl.NumberFormat('en-US', {
@@ -340,6 +413,18 @@ export function formatCurrency(amount: string | number, currency = 'USD'): strin
   }).format(num);
 }
 
+/**
+ * Format a large number with K/M/B suffix
+ * 
+ * @param num - Number to format
+ * @returns Formatted string with suffix (e.g., "1.23M")
+ * 
+ * @example
+ * ```typescript
+ * formatLargeNumber(1234567); // Returns: "1.23M"
+ * formatLargeNumber(1500); // Returns: "1.50K"
+ * ```
+ */
 export function formatLargeNumber(num: number): string {
   if (num >= 1e9) return `${(num / 1e9).toFixed(2)}B`;
   if (num >= 1e6) return `${(num / 1e6).toFixed(2)}M`;
@@ -347,6 +432,18 @@ export function formatLargeNumber(num: number): string {
   return num.toFixed(2);
 }
 
+/**
+ * Format a timestamp as relative time
+ * 
+ * @param timestamp - Unix timestamp in milliseconds
+ * @returns Human-readable relative time (e.g., "5m ago", "2h ago")
+ * 
+ * @example
+ * ```typescript
+ * formatTimeAgo(Date.now() - 300000); // Returns: "5m ago"
+ * formatTimeAgo(Date.now() - 86400000); // Returns: "1d ago"
+ * ```
+ */
 export function formatTimeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
   
@@ -359,6 +456,17 @@ export function formatTimeAgo(timestamp: number): string {
   return `${days}d ago`;
 }
 
+/**
+ * Get Tailwind CSS color class for risk level
+ * 
+ * @param level - Risk level string
+ * @returns Tailwind CSS text color class
+ * 
+ * @example
+ * ```typescript
+ * getRiskColor('high'); // Returns: "text-orange-600"
+ * ```
+ */
 export function getRiskColor(level: string): string {
   switch (level) {
     case 'low': return 'text-green-600';
@@ -369,6 +477,18 @@ export function getRiskColor(level: string): string {
   }
 }
 
+/**
+ * Get Tailwind CSS color class for transaction status
+ * 
+ * @param status - Transaction status string
+ * @returns Tailwind CSS text color class
+ * 
+ * @example
+ * ```typescript
+ * getStatusColor('confirmed'); // Returns: "text-green-600"
+ * getStatusColor('pending'); // Returns: "text-yellow-600"
+ * ```
+ */
 export function getStatusColor(status: string): string {
   switch (status) {
     case 'confirmed':
