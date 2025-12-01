@@ -32,3 +32,10 @@ pids
 .devcontainer/
 
 .spark-workbench-id
+
+# Heavy dependencies and build artifacts to exclude (for source-only imports)
+backend/node_modules/
+materialize_v13.11.0/
+build/
+.cache/
+.dist/
