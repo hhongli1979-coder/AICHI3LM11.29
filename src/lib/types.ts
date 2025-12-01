@@ -152,6 +152,8 @@ export interface NotificationItem {
 
 export type AIMessageRole = 'user' | 'assistant' | 'system';
 
+export type AIModelType = 'omnicore' | 'claude' | 'mxyejic';
+
 export type AIActionType = 
   | 'wallet_query'
   | 'transaction_create'
@@ -161,12 +163,23 @@ export type AIActionType =
   | 'settings_update'
   | 'general_chat';
 
+export interface AIModel {
+  id: AIModelType;
+  name: string;
+  description: string;
+  icon: string;
+  capabilities: string[];
+  isAdvanced: boolean;
+  status: 'online' | 'offline' | 'maintenance';
+}
+
 export interface AIMessage {
   id: string;
   role: AIMessageRole;
   content: string;
   timestamp: number;
   action?: AIAction;
+  model?: AIModelType;
 }
 
 export interface AIAction {
@@ -193,6 +206,8 @@ export interface AIAssistantState {
   memories: AIMemoryItem[];
   capabilities: AICapability[];
   lastActiveAt: number;
+  currentModel: AIModelType;
+  availableModels: AIModel[];
 }
 
 export interface AICapability {
