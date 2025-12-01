@@ -39,3 +39,5 @@ materialize_v13.11.0/
 build/
 .cache/
 .dist/
+dist/
+node_modules/
