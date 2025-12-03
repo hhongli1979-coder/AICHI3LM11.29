@@ -51,6 +51,18 @@ const CURRENCIES = [
   { code: 'BTC', symbol: '₿', name: '比特币' },
 ];
 
+/**
+ * Generate a placeholder QR code SVG for development/mock purposes
+ * In production, replace with a proper QR code generation library
+ */
+function generatePlaceholderQRCode(): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect fill="#fff" width="100" height="100"/>
+    <text x="50" y="55" text-anchor="middle" font-size="12">QR Code</text>
+  </svg>`;
+  return `data:image/svg+xml;base64,${btoa(svg)}`;
+}
+
 interface PaymentGatewayProps {
   payments?: PaymentRequest[];
 }
@@ -84,16 +96,18 @@ export function PaymentGateway({ payments: initialPayments = [] }: PaymentGatewa
       return;
     }
 
+    // Generate unique ID with timestamp and random suffix
+    const uniqueId = `pay-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
     const newPayment: PaymentRequest = {
-      id: `pay-${Date.now()}`,
-      merchantId: 'merchant-1',
+      id: uniqueId,
+      merchantId: 'merchant-1', // TODO: Get from context/configuration in production
       amount: parseFloat(formData.amount),
       currency: formData.currency,
       channel: formData.channel,
       status: 'pending',
       description: formData.description || '收款请求',
-      paymentUrl: `https://pay.omnicore.io/pay-${Date.now()}`,
-      qrCode: `data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="#fff" width="100" height="100"/><text x="50" y="55" text-anchor="middle" font-size="12">QR Code</text></svg>`)}`,
+      paymentUrl: `https://pay.omnicore.io/${uniqueId}`,
+      qrCode: generatePlaceholderQRCode(),
       createdAt: Date.now(),
       expiresAt: Date.now() + parseInt(formData.expiresInMinutes) * 60 * 1000,
     };
