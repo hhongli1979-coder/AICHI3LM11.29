@@ -464,3 +464,186 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Client Onboarding Types - Fiat24 KYC/AML Integration (个人客户入职)
+// ============================================================================
+
+/** Onboarding status for client registration */
+export type OnboardingStatus = 'pending' | 'in_review' | 'approved' | 'rejected' | 'manual_review';
+
+/** NFT Project tier based on developer NFT digits */
+export type NFTProjectTier = 'one_digit' | 'two_digit' | 'three_digit' | 'four_digit';
+
+/** Integration type for client onboarding */
+export type OnboardingIntegrationType = 'no_code' | 'code_based';
+
+/** Gender for ID verification */
+export type Gender = 'M' | 'F';
+
+/** Document type for ID verification */
+export type DocumentType = 'P' | 'I'; // Passport or National ID
+
+/** Salary range options */
+export type SalaryRange = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+
+/** Total assets range options */
+export type TotalAssetsRange = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+
+/** Occupation type */
+export type OccupationType = 'EMP' | 'SELF' | 'RET' | 'STU' | 'OTH';
+
+/** GPS coordinates */
+export interface GPSCoordinates {
+  lat: number;
+  lng: number;
+}
+
+/** Client onboarding profile information */
+export interface OnboardingProfile {
+  /** Annual salary range */
+  annualSalary: SalaryRange;
+  /** Total assets range */
+  totalAssets: TotalAssetsRange;
+  /** Main occupation type */
+  mainOccupation: OccupationType;
+  /** Job category code */
+  jobCategory: string;
+  /** Sector code */
+  sector: string;
+  /** Source of funds code */
+  sourceOfFunds: string;
+  /** Purposes for account usage (comma-separated) */
+  purposes: string;
+  /** TAN signature using wallet */
+  signature?: string;
+  /** Message signed by user */
+  tanMessage?: string;
+  /** User's address used during signature */
+  tanAddress?: string;
+  /** Timestamp when user signed in ms */
+  tanDateMs?: number;
+}
+
+/** Client onboarding address information */
+export interface OnboardingAddress {
+  /** Country ISO3 code */
+  countryISO3: string;
+  /** Street name */
+  street: string;
+  /** Street number */
+  streetNumber: string;
+  /** Postal code */
+  postalCode: string;
+  /** City name */
+  city: string;
+  /** GPS coordinates of input location */
+  gps: GPSCoordinates;
+  /** Current user GPS coordinates for address proof */
+  addressProof: GPSCoordinates;
+  /** Reverse geocoded address from current coordinates */
+  reverseAddressProof: string;
+  /** Distance between the two GPS points (in KM) */
+  distance: number;
+}
+
+/** Client onboarding ID document information */
+export interface OnboardingID {
+  /** Gender */
+  gender: Gender;
+  /** First name in Latin characters */
+  firstName: string;
+  /** Last name in Latin characters */
+  lastName: string;
+  /** Full name in original language */
+  nameOfHolder: string;
+  /** Date of birth (DD.MM.YYYY format) */
+  birthday: string;
+  /** Document number */
+  documentNumber: string;
+  /** Document type (Passport or National ID) */
+  documentType: DocumentType;
+  /** Document expiration date (DD.MM.YYYY format) */
+  documentValidUntil: string;
+  /** Issuer country ISO3 code */
+  issuerCountry: string;
+  /** Nationality ISO3 code */
+  nationality: string;
+}
+
+/** Files required for onboarding */
+export interface OnboardingFiles {
+  /** URL to client profile PDF from verification service */
+  clientProfilePdfUrl?: string;
+  /** URL to ID verification PDF from verification service */
+  idVerificationPdfUrl?: string;
+}
+
+/** Client onboarding request for code-based integration */
+export interface OnboardingRequest {
+  /** Unique identifier */
+  id: string;
+  /** Chain ID (e.g., 42161 for Arbitrum) */
+  chainId: number;
+  /** NFT ID for the wallet token */
+  nftId: number;
+  /** Client email address */
+  email: string;
+  /** Profile information */
+  profile: OnboardingProfile;
+  /** Address information */
+  address: OnboardingAddress;
+  /** ID document information */
+  id_document: OnboardingID;
+  /** Files for verification */
+  files: OnboardingFiles;
+  /** Current onboarding status */
+  status: OnboardingStatus;
+  /** Unix timestamp of creation */
+  createdAt: number;
+  /** Unix timestamp of last update */
+  updatedAt: number;
+}
+
+/** Onboarding step for UI workflow */
+export interface OnboardingStep {
+  /** Step ID */
+  id: string;
+  /** Step title */
+  title: string;
+  /** Step description */
+  description: string;
+  /** Whether step is completed */
+  completed: boolean;
+  /** Whether step is currently active */
+  active: boolean;
+  /** Icon name for the step */
+  icon: string;
+}
+
+/** No-code integration configuration */
+export interface NoCodeIntegrationConfig {
+  /** Wallet token ID */
+  walletTokenId: string;
+  /** Base URL for the integration */
+  baseUrl: string;
+  /** Whether to customize appearance */
+  customizeAppearance: boolean;
+  /** Custom color (hex code) */
+  customColor?: string;
+  /** Custom name/branding */
+  customName?: string;
+}
+
+/** API response from onboarding endpoint */
+export interface OnboardingAPIResponse {
+  /** HTTP status code */
+  status: number;
+  /** Response data */
+  data: {
+    /** Status result */
+    status: 'OK' | 'NOT_ELIGIBLE' | 'MANUAL_REVIEW' | 'ERROR';
+    /** Error message if status is ERROR */
+    message?: string;
+  };
+}

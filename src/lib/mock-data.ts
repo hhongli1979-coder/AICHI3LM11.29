@@ -7,7 +7,7 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, OnboardingRequest, OnboardingStep, NoCodeIntegrationConfig } from './types';
 
 // ============================================================================
 // Network Configuration
@@ -784,4 +784,249 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
   };
+}
+
+// ============================================================================
+// Client Onboarding Mock Data - Fiat24 KYC/AML Integration
+// ============================================================================
+
+/**
+ * Generate mock onboarding steps for the onboarding workflow
+ * 
+ * @returns Array of mock OnboardingStep objects
+ */
+export function generateMockOnboardingSteps(): OnboardingStep[] {
+  return [
+    {
+      id: 'step-1',
+      title: '获取 NFT',
+      description: '从 www.fiat24.com 或 OpenSea 获取 Fiat24 NFT',
+      completed: true,
+      active: false,
+      icon: 'Wallet',
+    },
+    {
+      id: 'step-2',
+      title: '审核个人资料',
+      description: '验证居住地、国籍、风险问卷，并收集联系信息',
+      completed: true,
+      active: false,
+      icon: 'UserCircle',
+    },
+    {
+      id: 'step-3',
+      title: '地址验证',
+      description: '通过 GPS 定位验证居住地址（需在 2 公里范围内）',
+      completed: false,
+      active: true,
+      icon: 'MapPin',
+    },
+    {
+      id: 'step-4',
+      title: '扫描护照/身份证',
+      description: '使用 NFC 芯片扫描护照或身份证进行身份验证',
+      completed: false,
+      active: false,
+      icon: 'IdentificationCard',
+    },
+    {
+      id: 'step-5',
+      title: '账户创建',
+      description: '完成背景调查后创建 Fiat24 账户（3-10分钟）',
+      completed: false,
+      active: false,
+      icon: 'CheckCircle',
+    },
+  ];
+}
+
+/**
+ * Generate mock onboarding requests for development
+ * 
+ * @returns Array of mock OnboardingRequest objects
+ */
+export function generateMockOnboardingRequests(): OnboardingRequest[] {
+  return [
+    {
+      id: 'onboard-1',
+      chainId: 42161,
+      nftId: 10365,
+      email: 'james.bond@example.com',
+      profile: {
+        annualSalary: 'B2',
+        totalAssets: 'B1',
+        mainOccupation: 'EMP',
+        jobCategory: 'EEE',
+        sector: 'ACC',
+        sourceOfFunds: 'SAV',
+        purposes: 'SLR,PNS,IVT',
+        signature: '0xabcdef1234567890...',
+        tanMessage: 'Zürich, 13.06.2025 I confirm...',
+        tanAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
+        tanDateMs: 1763127436000,
+      },
+      address: {
+        countryISO3: 'GBR',
+        street: 'New Bond Street',
+        streetNumber: '52',
+        postalCode: 'W1S',
+        city: 'London',
+        gps: { lat: 47.35055383741818, lng: 8.560838999296362 },
+        addressProof: { lat: 47.35055383741818, lng: 8.560838999296362 },
+        reverseAddressProof: 'Bellerivestrasse 245, Zurich 8008, Switzerland',
+        distance: 0.1,
+      },
+      id_document: {
+        gender: 'M',
+        firstName: 'James',
+        lastName: 'Bond',
+        nameOfHolder: '詹姆斯·邦德',
+        birthday: '27.06.1991',
+        documentNumber: 'ABCDE1234',
+        documentType: 'P',
+        documentValidUntil: '27.06.2099',
+        issuerCountry: 'GBR',
+        nationality: 'GBR',
+      },
+      files: {
+        clientProfilePdfUrl: 'https://api.sumsub.com/profile/12345.pdf',
+        idVerificationPdfUrl: 'https://api.sumsub.com/id/12345.pdf',
+      },
+      status: 'approved',
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 4 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'onboard-2',
+      chainId: 42161,
+      nftId: 10890,
+      email: 'alice.chen@example.com',
+      profile: {
+        annualSalary: 'C1',
+        totalAssets: 'C2',
+        mainOccupation: 'SELF',
+        jobCategory: 'FIN',
+        sector: 'BNK',
+        sourceOfFunds: 'BUS',
+        purposes: 'SLR,IVT',
+      },
+      address: {
+        countryISO3: 'CHE',
+        street: 'Bahnhofstrasse',
+        streetNumber: '100',
+        postalCode: '8001',
+        city: 'Zürich',
+        gps: { lat: 47.36667, lng: 8.55 },
+        addressProof: { lat: 47.36680, lng: 8.55012 },
+        reverseAddressProof: 'Bahnhofstrasse 100, 8001 Zürich, Switzerland',
+        distance: 0.02,
+      },
+      id_document: {
+        gender: 'F',
+        firstName: 'Alice',
+        lastName: 'Chen',
+        nameOfHolder: '陈爱丽',
+        birthday: '15.03.1988',
+        documentNumber: 'X1234567',
+        documentType: 'P',
+        documentValidUntil: '15.03.2030',
+        issuerCountry: 'CHE',
+        nationality: 'CHN',
+      },
+      files: {},
+      status: 'in_review',
+      createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'onboard-3',
+      chainId: 42161,
+      nftId: 11234,
+      email: 'max.mueller@example.com',
+      profile: {
+        annualSalary: 'A2',
+        totalAssets: 'B1',
+        mainOccupation: 'STU',
+        jobCategory: 'EDU',
+        sector: 'EDU',
+        sourceOfFunds: 'FAM',
+        purposes: 'SLR',
+      },
+      address: {
+        countryISO3: 'DEU',
+        street: 'Friedrichstraße',
+        streetNumber: '45',
+        postalCode: '10117',
+        city: 'Berlin',
+        gps: { lat: 52.52, lng: 13.405 },
+        addressProof: { lat: 52.5201, lng: 13.4055 },
+        reverseAddressProof: 'Friedrichstraße 45, 10117 Berlin, Germany',
+        distance: 0.015,
+      },
+      id_document: {
+        gender: 'M',
+        firstName: 'Max',
+        lastName: 'Müller',
+        nameOfHolder: 'Max Müller',
+        birthday: '22.11.1999',
+        documentNumber: 'DE123456',
+        documentType: 'I',
+        documentValidUntil: '22.11.2028',
+        issuerCountry: 'DEU',
+        nationality: 'DEU',
+      },
+      files: {},
+      status: 'pending',
+      createdAt: Date.now() - 1 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 30 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Generate mock no-code integration configuration
+ * 
+ * @returns Mock NoCodeIntegrationConfig object
+ */
+export function generateMockNoCodeConfig(): NoCodeIntegrationConfig {
+  return {
+    walletTokenId: '10365',
+    baseUrl: 'https://id.fiat24.com/login',
+    customizeAppearance: true,
+    customColor: '#627EEA',
+    customName: 'OmniCore Wallet',
+  };
+}
+
+/**
+ * Get onboarding status display color
+ * 
+ * @param status - Onboarding status string
+ * @returns Tailwind CSS text color class
+ */
+export function getOnboardingStatusColor(status: string): string {
+  switch (status) {
+    case 'approved': return 'text-green-600';
+    case 'in_review': return 'text-yellow-600';
+    case 'pending': return 'text-blue-600';
+    case 'manual_review': return 'text-orange-600';
+    case 'rejected': return 'text-red-600';
+    default: return 'text-gray-600';
+  }
+}
+
+/**
+ * Get onboarding status badge variant
+ * 
+ * @param status - Onboarding status string
+ * @returns Badge variant string
+ */
+export function getOnboardingStatusBadge(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (status) {
+    case 'approved': return 'default';
+    case 'in_review': return 'secondary';
+    case 'pending': return 'outline';
+    case 'rejected': return 'destructive';
+    default: return 'outline';
+  }
 }
