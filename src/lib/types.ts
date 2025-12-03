@@ -405,7 +405,7 @@ export interface AICapability {
 // ============================================================================
 
 /** Supported AI model providers */
-export type AIModelProvider = 'openai' | 'anthropic' | 'ollama' | 'custom' | 'local';
+export type AIModelProvider = 'openai' | 'anthropic' | 'ollama' | 'llama3' | 'custom' | 'local';
 
 /** AI model configuration */
 export interface AIModelConfig {

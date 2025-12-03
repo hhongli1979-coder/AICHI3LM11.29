@@ -39,6 +39,8 @@ import {
   Lightning,
   Database,
   Link,
+  CurrencyDollar,
+  Cpu,
 } from '@phosphor-icons/react';
 import { generateMockAIModelSettings } from '@/lib/mock-data';
 import type { AIModelConfig, AIModelSettings, AIModelProvider, CustomEndpoint } from '@/lib/types';
@@ -50,6 +52,8 @@ function getProviderIcon(provider: AIModelProvider) {
       return <Desktop size={18} weight="duotone" className="text-green-500" />;
     case 'ollama':
       return <Robot size={18} weight="duotone" className="text-purple-500" />;
+    case 'llama3':
+      return <Cpu size={18} weight="duotone" className="text-emerald-500" />;
     case 'openai':
       return <Globe size={18} weight="duotone" className="text-blue-500" />;
     case 'anthropic':
@@ -67,6 +71,8 @@ function getProviderLabel(provider: AIModelProvider): string {
       return '本地模型';
     case 'ollama':
       return 'Ollama';
+    case 'llama3':
+      return 'Llama 3';
     case 'openai':
       return 'OpenAI';
     case 'anthropic':
@@ -84,6 +90,8 @@ function getProviderBadgeColor(provider: AIModelProvider): string {
       return 'bg-green-100 text-green-700 border-green-300';
     case 'ollama':
       return 'bg-purple-100 text-purple-700 border-purple-300';
+    case 'llama3':
+      return 'bg-emerald-100 text-emerald-700 border-emerald-300';
     case 'openai':
       return 'bg-blue-100 text-blue-700 border-blue-300';
     case 'anthropic':
@@ -105,8 +113,10 @@ interface ModelCardProps {
 }
 
 function ModelCard({ model, isDefault, onToggle, onSetDefault, onEdit, onDelete }: ModelCardProps) {
+  const isCostEffective = model.provider === 'llama3' || model.provider === 'local';
+  
   return (
-    <Card className={`border transition-all hover:shadow-md ${isDefault ? 'ring-2 ring-primary' : ''}`}>
+    <Card className={`border transition-all hover:shadow-md ${isDefault ? 'ring-2 ring-primary' : ''} ${isCostEffective ? 'bg-gradient-to-br from-emerald-50/50 to-transparent' : ''}`}>
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3">
@@ -114,18 +124,24 @@ function ModelCard({ model, isDefault, onToggle, onSetDefault, onEdit, onDelete 
               {getProviderIcon(model.provider)}
             </div>
             <div className="flex-1">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-medium">{model.name}</span>
                 {isDefault && (
                   <Badge variant="default" className="text-xs">
                     默认
                   </Badge>
                 )}
+                {isCostEffective && (
+                  <Badge variant="outline" className="text-xs bg-emerald-100 text-emerald-700 border-emerald-300 gap-1">
+                    <CurrencyDollar size={12} weight="bold" />
+                    省钱
+                  </Badge>
+                )}
               </div>
               <div className="text-sm text-muted-foreground mt-1">
                 {model.modelName}
               </div>
-              <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground flex-wrap">
                 <Badge variant="outline" className={getProviderBadgeColor(model.provider)}>
                   {getProviderLabel(model.provider)}
                 </Badge>
@@ -142,7 +158,7 @@ function ModelCard({ model, isDefault, onToggle, onSetDefault, onEdit, onDelete 
           </div>
         </div>
         
-        <div className="flex items-center gap-2 mt-4 pt-3 border-t">
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t flex-wrap">
           <Button
             variant="outline"
             size="sm"
@@ -262,6 +278,12 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
                     <SelectValue placeholder="选择提供商" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="llama3">
+                      <div className="flex items-center gap-2">
+                        <Cpu size={16} />
+                        Llama 3 (推荐省钱)
+                      </div>
+                    </SelectItem>
                     <SelectItem value="local">
                       <div className="flex items-center gap-2">
                         <Desktop size={16} />
@@ -297,12 +319,27 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
               </div>
             </div>
 
+            {formData.provider === 'llama3' && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <CurrencyDollar size={18} weight="duotone" className="text-emerald-600 mt-0.5" />
+                  <div>
+                    <div className="font-medium text-emerald-800 text-sm">Llama 3 省钱模式</div>
+                    <p className="text-xs text-emerald-700 mt-1">
+                      使用 Meta 开源的 Llama 3 模型，无需 API 费用，本地部署即可运行。
+                      支持 8B 和 70B 参数版本，推荐使用 Ollama 进行部署。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="modelName">模型标识 *</Label>
                 <Input
                   id="modelName"
-                  placeholder="例如：llama3:8b, gpt-4"
+                  placeholder={formData.provider === 'llama3' ? 'llama3:8b 或 llama3:70b' : '例如：llama3:8b, gpt-4'}
                   value={formData.modelName}
                   onChange={(e) => setFormData({ ...formData, modelName: e.target.value })}
                 />
@@ -520,6 +557,38 @@ export function AIModelSettingsPanel() {
 
   return (
     <div className="space-y-6">
+      {/* Llama 3 Cost Saving Recommendation Card */}
+      <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-xl bg-emerald-100">
+              <CurrencyDollar size={28} weight="duotone" className="text-emerald-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-lg text-emerald-900">使用 Llama 3 省钱方案</h3>
+              <p className="text-sm text-emerald-700 mt-1">
+                通过接入 Meta 开源的 Llama 3 模型，可以大幅降低 AI 使用成本。本地部署无需 API 费用，
+                8B 参数版本适合日常对话，70B 版本适合复杂任务。
+              </p>
+              <div className="flex flex-wrap gap-3 mt-4">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 rounded-lg border border-emerald-200">
+                  <span className="text-xs font-medium text-emerald-800">🆓 零 API 费用</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 rounded-lg border border-emerald-200">
+                  <span className="text-xs font-medium text-emerald-800">🔒 数据隐私保护</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 rounded-lg border border-emerald-200">
+                  <span className="text-xs font-medium text-emerald-800">⚡ 低延迟响应</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 rounded-lg border border-emerald-200">
+                  <span className="text-xs font-medium text-emerald-800">🎯 相比 GPT-4 节省 90%+</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
