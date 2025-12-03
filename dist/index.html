@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OmniCore Wallet - Enterprise Smart Wallet Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter&family=Lora&family=Source+Code+Pro&display=swap">
+    <script>
+        // Single Page App (SPA) redirect handling for GitHub Pages and static hosting
+        // This script handles the redirect from 404.html by decoding the path from the query string
+        (function(l) {
+            // Check if we have a redirect path in the query string (format: /?/path&query)
+            if (l.search.length > 2 && l.search[0] === '?' && l.search[1] === '/') {
+                // Decode the path: split by '&', restore '~and~' to '&', first part is path, rest are query params
+                var parts = l.search.slice(2).split('&').map(function(s) {
+                    return s.replace(/~and~/g, '&');
+                });
+                // Handle edge case where path might be empty
+                var pathPart = parts[0] || '';
+                var path = pathPart ? '/' + pathPart : '/';
+                var query = parts.length > 1 ? '?' + parts.slice(1).join('&') : '';
+                window.history.replaceState(null, null, path + query + l.hash);
+            }
+        }(window.location))
+    </script>
+  <script type="module" crossorigin src="/assets/index-CkyVFv07.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-nNrwy8tq.css">
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+
+</html>
