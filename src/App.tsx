@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Bank } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -12,12 +12,14 @@ import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
 import { OrganizationSettings } from '@/components/organization/OrganizationSettings';
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
+import { BankPaymentForm, BankPaymentList, FXRatesDisplay } from '@/components/bank-payment';
 import {
   generateMockWallets,
   generateMockTransactions,
   generateMockDeFiPositions,
   generateMockOmniStats,
   generateMockNotifications,
+  generateMockBankPayments,
 } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -26,11 +28,13 @@ import { formatTimeAgo } from '@/lib/mock-data';
 function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [createWalletOpen, setCreateWalletOpen] = useState(false);
+  const [bankPaymentOpen, setBankPaymentOpen] = useState(false);
   const wallets = generateMockWallets();
   const transactions = generateMockTransactions();
   const defiPositions = generateMockDeFiPositions();
   const omniStats = generateMockOmniStats();
   const notifications = generateMockNotifications();
+  const bankPayments = generateMockBankPayments();
   const unreadCount = notifications.filter(n => !n.read).length;
   
   const totalAssets = wallets.reduce((sum, wallet) => {
@@ -218,25 +222,57 @@ function App() {
           
           <TabsContent value="payments" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold">Payment Gateway</h2>
-              <Button className="gap-2">
-                <CreditCard size={18} weight="bold" />
-                Create Payment Link
-              </Button>
+              <div>
+                <h2 className="text-3xl font-bold">Payment Gateway</h2>
+                <p className="text-muted-foreground mt-1">Manage payments, bank transfers, and FX rates</p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" className="gap-2">
+                  <CreditCard size={18} weight="bold" />
+                  Create Payment Link
+                </Button>
+                <Button className="gap-2" onClick={() => setBankPaymentOpen(true)}>
+                  <Bank size={18} weight="bold" />
+                  Bank Transfer
+                </Button>
+              </div>
             </div>
             
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="border rounded-lg p-8 text-center text-muted-foreground">
-                <CreditCard size={48} weight="duotone" className="mx-auto mb-4 text-primary" />
-                <p>Accept payments via crypto, credit cards, Alipay, WeChat Pay, and UnionPay</p>
-                <Button className="mt-4">Set Up Payment Gateway</Button>
+            {/* Payment Methods Cards */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="border rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
+                <Bank size={48} weight="duotone" className="mx-auto mb-4 text-primary" />
+                <h3 className="font-semibold mb-2">Fiat24 Bank Transfers</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Send EUR & CHF to any bank account via smart contracts
+                </p>
+                <Button className="w-full" onClick={() => setBankPaymentOpen(true)}>
+                  Send Bank Payment
+                </Button>
               </div>
-              <div className="border rounded-lg p-8 text-center text-muted-foreground">
-                <Coins size={48} weight="duotone" className="mx-auto mb-4 text-accent" />
-                <p>Create payment links and QR codes for instant settlements</p>
-                <Button variant="outline" className="mt-4">View Documentation</Button>
+              <div className="border rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
+                <CreditCard size={48} weight="duotone" className="mx-auto mb-4 text-accent" />
+                <h3 className="font-semibold mb-2">Payment Gateway</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Accept crypto, cards, Alipay, WeChat Pay, UnionPay
+                </p>
+                <Button variant="outline" className="w-full">Set Up Gateway</Button>
+              </div>
+              <div className="border rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
+                <Coins size={48} weight="duotone" className="mx-auto mb-4 text-yellow-500" />
+                <h3 className="font-semibold mb-2">Payment Links</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Create QR codes and links for instant settlements
+                </p>
+                <Button variant="outline" className="w-full">Create Link</Button>
               </div>
             </div>
+            
+            {/* FX Rates */}
+            <FXRatesDisplay pairs={['USDCHF', 'EURCHF', 'USDEUR', 'GBPCHF']} />
+            
+            {/* Bank Payment History */}
+            <BankPaymentList payments={bankPayments} />
           </TabsContent>
           
           <TabsContent value="omni" className="space-y-6">
@@ -260,13 +296,19 @@ function App() {
       <footer className="border-t mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
           <p>OmniCore Wallet - Enterprise Smart Wallet Platform | Powered by blockchain technology</p>
-          <p className="mt-2">Multi-chain support • Multi-signature security • DeFi integration • Global payments</p>
+          <p className="mt-2">Multi-chain support • Multi-signature security • DeFi integration • Global payments • Fiat24 Bank Transfers</p>
         </div>
       </footer>
 
       <CreateWalletDialog
         open={createWalletOpen}
         onOpenChange={setCreateWalletOpen}
+      />
+      
+      <BankPaymentForm
+        open={bankPaymentOpen}
+        onOpenChange={setBankPaymentOpen}
+        currency="EUR"
       />
     </div>
   );

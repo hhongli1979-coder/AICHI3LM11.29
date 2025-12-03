@@ -7,7 +7,7 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, PaymentPurpose, CountryWithCities, Fiat24BankInfo, BankPayment, Fiat24FXRate } from './types';
 
 // ============================================================================
 // Network Configuration
@@ -783,5 +783,469 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableLocalProcessing: true,
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
+  };
+}
+
+// ============================================================================
+// Fiat24 Bank Payment Mock Data - 银行支付集成
+// ============================================================================
+
+/**
+ * Fixed IBAN prefix for Fiat24
+ */
+const FIAT24_FIXED_IBAN = "83051";
+
+/**
+ * ISO 7064 Mod 97-10 checksum calculation
+ */
+function iso7064Mod97_10(iban: string): number {
+  let remainder = iban;
+  let block: string;
+
+  while (remainder.length > 2) {
+    block = remainder.slice(0, 9);
+    remainder = (parseInt(block, 10) % 97) + remainder.slice(block.length);
+  }
+
+  return parseInt(remainder, 10) % 97;
+}
+
+/**
+ * Prepare IBAN for ISO 13616 checksum
+ */
+function iso13616Prepare(iban: string): string {
+  iban = iban.toUpperCase();
+  iban = iban.substr(4) + iban.substr(0, 4);
+  const A = 'A'.charCodeAt(0);
+  const Z = 'Z'.charCodeAt(0);
+  return iban.split('').map(function(n) {
+    const code = n.charCodeAt(0);
+    if (code >= A && code <= Z) {
+      return (code - A + 10).toString();
+    } else {
+      return n;
+    }
+  }).join('');
+}
+
+/**
+ * Get checksum with dynamic token ID length
+ */
+function getChecksumWithDynamicTokenIDLength(fullTokenId: string): string {
+  const bban = `${FIAT24_FIXED_IBAN}${fullTokenId}`;
+  const remainder = iso7064Mod97_10(iso13616Prepare("CH" + '00' + bban));
+  const checkDigit = ('0' + (98 - remainder)).slice(-2);
+  return checkDigit;
+}
+
+/**
+ * Calculate IBAN from NFT token ID
+ * 
+ * @param tokenId - NFT token ID
+ * @returns Swiss IBAN string
+ * 
+ * @example
+ * ```typescript
+ * getIBAN(12345); // Returns: "CH6883051000000012345"
+ * ```
+ */
+export function getIBAN(tokenId: number): string {
+  const tokenIdS = tokenId.toString();
+  let fullTokenId = tokenIdS;
+  while (fullTokenId.length < 12) {
+    fullTokenId = "0" + fullTokenId;
+  }
+  const checksum = getChecksumWithDynamicTokenIDLength(fullTokenId);
+  return `CH${checksum}${FIAT24_FIXED_IBAN}${fullTokenId}`;
+}
+
+/**
+ * Validate IBAN format
+ * 
+ * @param iban - IBAN string to validate
+ * @returns boolean indicating if IBAN format is valid
+ */
+export function validateIBANFormat(iban: string): boolean {
+  // Remove spaces and convert to uppercase
+  const cleanIBAN = iban.replace(/\s/g, '').toUpperCase();
+  
+  // Basic format check: 2 letters + 2 digits + up to 30 alphanumeric
+  const ibanRegex = /^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/;
+  if (!ibanRegex.test(cleanIBAN)) {
+    return false;
+  }
+  
+  // Checksum validation
+  const prepared = iso13616Prepare(cleanIBAN);
+  return iso7064Mod97_10(prepared) === 1;
+}
+
+/**
+ * Format IBAN for display (groups of 4)
+ */
+export function formatIBAN(iban: string): string {
+  const clean = iban.replace(/\s/g, '').toUpperCase();
+  return clean.match(/.{1,4}/g)?.join(' ') || iban;
+}
+
+/**
+ * Generate mock payment purposes from Fiat24 API
+ */
+export function generateMockPaymentPurposes(): PaymentPurpose[] {
+  return [
+    { value: 0, name: "Transfer to own account (other bank)" },
+    { value: 1, name: "Purchase of goods" },
+    { value: 2, name: "Payment for services (leisure, medical, travel, education, insurance, telecom, etc.)" },
+    { value: 3, name: "Family support and inheritance" },
+    { value: 4, name: "Charity donation" },
+    { value: 5, name: "Salary, Benefits, Dividends" },
+    { value: 6, name: "Real Estate and rent" },
+    { value: 7, name: "Credit / debit card coverage" },
+    { value: 8, name: "Investment, securities, trading" },
+    { value: 9, name: "Currency exchange" },
+    { value: 10, name: "Tax and governmental payments" },
+    { value: 11, name: "Loan, Collateral" },
+  ];
+}
+
+/**
+ * Generate mock country/cities data from Fiat24 API
+ */
+export function generateMockCountryCities(): Record<string, CountryWithCities> {
+  return {
+    ARG: {
+      name: "Argentina",
+      iso3: "ARG",
+      postalCodeRegEx: "^[A-Z]\\d{4}\\s[A-Z]{3}$",
+      cities: [
+        "Buenos Aires", "Córdoba", "Rosario", "Mendoza", "San Miguel de Tucumán",
+        "La Plata", "Mar del Plata", "Salta", "Santa Fe", "San Juan"
+      ]
+    },
+    CHE: {
+      name: "Switzerland",
+      iso3: "CHE",
+      postalCodeRegEx: "^\\d{4}$",
+      cities: [
+        "Zurich", "Geneva", "Basel", "Bern", "Lausanne", "Winterthur",
+        "Lucerne", "St. Gallen", "Lugano", "Biel/Bienne"
+      ]
+    },
+    DEU: {
+      name: "Germany",
+      iso3: "DEU",
+      postalCodeRegEx: "^\\d{5}$",
+      cities: [
+        "Berlin", "Hamburg", "Munich", "Cologne", "Frankfurt", "Stuttgart",
+        "Düsseldorf", "Leipzig", "Dortmund", "Essen"
+      ]
+    },
+    FRA: {
+      name: "France",
+      iso3: "FRA",
+      postalCodeRegEx: "^\\d{5}$",
+      cities: [
+        "Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes",
+        "Strasbourg", "Montpellier", "Bordeaux", "Lille"
+      ]
+    },
+    GBR: {
+      name: "United Kingdom",
+      iso3: "GBR",
+      postalCodeRegEx: "^[A-Z]{1,2}\\d[A-Z\\d]?\\s?\\d[A-Z]{2}$",
+      cities: [
+        "London", "Birmingham", "Manchester", "Glasgow", "Liverpool",
+        "Bristol", "Sheffield", "Leeds", "Edinburgh", "Leicester"
+      ]
+    },
+    ITA: {
+      name: "Italy",
+      iso3: "ITA",
+      postalCodeRegEx: "^\\d{5}$",
+      cities: [
+        "Rome", "Milan", "Naples", "Turin", "Palermo", "Genoa",
+        "Bologna", "Florence", "Bari", "Catania"
+      ]
+    },
+    ESP: {
+      name: "Spain",
+      iso3: "ESP",
+      postalCodeRegEx: "^\\d{5}$",
+      cities: [
+        "Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza",
+        "Málaga", "Murcia", "Palma", "Bilbao", "Alicante"
+      ]
+    },
+    NLD: {
+      name: "Netherlands",
+      iso3: "NLD",
+      postalCodeRegEx: "^\\d{4}\\s?[A-Z]{2}$",
+      cities: [
+        "Amsterdam", "Rotterdam", "The Hague", "Utrecht", "Eindhoven",
+        "Tilburg", "Groningen", "Almere", "Breda", "Nijmegen"
+      ]
+    },
+    AUT: {
+      name: "Austria",
+      iso3: "AUT",
+      postalCodeRegEx: "^\\d{4}$",
+      cities: [
+        "Vienna", "Graz", "Linz", "Salzburg", "Innsbruck",
+        "Klagenfurt", "Villach", "Wels", "St. Pölten", "Dornbirn"
+      ]
+    },
+    BEL: {
+      name: "Belgium",
+      iso3: "BEL",
+      postalCodeRegEx: "^\\d{4}$",
+      cities: [
+        "Brussels", "Antwerp", "Ghent", "Charleroi", "Liège",
+        "Bruges", "Namur", "Leuven", "Mons", "Mechelen"
+      ]
+    },
+    CHN: {
+      name: "China",
+      iso3: "CHN",
+      postalCodeRegEx: "^\\d{6}$",
+      cities: [
+        "Shanghai", "Beijing", "Shenzhen", "Guangzhou", "Chengdu",
+        "Hangzhou", "Wuhan", "Xi'an", "Suzhou", "Nanjing"
+      ]
+    },
+    JPN: {
+      name: "Japan",
+      iso3: "JPN",
+      postalCodeRegEx: "^\\d{3}-\\d{4}$",
+      cities: [
+        "Tokyo", "Yokohama", "Osaka", "Nagoya", "Sapporo",
+        "Fukuoka", "Kobe", "Kyoto", "Kawasaki", "Saitama"
+      ]
+    },
+    USA: {
+      name: "United States",
+      iso3: "USA",
+      postalCodeRegEx: "^\\d{5}(-\\d{4})?$",
+      cities: [
+        "New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
+        "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose"
+      ]
+    },
+    SGP: {
+      name: "Singapore",
+      iso3: "SGP",
+      postalCodeRegEx: "^\\d{6}$",
+      cities: ["Singapore"]
+    },
+    HKG: {
+      name: "Hong Kong",
+      iso3: "HKG",
+      postalCodeRegEx: "^$",
+      cities: ["Hong Kong", "Kowloon", "New Territories"]
+    }
+  };
+}
+
+/**
+ * Generate mock bank info from IBAN validation
+ */
+export function generateMockBankInfo(iban: string): Fiat24BankInfo | null {
+  const cleanIBAN = iban.replace(/\s/g, '').toUpperCase();
+  
+  // Mock bank data based on country code
+  const countryCode = cleanIBAN.substring(0, 2);
+  
+  const mockBanks: Record<string, Fiat24BankInfo> = {
+    'CH': {
+      name: "Zürcher Kantonalbank",
+      bankCode: "00700",
+      bankCodes: ["00700", "00730", "00754", "00755", "30700"],
+      bic: "ZKBKCHZZ",
+      country: "CH",
+      accountMask: "CH00\\0\\07\\0\\0************",
+      accountPlaceholder: "CH0000700000000000000",
+      accountNotice: ""
+    },
+    'DE': {
+      name: "Deutsche Bank",
+      bankCode: "10070000",
+      bankCodes: ["10070000", "10070024"],
+      bic: "DEUTDEFF",
+      country: "DE",
+      accountMask: "DE00\\1\\00\\7\\00\\00**********",
+      accountPlaceholder: "DE00100700000000000000",
+      accountNotice: ""
+    },
+    'FR': {
+      name: "BNP Paribas",
+      bankCode: "30004",
+      bankCodes: ["30004"],
+      bic: "BNPAFRPP",
+      country: "FR",
+      accountMask: "FR00\\3\\00\\04***********00",
+      accountPlaceholder: "FR0030004000000000000000",
+      accountNotice: ""
+    },
+    'GB': {
+      name: "Barclays Bank",
+      bankCode: "203053",
+      bankCodes: ["203053"],
+      bic: "BARCGB22",
+      country: "GB",
+      accountMask: "GB00\\BA\\RC\\20\\30\\53********",
+      accountPlaceholder: "GB00BARC20305300000000",
+      accountNotice: ""
+    },
+    'IT': {
+      name: "UniCredit",
+      bankCode: "02008",
+      bankCodes: ["02008"],
+      bic: "UNCRITMM",
+      country: "IT",
+      accountMask: "IT00\\X\\02\\00\\8*************",
+      accountPlaceholder: "IT00X0200800000000000000",
+      accountNotice: ""
+    }
+  };
+  
+  return mockBanks[countryCode] || null;
+}
+
+/**
+ * Generate mock bank payment history
+ */
+export function generateMockBankPayments(): BankPayment[] {
+  return [
+    {
+      id: 'bp-1',
+      account: 'CH68 8305 1000 0000 12345',
+      bankName: 'Zürcher Kantonalbank',
+      bic: 'ZKBKCHZZ',
+      amount: '5000.00',
+      currency: 'CHF',
+      purposeId: 1,
+      purposeName: 'Purchase of goods',
+      reference: 'Invoice #2024-001',
+      creditor: {
+        name: 'Acme Corporation',
+        street: 'Bahnhofstrasse 10',
+        city: 'Zurich',
+        zip: '8001',
+        country: 'CHE'
+      },
+      status: 'completed',
+      txHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+      createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000,
+      executedAt: Date.now() - 6 * 24 * 60 * 60 * 1000
+    },
+    {
+      id: 'bp-2',
+      account: 'DE89 3704 0044 0532 0130 00',
+      bankName: 'Deutsche Bank',
+      bic: 'DEUTDEFF',
+      amount: '2500.00',
+      currency: 'EUR',
+      purposeId: 2,
+      purposeName: 'Payment for services',
+      reference: 'Consulting Q4',
+      creditor: {
+        name: 'Tech Solutions GmbH',
+        street: 'Friedrichstraße 123',
+        city: 'Berlin',
+        zip: '10117',
+        country: 'DEU'
+      },
+      status: 'processing',
+      createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000
+    },
+    {
+      id: 'bp-3',
+      account: 'CH68 8305 1000 0000 67890',
+      bankName: 'Zürcher Kantonalbank',
+      bic: 'ZKBKCHZZ',
+      amount: '1000.00',
+      currency: 'CHF',
+      purposeId: 0,
+      purposeName: 'Transfer to own account',
+      creditor: 'BR',
+      status: 'pending',
+      createdAt: Date.now() - 1 * 24 * 60 * 60 * 1000
+    }
+  ];
+}
+
+/**
+ * Generate mock FX rates from Fiat24 API
+ */
+export function generateMockFXRates(): Record<string, Fiat24FXRate> {
+  return {
+    USDCHF: {
+      rate: 0.8823,
+      bid: 0.8740,
+      ask: 0.8906,
+      lastUpdateAt: Date.now()
+    },
+    EURCHF: {
+      rate: 0.9612,
+      bid: 0.9518,
+      ask: 0.9706,
+      lastUpdateAt: Date.now()
+    },
+    USDEUR: {
+      rate: 0.9179,
+      bid: 0.9088,
+      ask: 0.9270,
+      lastUpdateAt: Date.now()
+    },
+    GBPCHF: {
+      rate: 1.1245,
+      bid: 1.1133,
+      ask: 1.1357,
+      lastUpdateAt: Date.now()
+    },
+    GBPEUR: {
+      rate: 1.1699,
+      bid: 1.1582,
+      ask: 1.1816,
+      lastUpdateAt: Date.now()
+    },
+    CNHCHF: {
+      rate: 0.1203,
+      bid: 0.1191,
+      ask: 0.1215,
+      lastUpdateAt: Date.now()
+    },
+    USDGBP: {
+      rate: 0.7647,
+      bid: 0.7571,
+      ask: 0.7723,
+      lastUpdateAt: Date.now()
+    }
+  };
+}
+
+/**
+ * Generate mock eligible countries list
+ */
+export function generateMockEligibleCountries(): { 
+  eligibleDomiciles: string[]; 
+  eligibleDomicilesForCards: string[]; 
+  blacklistNationalities: string[] 
+} {
+  return {
+    eligibleDomiciles: [
+      "ALA", "AUS", "AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST",
+      "FIN", "FRA", "DEU", "GRC", "HUN", "ISL", "IRL", "ITA", "JPN", "LVA",
+      "LIE", "LTU", "LUX", "MLT", "NLD", "NOR", "POL", "PRT", "ROU", "SGP",
+      "SVK", "SVN", "ESP", "SWE", "CHE", "TWN"
+    ],
+    eligibleDomicilesForCards: [
+      "ALA", "AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST",
+      "FIN", "FRA", "DEU", "GRC", "HUN", "ISL", "IRL", "ITA", "LVA",
+      "LIE", "LTU", "LUX", "MLT", "NLD", "NOR", "POL", "PRT", "ROU",
+      "SVK", "SVN", "ESP", "SWE", "CHE"
+    ],
+    blacklistNationalities: [
+      "GUM", "IRN", "PRK", "MNP", "PRI", "RUS", "UMI", "USA"
+    ]
   };
 }

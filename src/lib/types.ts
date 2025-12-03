@@ -464,3 +464,200 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Fiat24 Bank Payment Types - 银行支付集成
+// ============================================================================
+
+/** Fiat24 bank information from IBAN validation */
+export interface Fiat24BankInfo {
+  /** Bank name */
+  name: string;
+  /** Primary bank code */
+  bankCode: string;
+  /** Array of all bank codes */
+  bankCodes: string[];
+  /** BIC/SWIFT code */
+  bic: string;
+  /** Country code (ISO-2) */
+  country: string;
+  /** Account mask for display */
+  accountMask: string;
+  /** Account placeholder for input */
+  accountPlaceholder: string;
+  /** Account notice/instructions */
+  accountNotice: string;
+}
+
+/** Fiat24 bank validation error */
+export interface Fiat24BankError {
+  /** Error message */
+  error: string;
+}
+
+/** Payment purpose option from Fiat24 API */
+export interface PaymentPurpose {
+  /** Purpose ID value */
+  value: number;
+  /** Purpose description */
+  name: string;
+}
+
+/** Payment purposes response from Fiat24 API */
+export interface PaymentPurposesResponse {
+  /** Array of payment purposes */
+  purposes: PaymentPurpose[];
+}
+
+/** Country with cities for recipient address */
+export interface CountryWithCities {
+  /** Country name */
+  name: string;
+  /** ISO-3 country code */
+  iso3: string;
+  /** Regular expression for postal code validation */
+  postalCodeRegEx: string;
+  /** Array of city names */
+  cities: string[];
+}
+
+/** Country/cities API response */
+export interface CountryCitiesResponse {
+  /** Last update timestamp */
+  lastUpdateAt: number;
+  /** Countries mapped by ISO-3 code */
+  countries: Record<string, CountryWithCities>;
+}
+
+/** Creditor/recipient information for bank payment */
+export interface BankPaymentCreditor {
+  /** Recipient name */
+  name: string;
+  /** Street address */
+  street: string;
+  /** City name (from /country-cities API) */
+  city: string;
+  /** Postal/ZIP code */
+  zip: string;
+  /** Country ISO-3 code */
+  country: string;
+}
+
+/** Bank payment request structure */
+export interface BankPaymentRequest {
+  /** IBAN account number */
+  account: string;
+  /** Bank name (from /banks API) */
+  bankName: string;
+  /** BIC/SWIFT code (from /banks API) */
+  bic: string;
+  /** Payment purpose ID (from /payment-purposes API) */
+  purpose: number;
+  /** Optional reference/memo */
+  reference?: string;
+  /** Creditor info - "BR" for same owner or full creditor object */
+  creditor: 'BR' | BankPaymentCreditor;
+}
+
+/** Bank payment verification response */
+export interface BankPaymentVerifyResponse {
+  /** Contact ID for smart contract call */
+  contactId: string;
+  /** Purpose ID for smart contract call */
+  purposeId: number;
+  /** Reference for smart contract call */
+  ref: string;
+}
+
+/** Fiat24 IBAN calculation result */
+export interface Fiat24IBAN {
+  /** Calculated IBAN */
+  iban: string;
+}
+
+/** Fiat24 eligible countries response */
+export interface Fiat24CountriesResponse {
+  /** Eligible domiciles for account registration */
+  eligibleDomiciles: string[];
+  /** Eligible domiciles for card issuance */
+  eligibleDomicilesForCards: string[];
+  /** Blacklisted nationalities */
+  blacklistNationalities: string[];
+}
+
+/** Fiat24 FX rate */
+export interface Fiat24FXRate {
+  /** Interbank rate */
+  rate: number;
+  /** Bid rate */
+  bid: number;
+  /** Ask rate */
+  ask: number;
+  /** Last update timestamp */
+  lastUpdateAt: number;
+}
+
+/** Fiat24 FX rates response */
+export interface Fiat24RatesResponse {
+  /** Rates mapped by currency pair (e.g., "USDCHF") */
+  [pair: string]: Fiat24FXRate;
+}
+
+/** Fiat24 KYC status */
+export type Fiat24KYCStatus = 
+  | 'NOT_INIT'
+  | 'CA_COMPLETED_PENDING_SCAN'
+  | 'PROCESSING_SCAN'
+  | 'PENDING_ACTION'
+  | 'COMPLETED'
+  | 'MANUAL_REVIEW'
+  | 'REJECTED'
+  | 'INTERNAL_ERROR';
+
+/** Fiat24 email availability check response */
+export interface Fiat24EmailAvailability {
+  /** HTTP status */
+  status: number;
+  /** Availability data */
+  data: {
+    /** Whether email is already registered */
+    email: boolean;
+    /** Whether email is registered for cards (optional) */
+    cardEmail?: boolean;
+  };
+}
+
+/** Bank payment status */
+export type BankPaymentStatus = 'draft' | 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
+
+/** Bank payment record */
+export interface BankPayment {
+  /** Unique identifier */
+  id: string;
+  /** IBAN account */
+  account: string;
+  /** Bank name */
+  bankName: string;
+  /** BIC code */
+  bic: string;
+  /** Payment amount */
+  amount: string;
+  /** Currency (EUR or CHF) */
+  currency: 'EUR' | 'CHF';
+  /** Payment purpose ID */
+  purposeId: number;
+  /** Payment purpose name */
+  purposeName: string;
+  /** Optional reference */
+  reference?: string;
+  /** Creditor information */
+  creditor: 'BR' | BankPaymentCreditor;
+  /** Payment status */
+  status: BankPaymentStatus;
+  /** Transaction hash (after smart contract call) */
+  txHash?: string;
+  /** Created timestamp */
+  createdAt: number;
+  /** Executed timestamp */
+  executedAt?: number;
+}

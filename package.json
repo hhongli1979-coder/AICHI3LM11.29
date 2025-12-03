@@ -14,26 +14,46 @@
     "kill": "lsof -ti:5000 | xargs kill -9 2>/dev/null || true"
   },
   "engines": {
-    "node": "22"
+    "node": ">=18"
   },
+  "type": "module",
   "main": "index.js",
   "dependencies": {
+    "@eslint/js": "^9.39.1",
     "@github/spark": "^0.44.0",
     "@phosphor-icons/react": "^2.1.10",
+    "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@radix-ui/react-avatar": "^1.1.11",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-progress": "^1.1.8",
+    "@radix-ui/react-radio-group": "^1.3.8",
+    "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slider": "^1.3.6",
+    "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.15",
+    "@radix-ui/react-tooltip": "^1.2.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
     "firebase-admin": "^12.6.0",
     "firebase-functions": "^6.4.0",
-    "tailwind-merge": "^3.4.0"
+    "globals": "^16.5.0",
+    "lucide-react": "^0.555.0",
+    "react-error-boundary": "^6.0.0",
+    "tailwind-merge": "^3.4.0",
+    "tw-animate-css": "^1.4.0",
+    "typescript-eslint": "^8.48.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.17",
