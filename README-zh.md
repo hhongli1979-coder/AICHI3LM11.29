@@ -280,6 +280,15 @@ npm install --legacy-peer-deps
 
 ---
 
+## 二次开发
+
+如果您需要对 OmniCore 钱包进行二次开发（二开），请参阅我们的详细开发指南：
+
+- [二次开发指南（中文版）](./DEVELOPMENT-GUIDE-zh.md) - 完整的定制与扩展开发文档
+- [Secondary Development Guide](./DEVELOPMENT-GUIDE.md) - English version
+
+---
+
 ## 贡献
 
 欢迎提交 Issues 和 Pull Requests。详细贡献指南请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。

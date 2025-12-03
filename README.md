@@ -158,6 +158,8 @@ src/
 - [中文文档](./README-zh.md) - Chinese documentation
 - [PRD.md](./PRD.md) - Product Requirements Document
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution Guidelines
+- [DEVELOPMENT-GUIDE.md](./DEVELOPMENT-GUIDE.md) - Secondary Development Guide (二开指南)
+- [DEVELOPMENT-GUIDE-zh.md](./DEVELOPMENT-GUIDE-zh.md) - 二次开发指南（中文版）
 
 ---
 
