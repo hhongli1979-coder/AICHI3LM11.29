@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Car, ShoppingCart, HardDrives, CurrencyBtc, Users } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Car, ShoppingCart, HardDrives, CurrencyBtc, Users, Microphone, Globe, Stack, Brain, Path, SmileyWink, Flow, Terminal, Spider, Fire } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -15,15 +15,24 @@ import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
 import { VoiceAssistant } from '@/components/ai-assistant/VoiceAssistant';
 import { SmartVoiceAssistant } from '@/components/ai-assistant/SmartVoiceAssistant';
+import { VoicePaymentAssistant, SmartPaymentSystem } from '@/components/ai-assistant/VoicePaymentAssistant';
 import { CryptoExchange, FiatExchange } from '@/components/payment/CryptoExchange';
 import { ThirdPartyPayment } from '@/components/payment/ThirdPartyPayment';
+import { GlobalPaymentGateways, PaymentAnalytics, QuickCollect } from '@/components/payment/GlobalPaymentGateways';
+import { SmartCheckout, AIFraudPrevention, ConversionOptimizer, SmartPaymentConfig } from '@/components/payment/SmartCheckout';
+import { AIOptimizedCheckout, PayJavaIntegration } from '@/components/payment/AIOptimizedCheckout';
+import { FacePayment, MultiModalPayment } from '@/components/payment/FacePayment';
 import { DriverApp } from '@/components/taxi/DriverApp';
 import { PassengerApp } from '@/components/taxi/PassengerApp';
 import { ProxyPurchase } from '@/components/taxi/ProxyPurchase';
 import { DefiLlamaDashboard } from '@/components/admin/DefiLlamaDashboard';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { BinanceExchange, P2PTrading, FuturesTrading } from '@/components/exchange/BinanceExchange';
+import { OptionsTrading, GridTrading, CrossChainBridge, QuantStrategy } from '@/components/exchange/AdvancedTrading';
 import { JeePayDashboard } from '@/components/payment/JeePayDashboard';
+import { AIWorkflowAutomation } from '@/components/automation/AIWorkflowEngine';
+import { AIToolkit } from '@/components/automation/AIToolkit';
+import { NLPToolkit } from '@/components/automation/NLPToolkit';
 import {
   generateMockWallets,
   generateMockTransactions,
@@ -166,13 +175,41 @@ function App() {
               <CreditCard size={18} weight="duotone" />
               <span className="hidden sm:inline">JeePay</span>
             </TabsTrigger>
+            <TabsTrigger value="voice-pay" className="gap-2">
+              <Microphone size={18} weight="duotone" />
+              <span className="hidden sm:inline">语音收款</span>
+            </TabsTrigger>
+            <TabsTrigger value="global-pay" className="gap-2">
+              <Globe size={18} weight="duotone" />
+              <span className="hidden sm:inline">全球支付</span>
+            </TabsTrigger>
+            <TabsTrigger value="advanced-trading" className="gap-2">
+              <Stack size={18} weight="duotone" />
+              <span className="hidden sm:inline">高级交易</span>
+            </TabsTrigger>
+            <TabsTrigger value="smart-checkout" className="gap-2">
+              <Brain size={18} weight="duotone" />
+              <span className="hidden sm:inline">智能结账</span>
+            </TabsTrigger>
+            <TabsTrigger value="face-pay" className="gap-2">
+              <SmileyWink size={18} weight="duotone" />
+              <span className="hidden sm:inline">刷脸支付</span>
+            </TabsTrigger>
+            <TabsTrigger value="workflow" className="gap-2">
+              <Flow size={18} weight="duotone" />
+              <span className="hidden sm:inline">AI工作流</span>
+            </TabsTrigger>
+            <TabsTrigger value="ai-tools" className="gap-2">
+              <Terminal size={18} weight="duotone" />
+              <span className="hidden sm:inline">AI工具</span>
+            </TabsTrigger>
             <TabsTrigger value="admin" className="gap-2">
               <Gear size={18} weight="duotone" />
               <span className="hidden sm:inline">后台管理</span>
             </TabsTrigger>
             <TabsTrigger value="ai-assistant" className="gap-2">
-              <Robot size={18} weight="duotone" />
-              <span className="hidden sm:inline">AI助手</span>
+              <Brain size={18} weight="duotone" />
+              <span className="hidden sm:inline">大智能</span>
             </TabsTrigger>
             <TabsTrigger value="transactions" className="gap-2">
               <ArrowsLeftRight size={18} weight="duotone" />
@@ -326,6 +363,86 @@ function App() {
             <JeePayDashboard />
           </TabsContent>
           
+          {/* Voice Payment Assistant - 语音收款 */}
+          <TabsContent value="voice-pay" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">🎤 语音智能收款</h2>
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <VoicePaymentAssistant />
+              <div className="space-y-6">
+                <SmartPaymentSystem />
+                <QuickCollect />
+              </div>
+            </div>
+          </TabsContent>
+          
+          {/* Global Payment Gateways - 全球支付 */}
+          <TabsContent value="global-pay" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">🌍 全球支付网关</h2>
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <GlobalPaymentGateways />
+              <PaymentAnalytics />
+            </div>
+          </TabsContent>
+          
+          {/* Advanced Trading - 高级交易 */}
+          <TabsContent value="advanced-trading" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">📈 高级交易</h2>
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <OptionsTrading />
+              <GridTrading />
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <CrossChainBridge />
+              <QuantStrategy />
+            </div>
+          </TabsContent>
+          
+          {/* Smart Checkout - Stripe级AI智能结账 */}
+          <TabsContent value="smart-checkout" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">🧠 Stripe级 AI 智能结账</h2>
+            </div>
+            <AIOptimizedCheckout />
+            <div className="grid gap-6 lg:grid-cols-2 mt-6">
+              <AIFraudPrevention />
+              <ConversionOptimizer />
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2 mt-6">
+              <PayJavaIntegration />
+              <SmartPaymentConfig />
+            </div>
+          </TabsContent>
+          
+          {/* Face Payment - 刷脸支付 */}
+          <TabsContent value="face-pay" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">😊 刷脸支付</h2>
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <FacePayment />
+              <div className="space-y-6">
+                <MultiModalPayment />
+                <SmartCheckout />
+              </div>
+            </div>
+          </TabsContent>
+          
+          {/* AI Workflow - AI工作流自动化 */}
+          <TabsContent value="workflow" className="space-y-6">
+            <AIWorkflowAutomation />
+          </TabsContent>
+          
+          {/* AI Tools - AI开发工具 */}
+          <TabsContent value="ai-tools" className="space-y-6">
+            <AIToolkit />
+          </TabsContent>
+          
           {/* Admin Dashboard */}
           <TabsContent value="admin" className="space-y-6">
             <AdminDashboard />
@@ -336,11 +453,15 @@ function App() {
           </TabsContent>
           
           <TabsContent value="ai-assistant" className="space-y-6">
-            <div className="grid gap-6 lg:grid-cols-2">
-              <SmartVoiceAssistant />
-              <AIAssistant />
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-bold">🧠 大智能系统</h2>
             </div>
-            <div className="mt-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <VoicePaymentAssistant />
+              <SmartVoiceAssistant />
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2 mt-6">
+              <AIAssistant />
               <VoiceAssistant />
             </div>
           </TabsContent>
@@ -357,8 +478,9 @@ function App() {
       
       <footer className="border-t mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          <p>OmniCore 智能支付平台 - 加密支付 · 出租车 · 代购 · AI智能体 · DefiLlama · 币安交易 · JeePay</p>
-          <p className="mt-2">多链支持 • 语音助手 • 加密收款 • 全球代购 • DeFi后台管理 • 现货/合约/C2C交易 • 聚合支付</p>
+          <p>OmniCore 大智能支付平台 - Stripe级AI结账 · 刷脸支付 · 语音收款 · AI工作流 · MCP服务器 · 加密支付 · 出租车 · 代购</p>
+          <p className="mt-2">AI Shell · GPT Crawler · 400+MCP工具 · 期权/网格/量化交易 · Stripe/PayPal/Apple Pay · 全球50+国家支持</p>
+          <p className="mt-2">语音命令收款 • 多链跨链桥 • 期权/网格/量化交易 • Stripe/PayPal/Apple Pay • 全球50+国家支持</p>
         </div>
       </footer>
 

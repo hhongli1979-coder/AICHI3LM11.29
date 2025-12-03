@@ -29,6 +29,45 @@ import {
 } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 
+// Add SpeechRecognition type for TypeScript
+interface ISpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: Event) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  [index: number]: SpeechRecognitionResult;
+  length: number;
+}
+
+interface SpeechRecognitionResult {
+  [index: number]: SpeechRecognitionAlternative;
+  isFinal: boolean;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition: new () => ISpeechRecognition;
+    webkitSpeechRecognition: new () => ISpeechRecognition;
+  }
+}
+
 // 语音命令类型
 interface VoiceCommand {
   id: string;
@@ -258,7 +297,7 @@ export function SmartVoiceAssistant() {
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<InstanceType<typeof window.SpeechRecognition> | null>(null);
   const synthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   // 滚动到最新消息
