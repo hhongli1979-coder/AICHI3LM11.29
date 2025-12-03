@@ -7,7 +7,27 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { 
+  Wallet, 
+  Transaction, 
+  DeFiPosition, 
+  PaymentRequest, 
+  DCAStrategy, 
+  OmniTokenStats, 
+  NotificationItem, 
+  TokenBalance, 
+  AIMessage, 
+  AIMemoryItem, 
+  AICapability, 
+  AIAssistantState, 
+  AIModelConfig, 
+  AIModelSettings, 
+  CustomEndpoint,
+  Fiat24Card,
+  Fiat24Transaction,
+  Fiat24TransactionsResponse,
+  Fiat24DeviceToken,
+} from './types';
 
 // ============================================================================
 // Network Configuration
@@ -784,4 +804,182 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
   };
+}
+
+// ============================================================================
+// Fiat24 Card Mock Data - 借记卡模拟数据
+// ============================================================================
+
+/**
+ * Generate mock Fiat24 device tokens
+ * 
+ * @returns Array of mock Fiat24DeviceToken objects
+ */
+export function generateMockFiat24DeviceTokens(): Fiat24DeviceToken[] {
+  return [
+    {
+      id: 'token-1',
+      deviceType: 'apple_pay',
+      deviceName: 'iPhone 15 Pro',
+      isActive: true,
+      createdAt: Date.now() - 60 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'token-2',
+      deviceType: 'google_pay',
+      deviceName: 'Pixel 8',
+      isActive: true,
+      createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Generate mock Fiat24 card data
+ * 
+ * @returns Mock Fiat24Card object
+ */
+export function generateMockFiat24Card(): Fiat24Card {
+  return {
+    tokenId: 903,
+    externalId: 'CARD-903-EUR',
+    cardHolder: 'ALICE CHEN',
+    status: 'active',
+    defaultCurrency: 'EUR',
+    expiryDate: '12/28',
+    lastFourDigits: '4321',
+    activeTokens: generateMockFiat24DeviceTokens(),
+    createdAt: Date.now() - 180 * 24 * 60 * 60 * 1000,
+  };
+}
+
+/**
+ * Generate mock Fiat24 transactions
+ * 
+ * @returns Array of mock Fiat24Transaction objects
+ */
+export function generateMockFiat24Transactions(): Fiat24Transaction[] {
+  return [
+    {
+      title: 'COOP-4899ZURICHBAHNHOF',
+      subtitle: 'Reserved - ZURICH1SIZH',
+      amount: -1.89,
+      timestamp: Date.now() - 2 * 24 * 60 * 60 * 1000,
+      image: 'https://www.fiat24.com/img/mastercard.png',
+      txId: '0x815da6bf2b2767c61e11f2378e31d2e92c397b860e18c80b0ed7fb05ed5897a2',
+      from: 9105,
+      to: 903,
+      blockHash: '0x6b7a54812f2d344390c29c001f9ee81cf74cb594d95551ef94f64f51b1f0d810',
+      blockNumber: '238639288',
+      type: 'CRD',
+    },
+    {
+      title: 'MIG migrolino ZH Tiefenbr',
+      subtitle: 'Zurich',
+      amount: -1.02,
+      timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000,
+      image: 'https://www.fiat24.com/img/mastercard.png',
+      txId: '0x5a9b673377f17a38ecc404ce16d18ba33cae18b253037be5f0f7f9227d4ce8fa',
+      from: 9105,
+      to: 903,
+      blockHash: '0x6b7a54812f2d344390c29c001f9ee81cf74cb594d95551ef94f64f51b1f0d810',
+      blockNumber: '238639288',
+      type: 'CRD',
+    },
+    {
+      title: '@nicosaphirstein',
+      subtitle: '#903 - P2P Transfer',
+      amount: 500.00,
+      timestamp: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      image: 'https://www.fiat24.com/api/avatar/903',
+      txId: '0xded890834ca450dbf64e8eaad51cbc99edb027425980695e0e928f794a41e9cb',
+      from: 9105,
+      to: 903,
+      blockHash: '0x6b7a54812f2d344390c29c001f9ee81cf74cb594d95551ef94f64f51b1f0d810',
+      blockNumber: '238639288',
+      type: 'P2P',
+    },
+    {
+      title: 'Confiserie Sprungli AG V2',
+      subtitle: 'Zurich 1',
+      amount: -15.93,
+      timestamp: Date.now() - 7 * 24 * 60 * 60 * 1000,
+      image: 'https://www.fiat24.com/img/mastercard.png',
+      txId: '0x135f26c4276c4b08789e4151f19dc669c7568933d8b33587e351d7e376ad8edf',
+      from: 9105,
+      to: 903,
+      blockHash: '0x6b7a54812f2d344390c29c001f9ee81cf74cb594d95551ef94f64f51b1f0d810',
+      blockNumber: '238639288',
+      type: 'CRD',
+    },
+    {
+      title: 'Crypto Top-up',
+      subtitle: 'ETH to EUR',
+      amount: 1000.00,
+      timestamp: Date.now() - 10 * 24 * 60 * 60 * 1000,
+      image: 'https://www.fiat24.com/img/eth-logo.png',
+      txId: '0x1a5fcc4fb667793c70ff2fa563c98bf148484164b08fc58008f24ad096edf2d7',
+      from: 9105,
+      to: 903,
+      blockHash: '0x6b7a54812f2d344390c29c001f9ee81cf74cb594d95551ef94f64f51b1f0d810',
+      blockNumber: '238639288',
+      type: 'CTU',
+    },
+    {
+      title: 'Currency Exchange',
+      subtitle: 'USD to EUR',
+      amount: 250.00,
+      timestamp: Date.now() - 12 * 24 * 60 * 60 * 1000,
+      image: 'https://www.fiat24.com/img/exchange.png',
+      txId: '0x2b6dcc5fb778894d81ee3ga674d99cf259595274b19fd69119f35be197fef3e8',
+      from: 903,
+      to: 903,
+      blockHash: '0x7c8b65923g3e455491d30d112g0ff92de85dc695e06662fg05g65c52c2g1e921',
+      blockNumber: '238639290',
+      type: 'FRX',
+    },
+  ];
+}
+
+/**
+ * Generate mock Fiat24 transactions response
+ * 
+ * @param currency - Currency to filter by
+ * @returns Mock Fiat24TransactionsResponse object
+ */
+export function generateMockFiat24TransactionsResponse(currency: 'EUR' | 'USD' | 'CHF' | 'CNH' | 'ALL' = 'EUR'): Fiat24TransactionsResponse {
+  const transactions = generateMockFiat24Transactions();
+  const totalDebit = transactions
+    .filter(tx => tx.amount < 0)
+    .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+  const totalCredit = transactions
+    .filter(tx => tx.amount > 0)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+
+  return {
+    tokenid: 903,
+    currency,
+    count: transactions.length,
+    totalDebit,
+    totalCredit,
+    transactions,
+  };
+}
+
+/**
+ * Format Fiat24 transaction type to human-readable text
+ * 
+ * @param type - Transaction type code
+ * @returns Human-readable transaction type
+ */
+export function formatFiat24TransactionType(type?: string): string {
+  switch (type) {
+    case 'P2P': return 'P2P Transfer';
+    case 'FRX': return 'Currency Exchange';
+    case 'CTU': return 'Crypto Top-up';
+    case 'CRD': return 'Card Payment';
+    case 'CDP': return 'Cash Deposit';
+    case 'CWD': return 'Cash Withdrawal';
+    default: return 'Transaction';
+  }
 }

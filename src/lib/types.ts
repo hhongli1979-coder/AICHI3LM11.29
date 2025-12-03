@@ -464,3 +464,137 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Fiat24 Card Types - 借记卡集成
+// ============================================================================
+
+/** Supported Fiat24 currencies */
+export type Fiat24Currency = 'EUR' | 'USD' | 'CHF' | 'CNH' | 'ALL';
+
+/** Fiat24 card status */
+export type Fiat24CardStatus = 'active' | 'blocked' | 'expired' | 'pending';
+
+/** Fiat24 transaction type */
+export type Fiat24TransactionType = 'P2P' | 'FRX' | 'CTU' | 'CRD' | 'CDP' | 'CWD';
+
+/** Fiat24 transaction direction */
+export type Fiat24TransactionDirection = 'IN' | 'OUT' | 'ALL';
+
+/** Digital wallet token (Apple Pay, Google Pay, Samsung Pay) */
+export interface Fiat24DeviceToken {
+  /** Token ID */
+  id: string;
+  /** Device type */
+  deviceType: 'apple_pay' | 'google_pay' | 'samsung_pay';
+  /** Device name */
+  deviceName: string;
+  /** Whether token is active */
+  isActive: boolean;
+  /** Unix timestamp of creation */
+  createdAt: number;
+}
+
+/** Fiat24 debit card entity */
+export interface Fiat24Card {
+  /** Token ID (NFT account) */
+  tokenId: number;
+  /** External card ID */
+  externalId: string;
+  /** Card holder name */
+  cardHolder: string;
+  /** Card status */
+  status: Fiat24CardStatus;
+  /** Default currency */
+  defaultCurrency: Fiat24Currency;
+  /** Card expiry date (MM/YY format) */
+  expiryDate: string;
+  /** Last 4 digits of card number */
+  lastFourDigits: string;
+  /** Associated digital wallet tokens */
+  activeTokens: Fiat24DeviceToken[];
+  /** Unix timestamp of creation */
+  createdAt: number;
+}
+
+/** Fiat24 transaction entity */
+export interface Fiat24Transaction {
+  /** Transaction title (merchant name or recipient) */
+  title: string;
+  /** Transaction subtitle (location or description) */
+  subtitle: string;
+  /** Transaction amount (negative for debits) */
+  amount: number;
+  /** Unix timestamp in milliseconds */
+  timestamp: number;
+  /** Image URL (merchant logo or avatar) */
+  image: string;
+  /** Arbitrum transaction hash */
+  txId: string;
+  /** Sender token ID */
+  from: number;
+  /** Recipient token ID */
+  to: number;
+  /** Block hash */
+  blockHash: string;
+  /** Block number */
+  blockNumber: string;
+  /** Transaction type */
+  type?: Fiat24TransactionType;
+}
+
+/** Fiat24 transactions response */
+export interface Fiat24TransactionsResponse {
+  /** Token ID */
+  tokenid: number;
+  /** Currency */
+  currency: Fiat24Currency;
+  /** Transaction count */
+  count: number;
+  /** Total debit amount */
+  totalDebit: number;
+  /** Total credit amount */
+  totalCredit: number;
+  /** Transaction list */
+  transactions: Fiat24Transaction[];
+}
+
+/** QR payment verification result */
+export interface Fiat24QRPayment {
+  /** Payment type */
+  type: 'QRCH' | 'QRSEPA';
+  /** Recipient account (IBAN) */
+  account: string;
+  /** BIC code (for SEPA) */
+  bic?: string;
+  /** Payment amount */
+  amount: string | number;
+  /** Currency */
+  currency: string;
+  /** Payment reference */
+  reference: string;
+  /** Creditor information */
+  creditor: {
+    name: string;
+    street: string;
+    city: string;
+    zip: string;
+    country: string;
+  };
+  /** Ultimate debtor information (for Swiss QR) */
+  ultimateDebtor?: {
+    name: string;
+    street: string;
+    city: string;
+    zip: string;
+    country: string;
+  };
+  /** Smart contract parameters */
+  clientPayoutRefParams: {
+    currency: string;
+    amount: number;
+    contactId: string;
+    purposeId: number;
+    ref: string;
+  };
+}
