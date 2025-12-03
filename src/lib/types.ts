@@ -405,7 +405,7 @@ export interface AICapability {
 // ============================================================================
 
 /** Supported AI model providers */
-export type AIModelProvider = 'openai' | 'anthropic' | 'ollama' | 'custom' | 'local';
+export type AIModelProvider = 'openai' | 'anthropic' | 'ollama' | 'meta' | 'custom' | 'local';
 
 /** AI model configuration */
 export interface AIModelConfig {
@@ -421,6 +421,8 @@ export interface AIModelConfig {
   apiEndpoint: string;
   /** API key (if required) */
   apiKey?: string;
+  /** Download URL for model weights (if applicable) */
+  downloadUrl?: string;
   /** Whether model is enabled */
   enabled: boolean;
   /** Whether this is the default model */

@@ -750,6 +750,21 @@ export function generateMockAIModelConfigs(): AIModelConfig[] {
       createdAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
       updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
     },
+    {
+      id: 'model-4',
+      name: 'Meta Llama 4',
+      provider: 'meta',
+      modelName: 'llama4',
+      apiEndpoint: 'http://localhost:11434/api/generate',
+      downloadUrl: 'https://llama4.llamameta.net/',
+      enabled: false,
+      isDefault: false,
+      maxTokens: 32768,
+      temperature: 0.7,
+      systemPrompt: '你是基于 Meta Llama 4 的高级 AI 助手，专注于加密货币和 DeFi 领域。',
+      createdAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now(),
+    },
   ];
 }
 

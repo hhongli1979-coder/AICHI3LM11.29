@@ -54,6 +54,8 @@ function getProviderIcon(provider: AIModelProvider) {
       return <Globe size={18} weight="duotone" className="text-blue-500" />;
     case 'anthropic':
       return <Lightning size={18} weight="duotone" className="text-amber-500" />;
+    case 'meta':
+      return <Robot size={18} weight="duotone" className="text-indigo-500" />;
     case 'custom':
       return <Code size={18} weight="duotone" className="text-pink-500" />;
     default:
@@ -71,6 +73,8 @@ function getProviderLabel(provider: AIModelProvider): string {
       return 'OpenAI';
     case 'anthropic':
       return 'Anthropic';
+    case 'meta':
+      return 'Meta Llama';
     case 'custom':
       return '自定义';
     default:
@@ -88,6 +92,8 @@ function getProviderBadgeColor(provider: AIModelProvider): string {
       return 'bg-blue-100 text-blue-700 border-blue-300';
     case 'anthropic':
       return 'bg-amber-100 text-amber-700 border-amber-300';
+    case 'meta':
+      return 'bg-indigo-100 text-indigo-700 border-indigo-300';
     case 'custom':
       return 'bg-pink-100 text-pink-700 border-pink-300';
     default:
@@ -284,6 +290,12 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
                       <div className="flex items-center gap-2">
                         <Lightning size={16} />
                         Anthropic API
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="meta">
+                      <div className="flex items-center gap-2">
+                        <Robot size={16} />
+                        Meta Llama
                       </div>
                     </SelectItem>
                     <SelectItem value="custom">
