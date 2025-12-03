@@ -137,6 +137,7 @@ src/
 - [中文文档](./README-zh.md) - Chinese documentation
 - [PRD.md](./PRD.md) - Product Requirements Document
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution Guidelines
+- [GIT_SYNC_GUIDE.md](./GIT_SYNC_GUIDE.md) - Git sync troubleshooting guide (中英双语)
 
 ---
 

@@ -233,6 +233,22 @@ import { Wallet, ChartLine, ShieldCheck } from '@phosphor-icons/react';
 
 ---
 
+## 代码同步
+
+如果遇到代码无法从远程仓库拉取到本地的问题，请参阅 [Git 同步指南](./GIT_SYNC_GUIDE.md)。
+
+**快速同步命令：**
+
+```bash
+# Windows - 拉取代码
+pull.bat
+
+# Windows - 推送代码
+push.bat
+```
+
+---
+
 ## 常见问题
 
 ### 端口被占用
