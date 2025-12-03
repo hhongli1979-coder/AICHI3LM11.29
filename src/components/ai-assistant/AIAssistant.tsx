@@ -250,7 +250,9 @@ export function AIAssistant() {
         const models = await client.listModels();
         setAvailableModels(models);
         if (models.length > 0 && !models.find(m => m.name === selectedModel)) {
-          setSelectedModel(models[0].name);
+          const newModel = models[0].name;
+          setSelectedModel(newModel);
+          toast.info(`模型 "${selectedModel}" 不可用，已切换到 "${newModel}"`);
         }
         toast.success(`已连接到 Ollama 服务器 (v${status.version})`);
       }
@@ -276,7 +278,7 @@ export function AIAssistant() {
   // Convert conversation to Ollama format
   const convertToOllamaMessages = (messages: AIMessage[]): OllamaChatMessage[] => {
     return messages
-      .filter(msg => msg.role !== 'system')
+      .filter(msg => msg.role === 'user' || msg.role === 'assistant')
       .map(msg => ({
         role: msg.role as 'user' | 'assistant',
         content: msg.content,

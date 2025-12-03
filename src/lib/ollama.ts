@@ -159,10 +159,15 @@ export class OllamaClient {
    */
   async checkConnection(): Promise<OllamaConnectionStatus> {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
       const response = await fetch(`${this.baseUrl}/api/version`, {
         method: 'GET',
-        signal: AbortSignal.timeout(5000),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
@@ -189,10 +194,15 @@ export class OllamaClient {
    */
   async listModels(): Promise<OllamaModel[]> {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
       const response = await fetch(`${this.baseUrl}/api/tags`, {
         method: 'GET',
-        signal: AbortSignal.timeout(10000),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`Failed to fetch models: ${response.status}`);
@@ -222,14 +232,19 @@ export class OllamaClient {
     };
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for generation
+
       const response = await fetch(`${this.baseUrl}/api/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(request),
-        signal: AbortSignal.timeout(60000), // 60 second timeout for generation
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`Ollama API error: ${response.status}`);
@@ -247,11 +262,13 @@ export class OllamaClient {
    * Chat with Ollama using the chat API (recommended for conversation)
    */
   async chat(messages: OllamaChatMessage[]): Promise<string> {
-    // Prepend system message if not already present
-    const allMessages: OllamaChatMessage[] = [
-      { role: 'system', content: this.systemPrompt },
-      ...messages,
-    ];
+    // Check if system message already exists
+    const hasSystemMessage = messages.some(msg => msg.role === 'system');
+    
+    // Prepend system message only if not already present
+    const allMessages: OllamaChatMessage[] = hasSystemMessage
+      ? messages
+      : [{ role: 'system', content: this.systemPrompt }, ...messages];
 
     const request: OllamaChatRequest = {
       model: this.model,
@@ -264,14 +281,19 @@ export class OllamaClient {
     };
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+
       const response = await fetch(`${this.baseUrl}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(request),
-        signal: AbortSignal.timeout(60000),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`Ollama chat API error: ${response.status}`);
