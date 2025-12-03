@@ -38,8 +38,8 @@ const DESIGN_SPECS: DesignSpec[] = [
 ];
 
 const DESIGN_RULES_REQUIRED: DesignRule[] = [
-  { text: '为尺寸为1536 x 969 像素的PNG文件', allowed: true },
-  { text: '有借记卡标记', allowed: true },
+  { text: '文件尺寸为1536 x 969 像素的PNG格式', allowed: true },
+  { text: '包含借记卡标记', allowed: true },
   { text: '设计元素必须位于虚线区域内', allowed: true },
 ];
 
@@ -61,7 +61,8 @@ export function CardDesignTemplate() {
     toast.success('模板下载已开始', {
       description: 'Fiat24_CoBrand_MasterCard_Template.ai (630KB)'
     });
-    // In a real implementation, this would trigger a file download
+    // TODO: In production, implement file download via API endpoint or static file URL
+    // Example: window.location.href = '/api/download/card-template';
   };
 
   const handleDownloadLicenseAgreement = () => {
