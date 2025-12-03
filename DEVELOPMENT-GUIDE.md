@@ -90,8 +90,8 @@ OmniCore Wallet/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/omnicore-wallet.git
-cd omnicore-wallet
+git clone https://github.com/hhongli1979-coder/AICHI3LM11.29.git
+cd AICHI3LM11.29
 
 # 2. Install dependencies
 npm install --legacy-peer-deps
@@ -608,7 +608,7 @@ docker run -p 8080:80 omnicore-wallet
 
 ### Getting Help
 
-- Check [GitHub Issues](https://github.com/your-org/omnicore-wallet/issues)
+- Check [GitHub Issues](https://github.com/hhongli1979-coder/AICHI3LM11.29/issues)
 - Review [CONTRIBUTING.md](./CONTRIBUTING.md)
 - Contact the maintainers
 
