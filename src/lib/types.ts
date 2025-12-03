@@ -464,3 +464,173 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Multi-Agent System Types - 多智能体系统
+// ============================================================================
+
+/** Agent specialization types */
+export type AgentSpecialization = 
+  | 'data_analyst'      // 数据分析
+  | 'web_searcher'      // 网络搜索
+  | 'code_generator'    // 代码生成
+  | 'risk_assessor'     // 风险评估
+  | 'defi_optimizer'    // DeFi优化
+  | 'transaction_monitor' // 交易监控
+  | 'knowledge_manager' // 知识管理
+  | 'coordinator';      // 协调者
+
+/** Agent status */
+export type AgentStatus = 'idle' | 'working' | 'learning' | 'evolving' | 'error' | 'offline';
+
+/** Evolution stage for agent self-improvement */
+export type EvolutionStage = 'basic' | 'intermediate' | 'advanced' | 'expert' | 'master';
+
+/** Individual AI agent in the multi-agent system */
+export interface AIAgent {
+  /** Unique identifier */
+  id: string;
+  /** Agent display name */
+  name: string;
+  /** Agent specialization type */
+  specialization: AgentSpecialization;
+  /** Current status */
+  status: AgentStatus;
+  /** Current evolution stage */
+  evolutionStage: EvolutionStage;
+  /** Experience points (for evolution tracking) */
+  experiencePoints: number;
+  /** Experience points needed for next evolution */
+  experienceToNextStage: number;
+  /** Number of tasks completed */
+  tasksCompleted: number;
+  /** Agent success rate (0-100) */
+  successRate: number;
+  /** Agent capabilities */
+  capabilities: string[];
+  /** Unix timestamp of creation */
+  createdAt: number;
+  /** Unix timestamp of last activity */
+  lastActiveAt: number;
+  /** Whether agent is enabled */
+  enabled: boolean;
+  /** Agent's learned skills */
+  learnedSkills: AgentSkill[];
+}
+
+/** Skill learned by an agent */
+export interface AgentSkill {
+  /** Unique identifier */
+  id: string;
+  /** Skill name */
+  name: string;
+  /** Skill description */
+  description: string;
+  /** Proficiency level (0-100) */
+  proficiency: number;
+  /** Number of times this skill was used */
+  usageCount: number;
+  /** Unix timestamp when learned */
+  learnedAt: number;
+}
+
+/** Web search result from agent web search capability */
+export interface WebSearchResult {
+  /** Unique identifier */
+  id: string;
+  /** Search query */
+  query: string;
+  /** Result title */
+  title: string;
+  /** Result URL */
+  url: string;
+  /** Result snippet/summary */
+  snippet: string;
+  /** Relevance score (0-100) */
+  relevanceScore: number;
+  /** Source type */
+  sourceType: 'news' | 'documentation' | 'forum' | 'blog' | 'official';
+  /** Unix timestamp of search */
+  searchedAt: number;
+}
+
+/** Knowledge entry in the agent's knowledge base */
+export interface KnowledgeEntry {
+  /** Unique identifier */
+  id: string;
+  /** Knowledge category */
+  category: 'crypto' | 'defi' | 'security' | 'market' | 'technology' | 'regulation';
+  /** Title/key */
+  title: string;
+  /** Content/value */
+  content: string;
+  /** Source of knowledge */
+  source: string;
+  /** Confidence score (0-1) */
+  confidence: number;
+  /** Number of times referenced */
+  referenceCount: number;
+  /** Unix timestamp when added */
+  addedAt: number;
+  /** Unix timestamp of last update */
+  updatedAt: number;
+  /** Tags for categorization */
+  tags: string[];
+}
+
+/** Evolution event tracking */
+export interface EvolutionEvent {
+  /** Unique identifier */
+  id: string;
+  /** Agent ID that evolved */
+  agentId: string;
+  /** Previous evolution stage */
+  fromStage: EvolutionStage;
+  /** New evolution stage */
+  toStage: EvolutionStage;
+  /** Skills gained during evolution */
+  skillsGained: string[];
+  /** Unix timestamp of evolution */
+  evolvedAt: number;
+}
+
+/** Multi-agent task assignment */
+export interface AgentTask {
+  /** Unique identifier */
+  id: string;
+  /** Task description */
+  description: string;
+  /** Assigned agent ID */
+  assignedAgentId: string;
+  /** Task priority (1-5, 5 being highest) */
+  priority: number;
+  /** Task status */
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  /** Result data */
+  result?: string;
+  /** Unix timestamp of creation */
+  createdAt: number;
+  /** Unix timestamp of completion */
+  completedAt?: number;
+}
+
+/** Overall multi-agent system state */
+export interface MultiAgentSystemState {
+  /** All agents in the system */
+  agents: AIAgent[];
+  /** Active agent tasks */
+  tasks: AgentTask[];
+  /** Knowledge base entries */
+  knowledgeBase: KnowledgeEntry[];
+  /** Recent web search results */
+  searchHistory: WebSearchResult[];
+  /** Evolution history */
+  evolutionHistory: EvolutionEvent[];
+  /** System-wide statistics */
+  stats: {
+    totalTasksCompleted: number;
+    averageSuccessRate: number;
+    knowledgeBaseSize: number;
+    totalEvolutions: number;
+  };
+}

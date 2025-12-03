@@ -21,6 +21,7 @@ import {
   Memory,
   Gear,
   Database,
+  Users,
 } from '@phosphor-icons/react';
 import {
   generateMockAIAssistantState,
@@ -28,6 +29,7 @@ import {
 } from '@/lib/mock-data';
 import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
 import { AIModelSettingsPanel } from './AIModelSettings';
+import { MultiAgentSystem } from './MultiAgentSystem';
 
 function getCapabilityIcon(iconName: string) {
   const icons: Record<string, React.ReactNode> = {
@@ -293,11 +295,15 @@ export function AIAssistant() {
       </div>
 
       <Tabs defaultValue="chat" className="space-y-4">
-        {/* TabsList with 4 tabs: 对话, 记忆, 能力, 模型 */}
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+        {/* TabsList with 5 tabs: 对话, 记忆, 能力, 模型, 多智能体 */}
+        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
           <TabsTrigger value="chat" className="gap-2">
             <ChatCircle size={18} weight="duotone" />
             <span className="hidden sm:inline">对话</span>
+          </TabsTrigger>
+          <TabsTrigger value="multi-agent" className="gap-2">
+            <Users size={18} weight="duotone" />
+            <span className="hidden sm:inline">多智能体</span>
           </TabsTrigger>
           <TabsTrigger value="memory" className="gap-2">
             <Memory size={18} weight="duotone" />
@@ -368,6 +374,10 @@ export function AIAssistant() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="multi-agent" className="space-y-4">
+          <MultiAgentSystem />
         </TabsContent>
 
         <TabsContent value="memory" className="space-y-4">

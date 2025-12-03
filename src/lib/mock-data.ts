@@ -799,3 +799,460 @@ export function generateMockAIModelSettings(): AIModelSettings {
     customEndpoints: generateMockCustomEndpoints(),
   };
 }
+
+// ============================================================================
+// Multi-Agent System Mock Data - 多智能体系统模拟数据
+// ============================================================================
+
+import type { AIAgent, WebSearchResult, KnowledgeEntry, EvolutionEvent, AgentTask, MultiAgentSystemState, AgentSpecialization, EvolutionStage } from './types';
+
+/**
+ * Generate mock AI agents for the multi-agent system
+ */
+export function generateMockAgents(): AIAgent[] {
+  return [
+    {
+      id: 'agent-1',
+      name: '数据分析师 Alpha',
+      specialization: 'data_analyst',
+      status: 'working',
+      evolutionStage: 'advanced',
+      experiencePoints: 8500,
+      experienceToNextStage: 10000,
+      tasksCompleted: 342,
+      successRate: 94.5,
+      capabilities: ['市场数据分析', '价格预测', '交易量分析', '趋势识别'],
+      createdAt: Date.now() - 60 * 24 * 60 * 60 * 1000,
+      lastActiveAt: Date.now() - 5 * 60 * 1000,
+      enabled: true,
+      learnedSkills: [
+        {
+          id: 'skill-1-1',
+          name: 'K线形态识别',
+          description: '识别常见的K线形态并预测价格走势',
+          proficiency: 92,
+          usageCount: 156,
+          learnedAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+        },
+        {
+          id: 'skill-1-2',
+          name: '链上数据分析',
+          description: '分析区块链上的交易数据和地址行为',
+          proficiency: 88,
+          usageCount: 98,
+          learnedAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+        },
+      ],
+    },
+    {
+      id: 'agent-2',
+      name: '网络探索者 Beta',
+      specialization: 'web_searcher',
+      status: 'idle',
+      evolutionStage: 'intermediate',
+      experiencePoints: 4200,
+      experienceToNextStage: 5000,
+      tasksCompleted: 189,
+      successRate: 91.2,
+      capabilities: ['实时新闻搜索', '项目研究', '社交媒体监控', '舆情分析'],
+      createdAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+      lastActiveAt: Date.now() - 30 * 60 * 1000,
+      enabled: true,
+      learnedSkills: [
+        {
+          id: 'skill-2-1',
+          name: '多源信息整合',
+          description: '从多个来源收集和整合相关信息',
+          proficiency: 85,
+          usageCount: 234,
+          learnedAt: Date.now() - 40 * 24 * 60 * 60 * 1000,
+        },
+      ],
+    },
+    {
+      id: 'agent-3',
+      name: '风险卫士 Gamma',
+      specialization: 'risk_assessor',
+      status: 'learning',
+      evolutionStage: 'expert',
+      experiencePoints: 15200,
+      experienceToNextStage: 20000,
+      tasksCompleted: 567,
+      successRate: 97.8,
+      capabilities: ['交易风险评估', '地址信誉分析', '智能合约审计', '异常检测'],
+      createdAt: Date.now() - 90 * 24 * 60 * 60 * 1000,
+      lastActiveAt: Date.now() - 2 * 60 * 1000,
+      enabled: true,
+      learnedSkills: [
+        {
+          id: 'skill-3-1',
+          name: '智能合约漏洞检测',
+          description: '检测智能合约中的常见安全漏洞',
+          proficiency: 96,
+          usageCount: 312,
+          learnedAt: Date.now() - 75 * 24 * 60 * 60 * 1000,
+        },
+        {
+          id: 'skill-3-2',
+          name: '反洗钱分析',
+          description: '识别可疑的资金流动模式',
+          proficiency: 94,
+          usageCount: 187,
+          learnedAt: Date.now() - 60 * 24 * 60 * 60 * 1000,
+        },
+        {
+          id: 'skill-3-3',
+          name: '实时风险预警',
+          description: '实时监控并预警潜在风险',
+          proficiency: 91,
+          usageCount: 445,
+          learnedAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+        },
+      ],
+    },
+    {
+      id: 'agent-4',
+      name: 'DeFi优化师 Delta',
+      specialization: 'defi_optimizer',
+      status: 'working',
+      evolutionStage: 'advanced',
+      experiencePoints: 7800,
+      experienceToNextStage: 10000,
+      tasksCompleted: 256,
+      successRate: 93.1,
+      capabilities: ['收益优化', '流动性分析', '协议对比', '策略推荐'],
+      createdAt: Date.now() - 50 * 24 * 60 * 60 * 1000,
+      lastActiveAt: Date.now() - 10 * 60 * 1000,
+      enabled: true,
+      learnedSkills: [
+        {
+          id: 'skill-4-1',
+          name: '无损收益策略',
+          description: '识别和推荐低风险高收益的DeFi策略',
+          proficiency: 89,
+          usageCount: 156,
+          learnedAt: Date.now() - 35 * 24 * 60 * 60 * 1000,
+        },
+      ],
+    },
+    {
+      id: 'agent-5',
+      name: '知识管理者 Epsilon',
+      specialization: 'knowledge_manager',
+      status: 'idle',
+      evolutionStage: 'intermediate',
+      experiencePoints: 3500,
+      experienceToNextStage: 5000,
+      tasksCompleted: 128,
+      successRate: 96.5,
+      capabilities: ['知识整理', '文档生成', '学习路径规划', '信息检索'],
+      createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+      lastActiveAt: Date.now() - 1 * 60 * 60 * 1000,
+      enabled: true,
+      learnedSkills: [
+        {
+          id: 'skill-5-1',
+          name: '跨领域知识关联',
+          description: '发现不同知识领域之间的关联',
+          proficiency: 82,
+          usageCount: 89,
+          learnedAt: Date.now() - 20 * 24 * 60 * 60 * 1000,
+        },
+      ],
+    },
+    {
+      id: 'agent-6',
+      name: '协调者 Omega',
+      specialization: 'coordinator',
+      status: 'working',
+      evolutionStage: 'master',
+      experiencePoints: 25000,
+      experienceToNextStage: 30000,
+      tasksCompleted: 1024,
+      successRate: 98.2,
+      capabilities: ['任务分配', '智能体协调', '优先级管理', '冲突解决'],
+      createdAt: Date.now() - 120 * 24 * 60 * 60 * 1000,
+      lastActiveAt: Date.now(),
+      enabled: true,
+      learnedSkills: [
+        {
+          id: 'skill-6-1',
+          name: '多智能体协同',
+          description: '协调多个智能体共同完成复杂任务',
+          proficiency: 98,
+          usageCount: 512,
+          learnedAt: Date.now() - 90 * 24 * 60 * 60 * 1000,
+        },
+        {
+          id: 'skill-6-2',
+          name: '自适应任务分配',
+          description: '根据智能体能力动态分配任务',
+          proficiency: 96,
+          usageCount: 423,
+          learnedAt: Date.now() - 60 * 24 * 60 * 60 * 1000,
+        },
+      ],
+    },
+  ];
+}
+
+/**
+ * Generate mock web search results
+ */
+export function generateMockWebSearchResults(): WebSearchResult[] {
+  return [
+    {
+      id: 'search-1',
+      query: 'ETH 2.0 质押收益率',
+      title: 'Ethereum 2.0 Staking: 2024年最新收益率分析',
+      url: 'https://example.com/eth-staking-yields',
+      snippet: '根据最新数据，ETH 2.0 质押年化收益率约为 4.5-5.2%，较去年有所下降...',
+      relevanceScore: 95,
+      sourceType: 'news',
+      searchedAt: Date.now() - 2 * 60 * 60 * 1000,
+    },
+    {
+      id: 'search-2',
+      query: 'Aave V3 安全审计报告',
+      title: 'Aave V3 Protocol Security Audit Report',
+      url: 'https://example.com/aave-v3-audit',
+      snippet: 'Aave V3 已通过多家安全公司审计，包括 OpenZeppelin 和 Trail of Bits...',
+      relevanceScore: 92,
+      sourceType: 'documentation',
+      searchedAt: Date.now() - 5 * 60 * 60 * 1000,
+    },
+    {
+      id: 'search-3',
+      query: 'Layer 2 扩容方案对比',
+      title: 'Arbitrum vs Optimism vs zkSync: 2024年最佳L2选择',
+      url: 'https://example.com/l2-comparison',
+      snippet: '本文深入对比三大 Layer 2 解决方案的性能、费用和生态系统...',
+      relevanceScore: 88,
+      sourceType: 'blog',
+      searchedAt: Date.now() - 12 * 60 * 60 * 1000,
+    },
+    {
+      id: 'search-4',
+      query: 'DeFi 监管政策更新',
+      title: 'SEC最新DeFi监管框架解读',
+      url: 'https://example.com/sec-defi-regulation',
+      snippet: '美国证券交易委员会（SEC）近期发布了关于去中心化金融的新监管指南...',
+      relevanceScore: 85,
+      sourceType: 'official',
+      searchedAt: Date.now() - 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Generate mock knowledge base entries
+ */
+export function generateMockKnowledgeBase(): KnowledgeEntry[] {
+  return [
+    {
+      id: 'kb-1',
+      category: 'defi',
+      title: 'Impermanent Loss 计算公式',
+      content: '无常损失 = 2 * sqrt(price_ratio) / (1 + price_ratio) - 1。当价格变化 2 倍时，损失约 5.7%；变化 5 倍时，损失约 25.5%。',
+      source: '学习自用户交易历史分析',
+      confidence: 0.95,
+      referenceCount: 45,
+      addedAt: Date.now() - 60 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      tags: ['DeFi', '流动性挖矿', '风险'],
+    },
+    {
+      id: 'kb-2',
+      category: 'security',
+      title: '常见智能合约攻击向量',
+      content: '包括重入攻击、闪电贷攻击、价格操纵、前端运行、治理攻击等。建议使用 Reentrancy Guard 和 时间锁定等防护措施。',
+      source: '安全审计报告汇总',
+      confidence: 0.98,
+      referenceCount: 78,
+      addedAt: Date.now() - 90 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
+      tags: ['安全', '智能合约', '审计'],
+    },
+    {
+      id: 'kb-3',
+      category: 'market',
+      title: 'BTC/ETH 相关性分析',
+      content: 'BTC 与 ETH 的价格相关性通常在 0.7-0.9 之间。在市场高波动期，相关性会降低，提供潜在的对冲机会。',
+      source: '历史数据分析',
+      confidence: 0.88,
+      referenceCount: 34,
+      addedAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
+      tags: ['市场', '相关性', '分析'],
+    },
+    {
+      id: 'kb-4',
+      category: 'technology',
+      title: 'EIP-4844 Proto-Danksharding',
+      content: 'EIP-4844 引入 blob 交易，大幅降低 L2 数据可用性成本，预计可将 L2 交易费用降低 10-100 倍。',
+      source: '以太坊官方文档',
+      confidence: 0.96,
+      referenceCount: 56,
+      addedAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 7 * 24 * 60 * 60 * 1000,
+      tags: ['技术', '以太坊', '扩容'],
+    },
+    {
+      id: 'kb-5',
+      category: 'crypto',
+      title: '跨链桥安全最佳实践',
+      content: '推荐使用多签验证的桥协议，避免单点故障。检查桥的TVL、审计报告和运行历史。',
+      source: '安全研究报告',
+      confidence: 0.92,
+      referenceCount: 42,
+      addedAt: Date.now() - 20 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+      tags: ['跨链', '安全', '桥'],
+    },
+  ];
+}
+
+/**
+ * Generate mock evolution events
+ */
+export function generateMockEvolutionEvents(): EvolutionEvent[] {
+  return [
+    {
+      id: 'evo-1',
+      agentId: 'agent-3',
+      fromStage: 'advanced',
+      toStage: 'expert',
+      skillsGained: ['实时风险预警', '高级威胁检测'],
+      evolvedAt: Date.now() - 15 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'evo-2',
+      agentId: 'agent-1',
+      fromStage: 'intermediate',
+      toStage: 'advanced',
+      skillsGained: ['链上数据分析', '预测模型优化'],
+      evolvedAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'evo-3',
+      agentId: 'agent-6',
+      fromStage: 'expert',
+      toStage: 'master',
+      skillsGained: ['自适应任务分配', '全局优化决策'],
+      evolvedAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'evo-4',
+      agentId: 'agent-4',
+      fromStage: 'intermediate',
+      toStage: 'advanced',
+      skillsGained: ['无损收益策略', 'Gas优化'],
+      evolvedAt: Date.now() - 20 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Generate mock agent tasks
+ */
+export function generateMockAgentTasks(): AgentTask[] {
+  return [
+    {
+      id: 'task-1',
+      description: '分析最近24小时的以太坊Gas价格趋势',
+      assignedAgentId: 'agent-1',
+      priority: 3,
+      status: 'completed',
+      result: 'Gas价格在过去24小时内平均为35 Gwei，峰值出现在UTC 14:00左右',
+      createdAt: Date.now() - 2 * 60 * 60 * 1000,
+      completedAt: Date.now() - 1 * 60 * 60 * 1000,
+    },
+    {
+      id: 'task-2',
+      description: '搜索并汇总Arbitrum最新生态项目',
+      assignedAgentId: 'agent-2',
+      priority: 2,
+      status: 'in_progress',
+      createdAt: Date.now() - 30 * 60 * 1000,
+    },
+    {
+      id: 'task-3',
+      description: '评估地址0x742d35Cc...的风险等级',
+      assignedAgentId: 'agent-3',
+      priority: 5,
+      status: 'completed',
+      result: '风险等级: 低。该地址是已验证的知名协议合约，无异常交易记录。',
+      createdAt: Date.now() - 15 * 60 * 1000,
+      completedAt: Date.now() - 10 * 60 * 1000,
+    },
+    {
+      id: 'task-4',
+      description: '优化当前DeFi策略组合的收益率',
+      assignedAgentId: 'agent-4',
+      priority: 4,
+      status: 'in_progress',
+      createdAt: Date.now() - 45 * 60 * 1000,
+    },
+    {
+      id: 'task-5',
+      description: '将最新的安全研究发现添加到知识库',
+      assignedAgentId: 'agent-5',
+      priority: 2,
+      status: 'pending',
+      createdAt: Date.now() - 5 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Generate complete multi-agent system state
+ */
+export function generateMockMultiAgentState(): MultiAgentSystemState {
+  const agents = generateMockAgents();
+  const tasks = generateMockAgentTasks();
+  
+  return {
+    agents,
+    tasks,
+    knowledgeBase: generateMockKnowledgeBase(),
+    searchHistory: generateMockWebSearchResults(),
+    evolutionHistory: generateMockEvolutionEvents(),
+    stats: {
+      totalTasksCompleted: agents.reduce((sum, a) => sum + a.tasksCompleted, 0),
+      averageSuccessRate: agents.reduce((sum, a) => sum + a.successRate, 0) / agents.length,
+      knowledgeBaseSize: 5,
+      totalEvolutions: 4,
+    },
+  };
+}
+
+/**
+ * Get agent specialization label in Chinese
+ */
+export function getAgentSpecializationLabel(spec: AgentSpecialization): string {
+  switch (spec) {
+    case 'data_analyst': return '数据分析';
+    case 'web_searcher': return '网络搜索';
+    case 'code_generator': return '代码生成';
+    case 'risk_assessor': return '风险评估';
+    case 'defi_optimizer': return 'DeFi优化';
+    case 'transaction_monitor': return '交易监控';
+    case 'knowledge_manager': return '知识管理';
+    case 'coordinator': return '协调者';
+    default: return spec;
+  }
+}
+
+/**
+ * Get evolution stage label in Chinese
+ */
+export function getEvolutionStageLabel(stage: EvolutionStage): string {
+  switch (stage) {
+    case 'basic': return '基础';
+    case 'intermediate': return '中级';
+    case 'advanced': return '高级';
+    case 'expert': return '专家';
+    case 'master': return '大师';
+    default: return stage;
+  }
+}
