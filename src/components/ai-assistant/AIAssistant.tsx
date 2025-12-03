@@ -345,7 +345,11 @@ export function AIAssistant() {
                   placeholder="输入您的问题或指令..."
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+                      handleSendMessage();
+                    }
+                  }}
                   className="flex-1"
                 />
                 <Button onClick={handleSendMessage} className="gap-2">
