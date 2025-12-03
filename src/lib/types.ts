@@ -464,3 +464,278 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Fiat24 API Types - Rate Limiting, Security, and API Integration
+// ============================================================================
+
+/** Fiat24 API rate limit tier based on active users */
+export type Fiat24RateLimitTier = 'tier1' | 'tier2' | 'tier3';
+
+/** Fiat24 card type */
+export type Fiat24CardType = 'MSTD' | 'VISA';
+
+/** Fiat24 card status */
+export type Fiat24CardStatus = 'Active' | 'Blocked' | 'Expired';
+
+/** Fiat24 supported currencies */
+export type Fiat24Currency = 'EUR' | 'USD' | 'CHF' | 'CNH';
+
+/** Fiat24 token currencies */
+export type Fiat24TokenCurrency = 'EUR24' | 'USD24' | 'CHF24' | 'CNH24';
+
+/** Fiat24 API rate limit configuration */
+export interface Fiat24RateLimitConfig {
+  /** Rate limit tier */
+  tier: Fiat24RateLimitTier;
+  /** Maximum calls per minute */
+  callsPerMinute: number;
+  /** Minimum active users required for this tier */
+  minActiveUsers: number;
+  /** Current usage in the time window */
+  currentUsage: number;
+  /** Unix timestamp when rate limit resets */
+  resetAt: number;
+  /** Last evaluation date (weekly on Friday) */
+  lastEvaluatedAt: number;
+}
+
+/** Fiat24 API security headers for authenticated requests */
+export interface Fiat24SecurityHeaders {
+  /** Content-Type header */
+  contentType: string;
+  /** User's NFT token ID */
+  tokenId: number;
+  /** Network ID (42161 for Arbitrum, 5000 for Mantle) */
+  network: number;
+  /** User's wallet signature */
+  sign: string;
+  /** Original text that was hashed */
+  hash: string;
+  /** Unix timestamp deadline for signature validity */
+  deadline: number;
+}
+
+/** Fiat24 account limits */
+export interface Fiat24AccountLimits {
+  /** Date when limits restart (formatted string) */
+  restartDate: string;
+  /** Unix timestamp when limits restart */
+  restartDateMs: number;
+  /** Amount already used (in CHF) */
+  used: number;
+  /** Amount available (in CHF) */
+  available: number;
+  /** Maximum limit (in CHF) */
+  max: number;
+}
+
+/** Fiat24 external contact for payments */
+export interface Fiat24Contact {
+  /** Contact identifier */
+  id: string;
+  /** Contact name */
+  name: string;
+  /** Masked account number */
+  account: string;
+  /** Full account number */
+  fullAccount: string;
+  /** Bank name */
+  bank: string;
+  /** Country code */
+  country: string;
+  /** Unix timestamp of last payment */
+  lastPaymentDate: number;
+}
+
+/** Fiat24 deposit bank information */
+export interface Fiat24DepositBank {
+  /** IBAN account number */
+  account: string;
+  /** Bank name */
+  bank: string;
+  /** Bank BIC/SWIFT code */
+  BIC: string;
+  /** Payee name */
+  payee: string;
+  /** City */
+  city: string;
+  /** Street address */
+  street: string;
+  /** Postal code */
+  postalCode: string;
+  /** Country code */
+  country: string;
+}
+
+/** Fiat24 card activation info */
+export interface Fiat24CardActivation {
+  /** Activation fee amount */
+  amount: number;
+  /** Currency for activation fee */
+  currency: Fiat24Currency;
+}
+
+/** Fiat24 customer profile from /br endpoint */
+export interface Fiat24CustomerProfile {
+  /** User's NFT token ID */
+  tokenId: number;
+  /** Beneficiary/account holder name */
+  br: string;
+  /** IBAN account number (formatted) */
+  iban: string;
+  /** Email address */
+  email: string;
+  /** Mobile phone number */
+  mobile: string;
+  /** Debit card type (empty if not eligible) */
+  debitCard: Fiat24CardType | '';
+  /** Whether user is eligible for card */
+  isCardEligible: boolean;
+  /** User's cards (only if isCardEligible is true) */
+  cards?: Fiat24Card[];
+  /** Card activation info (only if isCardEligible and no cards) */
+  cardActivation?: Fiat24CardActivation;
+  /** Street address */
+  street: string;
+  /** Postal code */
+  postalCode: string;
+  /** City */
+  city: string;
+  /** Country code (ISO 3166-1 alpha-3) */
+  country: string;
+  /** Account limits from smart contract */
+  limits: Fiat24AccountLimits;
+  /** Registered payment contacts by currency */
+  contacts: Record<Fiat24Currency, Fiat24Contact[]>;
+  /** Deposit bank information by currency */
+  depositBank: Record<Fiat24Currency, Fiat24DepositBank>;
+}
+
+/** Fiat24 active/inactive token for card devices */
+export interface Fiat24DeviceToken {
+  /** Token identifier */
+  id: string;
+  /** Device type (e.g., "Fiat24 Phone") */
+  type: string;
+  /** Unix timestamp when token was created */
+  createdAt: number;
+}
+
+/** Fiat24 card security settings */
+export interface Fiat24CardSecurity {
+  /** Whether contactless payments are enabled */
+  contactlessEnabled: boolean;
+  /** Whether ATM withdrawals are enabled */
+  withdrawalEnabled: boolean;
+  /** Whether internet purchases are enabled */
+  internetPurchaseEnabled: boolean;
+  /** Whether overall limits are enabled */
+  overallLimitsEnabled: boolean;
+}
+
+/** Fiat24 card limit details */
+export interface Fiat24CardLimitDetails {
+  /** Amount used in current period */
+  used: number;
+  /** Amount available in current period */
+  available: number;
+  /** Maximum limit for period */
+  max: number;
+  /** Daily amount used */
+  dailyUsed: number;
+  /** Daily amount available */
+  dailyAvailable: number;
+  /** Daily maximum limit */
+  dailyMax: number;
+}
+
+/** Fiat24 card transaction limits */
+export interface Fiat24TransactionLimits {
+  /** Purchase limit */
+  purchase: number;
+  /** Withdrawal limit */
+  withdrawal: number;
+  /** Internet purchase limit */
+  internetPurchase: number;
+  /** Contactless payment limit */
+  contactless: number;
+}
+
+/** Fiat24 card limits */
+export interface Fiat24CardLimits {
+  /** Account-level limits */
+  account: Fiat24AccountLimits;
+  /** Contactless payment limits */
+  contactless: Fiat24CardLimitDetails;
+  /** ATM withdrawal limits */
+  withdrawal: Fiat24CardLimitDetails;
+  /** Internet purchase limits */
+  internetPurchase: Fiat24CardLimitDetails;
+  /** Transaction type limits */
+  transaction: Fiat24TransactionLimits;
+}
+
+/** Fiat24 masked card details */
+export interface Fiat24MaskedCardDetails {
+  /** Masked card number (e.g., "•••• 4455") */
+  cardNumber: string;
+  /** Masked CVV */
+  cvv2: string;
+  /** Masked expiry date */
+  expiry: string;
+  /** Masked 3D Secure password */
+  card3DSecurePassword: string;
+}
+
+/** Fiat24 debit card from /cards endpoint */
+export interface Fiat24Card {
+  /** User's NFT token ID */
+  tokenId: number;
+  /** Card holder name */
+  cardHolder: string;
+  /** External ID for card management APIs */
+  externalId: string;
+  /** Token for displaying card details (valid for 5 minutes) */
+  cardToken: string;
+  /** Active device tokens where card is added */
+  activeTokens: Fiat24DeviceToken[];
+  /** Pending device tokens where card wants to be added */
+  inactiveTokens: Fiat24DeviceToken[];
+  /** Default card currency */
+  currency: Fiat24TokenCurrency;
+  /** Native currencies supported by the card */
+  currencies: Fiat24Currency[];
+  /** Card design type */
+  cardDesign: Fiat24CardType;
+  /** Card security settings */
+  security: Fiat24CardSecurity;
+  /** Card limits (all monthly in EUR except daily limits) */
+  limits: Fiat24CardLimits;
+  /** Card status */
+  status: Fiat24CardStatus;
+  /** Masked sensitive card details */
+  masked: Fiat24MaskedCardDetails;
+}
+
+/** Fiat24 cards API response */
+export interface Fiat24CardsResponse {
+  /** HTTP status code */
+  statusCode: number;
+  /** Token ID (present in error responses) */
+  tokenId?: number;
+  /** Cards array (present in success responses) */
+  body?: Fiat24Card[];
+}
+
+/** Fiat24 API configuration */
+export interface Fiat24ApiConfig {
+  /** Base API URL */
+  baseUrl: string;
+  /** Current rate limit configuration */
+  rateLimit: Fiat24RateLimitConfig;
+  /** Signature deadline in seconds (max 1200 = 20 minutes) */
+  signatureDeadlineSeconds: number;
+  /** Current server timestamp */
+  serverTimestamp: number;
+}

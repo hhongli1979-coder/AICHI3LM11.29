@@ -7,7 +7,7 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, Fiat24RateLimitConfig, Fiat24CustomerProfile, Fiat24Card, Fiat24CardsResponse, Fiat24ApiConfig } from './types';
 
 // ============================================================================
 // Network Configuration
@@ -784,4 +784,320 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
   };
+}
+
+// ============================================================================
+// Fiat24 API Mock Data - Rate Limiting, Security Headers, and API Responses
+// ============================================================================
+
+/**
+ * Generate mock Fiat24 rate limit configuration
+ * 
+ * @param tier - Rate limit tier ('tier1' | 'tier2' | 'tier3')
+ * @returns Mock Fiat24RateLimitConfig object
+ * 
+ * @example
+ * ```typescript
+ * const rateLimit = generateMockFiat24RateLimit('tier2');
+ * console.log(rateLimit.callsPerMinute); // 250
+ * ```
+ */
+export function generateMockFiat24RateLimit(tier: 'tier1' | 'tier2' | 'tier3' = 'tier3'): Fiat24RateLimitConfig {
+  const tierConfigs = {
+    tier1: { callsPerMinute: 500, minActiveUsers: 20000 },
+    tier2: { callsPerMinute: 250, minActiveUsers: 5000 },
+    tier3: { callsPerMinute: 80, minActiveUsers: 0 },
+  };
+
+  const config = tierConfigs[tier];
+  const now = Date.now();
+  const lastFriday = now - ((new Date().getDay() + 2) % 7) * 24 * 60 * 60 * 1000;
+
+  return {
+    tier,
+    callsPerMinute: config.callsPerMinute,
+    minActiveUsers: config.minActiveUsers,
+    currentUsage: Math.floor(Math.random() * config.callsPerMinute * 0.6),
+    resetAt: now + 60 * 1000,
+    lastEvaluatedAt: lastFriday,
+  };
+}
+
+/**
+ * Generate mock Fiat24 customer profile
+ * 
+ * @returns Mock Fiat24CustomerProfile object matching /br endpoint response
+ * 
+ * @example
+ * ```typescript
+ * const profile = generateMockFiat24CustomerProfile();
+ * console.log(profile.iban); // "CH81 8305 1000 0000 1036 5"
+ * ```
+ */
+export function generateMockFiat24CustomerProfile(): Fiat24CustomerProfile {
+  return {
+    tokenId: 10365,
+    br: 'Janet Jackson',
+    iban: 'CH81 8305 1000 0000 1036 5',
+    email: 'sample@gmail.com',
+    mobile: '+41798563254',
+    debitCard: 'MSTD',
+    isCardEligible: true,
+    cards: [],
+    cardActivation: {
+      amount: 10,
+      currency: 'EUR',
+    },
+    street: 'Passeig Sant Gervasi',
+    postalCode: '08022',
+    city: 'Barcelona',
+    country: 'ESP',
+    limits: {
+      restartDate: '16.09.2023 - 9:04',
+      restartDateMs: 1725523620885,
+      used: 27.88,
+      available: 99972.12,
+      max: 100000.00,
+    },
+    contacts: {
+      CHF: [
+        {
+          id: 'EC-0000001',
+          name: 'Jake',
+          account: '•••• 0001',
+          fullAccount: 'CH1234567890',
+          bank: 'PostFinance',
+          country: 'CH',
+          lastPaymentDate: 1700093537000,
+        },
+      ],
+      EUR: [
+        {
+          id: 'EC-0000002',
+          name: 'Marc',
+          account: '•••• 1234',
+          fullAccount: 'DE89370400440532013000',
+          bank: 'PostFinance',
+          country: 'ES',
+          lastPaymentDate: 1700093537000,
+        },
+      ],
+      USD: [],
+      CNH: [],
+    },
+    depositBank: {
+      CHF: {
+        account: 'CH8183051000000010365',
+        bank: 'SR Saphirstein AG',
+        BIC: 'SAHHCHZ2',
+        payee: 'Janet Jackson',
+        city: 'Barcelona',
+        street: 'Passeig Sant Gervasi',
+        postalCode: '8022',
+        country: 'ESP',
+      },
+      EUR: {
+        account: 'CH8183051000000010365',
+        bank: 'SR Saphirstein AG',
+        BIC: 'SAHHCHZ2',
+        payee: 'Janet Jackson',
+        city: 'Barcelona',
+        street: 'Passeig Sant Gervasi',
+        postalCode: '8022',
+        country: 'ESP',
+      },
+      USD: {
+        account: 'CH8183051000000010365',
+        bank: 'SR Saphirstein AG',
+        BIC: 'SAHHCHZ2',
+        payee: 'Janet Jackson',
+        city: 'Barcelona',
+        street: 'Passeig Sant Gervasi',
+        postalCode: '8022',
+        country: 'ESP',
+      },
+      CNH: {
+        account: 'CH8183051000000010365',
+        bank: 'SR Saphirstein AG',
+        BIC: 'SAHHCHZ2',
+        payee: 'Janet Jackson',
+        city: 'Barcelona',
+        street: 'Passeig Sant Gervasi',
+        postalCode: '8022',
+        country: 'ESP',
+      },
+    },
+  };
+}
+
+/**
+ * Generate mock Fiat24 card data
+ * 
+ * @returns Mock Fiat24Card object matching /cards endpoint response
+ * 
+ * @example
+ * ```typescript
+ * const card = generateMockFiat24Card();
+ * console.log(card.status); // "Active"
+ * ```
+ */
+export function generateMockFiat24Card(): Fiat24Card {
+  return {
+    tokenId: 10365,
+    cardHolder: 'Janet Jackson',
+    externalId: '123456',
+    cardToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    activeTokens: [
+      {
+        id: 'active_token_1',
+        type: 'Fiat24 Phone',
+        createdAt: 1725523620885,
+      },
+    ],
+    inactiveTokens: [
+      {
+        id: 'inactive_token_1',
+        type: 'Apple Watch',
+        createdAt: 1725523620885,
+      },
+    ],
+    currency: 'EUR24',
+    currencies: ['EUR', 'CHF', 'USD', 'CNH'],
+    cardDesign: 'MSTD',
+    security: {
+      contactlessEnabled: true,
+      withdrawalEnabled: false,
+      internetPurchaseEnabled: true,
+      overallLimitsEnabled: false,
+    },
+    limits: {
+      account: {
+        restartDate: '16.09.2023 - 9:04',
+        restartDateMs: 1725523620885,
+        used: 27.88,
+        available: 99972.12,
+        max: 100000.00,
+      },
+      contactless: {
+        used: 13.02,
+        available: 9986.98,
+        max: 10000,
+        dailyUsed: 0,
+        dailyAvailable: 1600,
+        dailyMax: 1600,
+      },
+      withdrawal: {
+        used: 0,
+        available: 0,
+        max: 0,
+        dailyUsed: 0,
+        dailyAvailable: 0,
+        dailyMax: 0,
+      },
+      internetPurchase: {
+        used: 0,
+        available: 10000,
+        max: 10000,
+        dailyUsed: 0,
+        dailyAvailable: 5000,
+        dailyMax: 5000,
+      },
+      transaction: {
+        purchase: 0,
+        withdrawal: 0,
+        internetPurchase: 5000,
+        contactless: 1600,
+      },
+    },
+    status: 'Active',
+    masked: {
+      cardNumber: '•••• 4455',
+      cvv2: '•••',
+      expiry: '••/••',
+      card3DSecurePassword: '••••••',
+    },
+  };
+}
+
+/**
+ * Generate mock Fiat24 cards API response
+ * 
+ * @param hasCard - Whether the user has a card
+ * @returns Mock Fiat24CardsResponse object
+ * 
+ * @example
+ * ```typescript
+ * const response = generateMockFiat24CardsResponse(true);
+ * console.log(response.statusCode); // 200
+ * ```
+ */
+export function generateMockFiat24CardsResponse(hasCard: boolean = true): Fiat24CardsResponse {
+  if (!hasCard) {
+    return {
+      statusCode: 404,
+      tokenId: 10365,
+    };
+  }
+
+  return {
+    statusCode: 200,
+    body: [generateMockFiat24Card()],
+  };
+}
+
+/**
+ * Generate mock Fiat24 API configuration
+ * 
+ * @param tier - Rate limit tier
+ * @returns Mock Fiat24ApiConfig object
+ * 
+ * @example
+ * ```typescript
+ * const config = generateMockFiat24ApiConfig();
+ * console.log(config.baseUrl); // "https://api.fiat24.com"
+ * ```
+ */
+export function generateMockFiat24ApiConfig(tier: 'tier1' | 'tier2' | 'tier3' = 'tier3'): Fiat24ApiConfig {
+  return {
+    baseUrl: 'https://api.fiat24.com',
+    rateLimit: generateMockFiat24RateLimit(tier),
+    signatureDeadlineSeconds: 1200,
+    serverTimestamp: Date.now(),
+  };
+}
+
+/**
+ * Get rate limit tier description
+ * 
+ * @param tier - Rate limit tier
+ * @returns Human-readable tier description
+ */
+export function getFiat24TierDescription(tier: 'tier1' | 'tier2' | 'tier3'): string {
+  switch (tier) {
+    case 'tier1':
+      return '20,000+ 活跃用户 (500 次/分钟)';
+    case 'tier2':
+      return '5,000+ 活跃用户 (250 次/分钟)';
+    case 'tier3':
+      return '其他项目 (80 次/分钟)';
+    default:
+      return '未知层级';
+  }
+}
+
+/**
+ * Get network name from Fiat24 network ID
+ * 
+ * @param networkId - Fiat24 network ID
+ * @returns Network name
+ */
+export function getFiat24NetworkName(networkId: number): string {
+  switch (networkId) {
+    case 42161:
+      return 'Arbitrum One';
+    case 5000:
+      return 'Mantle';
+    default:
+      return `Network ${networkId}`;
+  }
 }
