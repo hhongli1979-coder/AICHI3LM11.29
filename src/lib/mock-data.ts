@@ -799,3 +799,351 @@ export function generateMockAIModelSettings(): AIModelSettings {
     customEndpoints: generateMockCustomEndpoints(),
   };
 }
+
+// ============================================================================
+// Taxido - Taxi Booking Mock Data (二次开发集成)
+// ============================================================================
+
+import type { TaxiRide, TaxiDriver, TaxiLocation, TaxiFareEstimate, TaxidoConfig } from './types';
+
+/**
+ * Generate mock taxi drivers
+ */
+export function generateMockTaxiDrivers(): TaxiDriver[] {
+  return [
+    {
+      id: 'driver-1',
+      name: '李师傅',
+      photoUrl: undefined,
+      rating: 4.9,
+      totalRides: 3256,
+      vehiclePlate: '京A·12345',
+      vehicleModel: '特斯拉 Model 3',
+      vehicleColor: '白色',
+      phone: '138****1234',
+    },
+    {
+      id: 'driver-2',
+      name: '王师傅',
+      photoUrl: undefined,
+      rating: 4.8,
+      totalRides: 2134,
+      vehiclePlate: '京B·67890',
+      vehicleModel: '比亚迪 汉EV',
+      vehicleColor: '黑色',
+      phone: '139****5678',
+    },
+    {
+      id: 'driver-3',
+      name: '张师傅',
+      photoUrl: undefined,
+      rating: 4.95,
+      totalRides: 5678,
+      vehiclePlate: '京C·11111',
+      vehicleModel: '奔驰 E300L',
+      vehicleColor: '银色',
+      phone: '136****9012',
+    },
+  ];
+}
+
+/**
+ * Generate mock saved locations
+ */
+export function generateMockSavedLocations(): { pickups: TaxiLocation[], dropoffs: TaxiLocation[] } {
+  return {
+    pickups: [
+      {
+        name: '家',
+        address: '北京市朝阳区建国路88号SOHO现代城',
+        lat: 39.9087,
+        lng: 116.4605,
+      },
+      {
+        name: '公司',
+        address: '北京市海淀区中关村软件园二期',
+        lat: 40.0456,
+        lng: 116.2892,
+      },
+    ],
+    dropoffs: [
+      {
+        name: '首都机场T3',
+        address: '北京市顺义区首都国际机场3号航站楼',
+        lat: 40.0799,
+        lng: 116.6031,
+      },
+      {
+        name: '北京南站',
+        address: '北京市丰台区永外大街12号',
+        lat: 39.8654,
+        lng: 116.3787,
+      },
+    ],
+  };
+}
+
+/**
+ * Generate mock taxi ride history
+ */
+export function generateMockTaxiRides(): TaxiRide[] {
+  const drivers = generateMockTaxiDrivers();
+  
+  return [
+    {
+      id: 'ride-1',
+      pickup: {
+        name: '当前位置',
+        address: '北京市朝阳区三里屯太古里',
+        lat: 39.9341,
+        lng: 116.4555,
+      },
+      dropoff: {
+        name: '首都机场T3',
+        address: '北京市顺义区首都国际机场3号航站楼',
+        lat: 40.0799,
+        lng: 116.6031,
+      },
+      vehicleType: 'comfort',
+      status: 'in_progress',
+      driver: drivers[0],
+      estimatedFare: 125.00,
+      paymentMethod: 'omni_token',
+      paymentWalletId: 'wallet-1',
+      estimatedArrival: 0,
+      estimatedDuration: 45,
+      distance: 28.5,
+      createdAt: Date.now() - 30 * 60 * 1000,
+      startedAt: Date.now() - 15 * 60 * 1000,
+    },
+    {
+      id: 'ride-2',
+      pickup: {
+        name: '公司',
+        address: '北京市海淀区中关村软件园二期',
+        lat: 40.0456,
+        lng: 116.2892,
+      },
+      dropoff: {
+        name: '家',
+        address: '北京市朝阳区建国路88号SOHO现代城',
+        lat: 39.9087,
+        lng: 116.4605,
+      },
+      vehicleType: 'economy',
+      status: 'completed',
+      driver: drivers[1],
+      estimatedFare: 45.00,
+      actualFare: 42.50,
+      paymentMethod: 'crypto',
+      paymentWalletId: 'wallet-2',
+      paymentTxHash: '0xabc123...def456',
+      estimatedDuration: 35,
+      distance: 15.2,
+      createdAt: Date.now() - 24 * 60 * 60 * 1000,
+      startedAt: Date.now() - 24 * 60 * 60 * 1000 + 5 * 60 * 1000,
+      completedAt: Date.now() - 24 * 60 * 60 * 1000 + 40 * 60 * 1000,
+      userRating: 5,
+      userFeedback: '司机很专业，车内干净整洁',
+    },
+    {
+      id: 'ride-3',
+      pickup: {
+        name: '家',
+        address: '北京市朝阳区建国路88号SOHO现代城',
+        lat: 39.9087,
+        lng: 116.4605,
+      },
+      dropoff: {
+        name: '北京南站',
+        address: '北京市丰台区永外大街12号',
+        lat: 39.8654,
+        lng: 116.3787,
+      },
+      vehicleType: 'luxury',
+      status: 'completed',
+      driver: drivers[2],
+      estimatedFare: 85.00,
+      actualFare: 82.00,
+      paymentMethod: 'alipay',
+      estimatedDuration: 25,
+      distance: 12.8,
+      createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+      startedAt: Date.now() - 3 * 24 * 60 * 60 * 1000 + 3 * 60 * 1000,
+      completedAt: Date.now() - 3 * 24 * 60 * 60 * 1000 + 28 * 60 * 1000,
+      userRating: 5,
+    },
+    {
+      id: 'ride-4',
+      pickup: {
+        name: '王府井',
+        address: '北京市东城区王府井大街',
+        lat: 39.9149,
+        lng: 116.4076,
+      },
+      dropoff: {
+        name: '国贸',
+        address: '北京市朝阳区国贸CBD',
+        lat: 39.9084,
+        lng: 116.4618,
+      },
+      vehicleType: 'economy',
+      status: 'cancelled',
+      estimatedFare: 28.00,
+      paymentMethod: 'wechat',
+      estimatedDuration: 20,
+      distance: 6.5,
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Generate mock fare estimates for a route
+ */
+export function generateMockFareEstimates(): TaxiFareEstimate[] {
+  return [
+    {
+      vehicleType: 'economy',
+      vehicleName: '经济型',
+      estimatedFare: 35.00,
+      estimatedDuration: 25,
+      distance: 12.5,
+      baseFare: 13.00,
+      distanceCharge: 15.00,
+      timeCharge: 7.00,
+      surgeMultiplier: 1.0,
+      available: true,
+      estimatedWait: 3,
+    },
+    {
+      vehicleType: 'comfort',
+      vehicleName: '舒适型',
+      estimatedFare: 52.00,
+      estimatedDuration: 25,
+      distance: 12.5,
+      baseFare: 18.00,
+      distanceCharge: 22.00,
+      timeCharge: 12.00,
+      surgeMultiplier: 1.0,
+      available: true,
+      estimatedWait: 5,
+    },
+    {
+      vehicleType: 'luxury',
+      vehicleName: '豪华型',
+      estimatedFare: 85.00,
+      estimatedDuration: 25,
+      distance: 12.5,
+      baseFare: 30.00,
+      distanceCharge: 35.00,
+      timeCharge: 20.00,
+      surgeMultiplier: 1.0,
+      available: true,
+      estimatedWait: 8,
+    },
+    {
+      vehicleType: 'suv',
+      vehicleName: 'SUV',
+      estimatedFare: 68.00,
+      estimatedDuration: 25,
+      distance: 12.5,
+      baseFare: 25.00,
+      distanceCharge: 28.00,
+      timeCharge: 15.00,
+      surgeMultiplier: 1.0,
+      available: true,
+      estimatedWait: 10,
+    },
+    {
+      vehicleType: 'van',
+      vehicleName: '商务车',
+      estimatedFare: 95.00,
+      estimatedDuration: 25,
+      distance: 12.5,
+      baseFare: 35.00,
+      distanceCharge: 38.00,
+      timeCharge: 22.00,
+      surgeMultiplier: 1.0,
+      available: false,
+      estimatedWait: 15,
+    },
+  ];
+}
+
+/**
+ * Generate mock Taxido configuration
+ */
+export function generateMockTaxidoConfig(): TaxidoConfig {
+  const savedLocations = generateMockSavedLocations();
+  
+  return {
+    enabled: true,
+    defaultPaymentMethod: 'omni_token',
+    defaultVehicleType: 'comfort',
+    preferredWalletId: 'wallet-1',
+    omniTokenDiscount: true,
+    omniDiscountPercent: 10,
+    autoShareStatus: false,
+    savedPickups: savedLocations.pickups,
+    savedDropoffs: savedLocations.dropoffs,
+  };
+}
+
+/**
+ * Get display name for vehicle type
+ */
+export function getVehicleTypeName(type: string): string {
+  const names: Record<string, string> = {
+    economy: '经济型',
+    comfort: '舒适型',
+    luxury: '豪华型',
+    suv: 'SUV',
+    van: '商务车',
+  };
+  return names[type] || type;
+}
+
+/**
+ * Get display name for taxi ride status
+ */
+export function getTaxiStatusName(status: string): string {
+  const names: Record<string, string> = {
+    searching: '搜索司机中',
+    matched: '已匹配司机',
+    arriving: '司机正在到达',
+    in_progress: '行程中',
+    completed: '已完成',
+    cancelled: '已取消',
+  };
+  return names[status] || status;
+}
+
+/**
+ * Get color for taxi ride status
+ */
+export function getTaxiStatusColor(status: string): string {
+  switch (status) {
+    case 'completed': return 'text-green-600';
+    case 'in_progress': return 'text-blue-600';
+    case 'arriving':
+    case 'matched': return 'text-yellow-600';
+    case 'searching': return 'text-purple-600';
+    case 'cancelled': return 'text-red-600';
+    default: return 'text-gray-600';
+  }
+}
+
+/**
+ * Get payment method display name
+ */
+export function getPaymentMethodName(method: string): string {
+  const names: Record<string, string> = {
+    crypto: '加密货币',
+    alipay: '支付宝',
+    wechat: '微信支付',
+    card: '银行卡',
+    omni_token: 'OMNI代币',
+  };
+  return names[method] || method;
+}

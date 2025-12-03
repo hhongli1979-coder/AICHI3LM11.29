@@ -464,3 +464,146 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Taxido - Taxi Booking Types (二次开发集成)
+// ============================================================================
+
+/** Taxi ride status lifecycle */
+export type TaxiRideStatus = 
+  | 'searching'     // 搜索司机中
+  | 'matched'       // 已匹配司机
+  | 'arriving'      // 司机正在到达
+  | 'in_progress'   // 行程中
+  | 'completed'     // 已完成
+  | 'cancelled';    // 已取消
+
+/** Payment method for taxi rides */
+export type TaxiPaymentMethod = 'crypto' | 'alipay' | 'wechat' | 'card' | 'omni_token';
+
+/** Vehicle type for taxi booking */
+export type TaxiVehicleType = 'economy' | 'comfort' | 'luxury' | 'suv' | 'van';
+
+/** Driver information */
+export interface TaxiDriver {
+  /** Driver unique identifier */
+  id: string;
+  /** Driver name */
+  name: string;
+  /** Driver photo URL */
+  photoUrl?: string;
+  /** Driver rating (1-5 stars) */
+  rating: number;
+  /** Total completed rides */
+  totalRides: number;
+  /** Vehicle plate number */
+  vehiclePlate: string;
+  /** Vehicle model */
+  vehicleModel: string;
+  /** Vehicle color */
+  vehicleColor: string;
+  /** Driver phone number */
+  phone: string;
+}
+
+/** Location with coordinates */
+export interface TaxiLocation {
+  /** Location name/address */
+  name: string;
+  /** Detailed address */
+  address: string;
+  /** Latitude */
+  lat: number;
+  /** Longitude */
+  lng: number;
+}
+
+/** Taxi ride booking entity */
+export interface TaxiRide {
+  /** Unique identifier */
+  id: string;
+  /** Pickup location */
+  pickup: TaxiLocation;
+  /** Dropoff location */
+  dropoff: TaxiLocation;
+  /** Vehicle type */
+  vehicleType: TaxiVehicleType;
+  /** Current ride status */
+  status: TaxiRideStatus;
+  /** Assigned driver (if matched) */
+  driver?: TaxiDriver;
+  /** Estimated fare in USD */
+  estimatedFare: number;
+  /** Actual fare after completion */
+  actualFare?: number;
+  /** Payment method */
+  paymentMethod: TaxiPaymentMethod;
+  /** Crypto wallet used for payment (if crypto/omni_token) */
+  paymentWalletId?: string;
+  /** Transaction hash (if paid with crypto) */
+  paymentTxHash?: string;
+  /** Estimated arrival time in minutes */
+  estimatedArrival?: number;
+  /** Estimated trip duration in minutes */
+  estimatedDuration?: number;
+  /** Distance in kilometers */
+  distance?: number;
+  /** Unix timestamp of booking creation */
+  createdAt: number;
+  /** Unix timestamp of ride start */
+  startedAt?: number;
+  /** Unix timestamp of ride completion */
+  completedAt?: number;
+  /** User rating for the ride (1-5) */
+  userRating?: number;
+  /** User feedback/notes */
+  userFeedback?: string;
+}
+
+/** Fare estimate response */
+export interface TaxiFareEstimate {
+  /** Vehicle type */
+  vehicleType: TaxiVehicleType;
+  /** Vehicle type display name */
+  vehicleName: string;
+  /** Estimated fare in USD */
+  estimatedFare: number;
+  /** Estimated duration in minutes */
+  estimatedDuration: number;
+  /** Distance in kilometers */
+  distance: number;
+  /** Base fare */
+  baseFare: number;
+  /** Distance charge */
+  distanceCharge: number;
+  /** Time charge */
+  timeCharge: number;
+  /** Surge multiplier (1.0 = no surge) */
+  surgeMultiplier: number;
+  /** Whether this vehicle type is available */
+  available: boolean;
+  /** Estimated wait time in minutes */
+  estimatedWait: number;
+}
+
+/** Taxido service configuration */
+export interface TaxidoConfig {
+  /** Whether Taxido service is enabled */
+  enabled: boolean;
+  /** Default payment method */
+  defaultPaymentMethod: TaxiPaymentMethod;
+  /** Default vehicle type preference */
+  defaultVehicleType: TaxiVehicleType;
+  /** Preferred wallet for crypto payments */
+  preferredWalletId?: string;
+  /** Enable OMNI token discount */
+  omniTokenDiscount: boolean;
+  /** Discount percentage when paying with OMNI */
+  omniDiscountPercent: number;
+  /** Auto-share ride status with contacts */
+  autoShareStatus: boolean;
+  /** Saved pickup locations */
+  savedPickups: TaxiLocation[];
+  /** Saved dropoff locations */
+  savedDropoffs: TaxiLocation[];
+}
