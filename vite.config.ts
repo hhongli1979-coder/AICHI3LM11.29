@@ -5,8 +5,8 @@ import { resolve } from 'path'
 
 const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
 
-// Check if running in Spark environment
-const isSparkEnvironment = process.env.SPARK_ENV === 'true' || process.env.npm_package_name?.includes('spark');
+// Check if running in Spark environment using explicit environment variable
+const isSparkEnvironment = process.env.SPARK_ENV === 'true';
 
 // Conditionally load Spark plugins
 async function getSparkPlugins(): Promise<PluginOption[]> {
@@ -30,6 +30,15 @@ async function getSparkPlugins(): Promise<PluginOption[]> {
 export default defineConfig(async () => {
   const sparkPlugins = await getSparkPlugins();
   
+  // Build alias configuration - only provide spark shim in non-Spark environment
+  const aliases: Record<string, string> = {
+    '@': resolve(projectRoot, 'src'),
+  };
+  
+  if (!isSparkEnvironment) {
+    aliases['@github/spark/spark'] = resolve(projectRoot, 'src/lib/spark-shim.ts');
+  }
+  
   return {
     plugins: [
       react(),
@@ -37,11 +46,7 @@ export default defineConfig(async () => {
       ...sparkPlugins,
     ],
     resolve: {
-      alias: {
-        '@': resolve(projectRoot, 'src'),
-        // Provide empty module for spark in non-Spark environment
-        '@github/spark/spark': isSparkEnvironment ? '@github/spark/spark' : resolve(projectRoot, 'src/lib/spark-shim.ts'),
-      }
+      alias: aliases
     },
   };
 });
