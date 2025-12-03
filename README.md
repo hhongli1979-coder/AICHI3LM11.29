@@ -34,6 +34,7 @@ OmniCore Wallet is an enterprise-grade SaaS platform for managing crypto assets,
 - 📈 **DeFi Treasury Automation** - Automated yield farming, staking, and DCA strategies for idle assets
 - 🪙 **OMNI Token Economy** - Native platform token for fee discounts, governance voting, and revenue sharing
 - 🤖 **AI Risk Intelligence** - Real-time transaction risk analysis using machine learning
+- 🔤 **Chinese NLP (Jiagu)** - Deep learning NLP toolkit for Chinese text analysis, sentiment, and knowledge extraction
 - 👥 **Organization Management** - Multi-tenant SaaS with role-based permissions and team invitations
 - 📊 **Real-Time Dashboard** - Unified view of all assets, transactions, and DeFi positions across chains
 
@@ -90,6 +91,32 @@ npm run preview
 | Phosphor Icons | 2.x | Icon Library |
 | Sonner | 2.x | Toast Notifications |
 | GitHub Spark | 0.42 | Platform Framework |
+
+---
+
+## Chinese NLP Engine (Jiagu)
+
+The platform integrates [Jiagu (甲骨)](https://gitee.com/ownthink/Jiagu), a deep learning-based Chinese Natural Language Processing toolkit developed by OwnThink. Jiagu provides comprehensive Chinese text analysis capabilities for risk intelligence and user interaction processing.
+
+### Key Capabilities
+
+| Feature | Description |
+|---------|-------------|
+| Word Segmentation | Chinese text tokenization with MSR/PKU/CNC standards |
+| POS Tagging | Part-of-speech annotation for grammatical analysis |
+| Named Entity Recognition | Identification of people, locations, organizations (BIO format) |
+| Knowledge Graph Extraction | Triple extraction for semantic relationship mining |
+| Sentiment Analysis | BiLSTM-based emotional tone detection |
+| Keyword Extraction | Automatic key term identification |
+| Text Summarization | Concise summary generation from long texts |
+| New Word Discovery | Detection of unknown or emerging vocabulary |
+
+### Use Cases in OmniCore
+
+- **Transaction Risk Analysis** - Analyze transaction descriptions for suspicious patterns
+- **User Feedback Processing** - Extract insights from Chinese user messages
+- **Knowledge Graph Building** - Build entity-relationship graphs from financial texts
+- **Sentiment Monitoring** - Track market sentiment from Chinese sources
 
 ---
 
