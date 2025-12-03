@@ -262,3 +262,11 @@ npm install --legacy-peer-deps
 ## 贡献
 
 欢迎提交 Issues 和 Pull Requests。详细贡献指南请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+---
+
+## 客户支持
+
+有关 Fiat24 服务机器人、服务表格和支持渠道的信息，请参阅 [SUPPORT.md](SUPPORT.md)。
+
+> ⚠️ **重要通知**: 自2025年9月1日起，电子邮件地址 `service@fiat24.com` 已弃用，并由 Telegram 服务机器人 ([https://t.me/fiat24bot](https://t.me/fiat24bot)) 取代。
