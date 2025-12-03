@@ -41,8 +41,8 @@ if ($status) {
     Write-Host ""
     $response = Read-Host "是否先暂存这些更改？(y/n)"
     if ($response -eq "y" -or $response -eq "Y") {
-        & git stash push -m "Auto stash before pull $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-        Write-Host "更改已暂存" -ForegroundColor Green
+        & git stash push -m "Auto stash before pull"
+        Write-Host "更改已暂存（使用 'git stash list' 查看暂存列表）" -ForegroundColor Green
     }
 }
 
