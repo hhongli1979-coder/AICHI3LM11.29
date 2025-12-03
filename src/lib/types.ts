@@ -464,3 +464,137 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Fiat24 KYC Registration Types
+// ============================================================================
+
+/** Occupation type codes for KYC registration */
+export type OccupationCode = 'EMP' | 'SLF' | 'RET' | 'STU' | 'LOS';
+
+/** Job category codes for KYC registration */
+export type JobCategoryCode = 'EEE' | 'MNG' | 'CLV' | 'DIR';
+
+/** Purpose codes for account usage */
+export type PurposeCode = 'SLR' | 'EXP' | 'PNS' | 'PTP' | 'IVT' | 'FRX' | 'TUP';
+
+/** Source of funds codes */
+export type SourceOfFundsCode = 'SAV' | 'BIZ' | 'ERB' | 'INV' | 'DIG' | 'REA' | 'RUL';
+
+/** Business sector codes */
+export type SectorCode = 
+  | 'ACC' | 'ADM' | 'SEX' | 'AGR' | 'NUC' | 'ANT' | 'BRK' | 'CAS' | 'TSM' | 'NGO'
+  | 'BAU' | 'BTC' | 'ART' | 'EDU' | 'WTR' | 'EMG' | 'BNK' | 'PBK' | 'FIN' | 'ISU'
+  | 'MTA' | 'TRA' | 'GOV' | 'MED' | 'INT' | 'JEW' | 'LAW' | 'MAN' | 'MKT' | 'MIN'
+  | 'FAR' | 'OIL' | 'TBK' | 'SAL' | 'RUB' | 'DEV' | 'WEL' | 'SCW' | 'TSP' | 'WPN';
+
+/** Salary/income bracket codes */
+export type SalaryBracketCode = 'B1' | 'B2' | 'B3' | 'B4' | 'B5';
+
+/** Total assets bracket codes */
+export type TotalAssetsBracketCode = 'B1' | 'B2' | 'B3' | 'B4' | 'B5';
+
+/** Gender code for ID verification */
+export type GenderCode = 'M' | 'F';
+
+/** Document type for ID verification */
+export type DocumentTypeCode = 'P' | 'I';
+
+/** GPS coordinates */
+export interface GPSCoordinates {
+  lat: number;
+  lng: number;
+}
+
+/** User profile for KYC registration */
+export interface Fiat24UserProfile {
+  /** Annual salary bracket */
+  annualSalary: SalaryBracketCode;
+  /** Total assets bracket */
+  totalAssets: TotalAssetsBracketCode;
+  /** Main occupation */
+  mainOccupation: OccupationCode;
+  /** Job category */
+  jobCategory: JobCategoryCode;
+  /** Business sector */
+  sector: SectorCode;
+  /** Source of funds */
+  sourceOfFunds: SourceOfFundsCode;
+  /** Comma-separated list of purposes */
+  purposes: string;
+}
+
+/** User address for KYC registration */
+export interface Fiat24Address {
+  /** Country ISO3 code */
+  countryISO3: string;
+  /** Street name */
+  street: string;
+  /** Street number */
+  streetNumber: string;
+  /** Postal/ZIP code */
+  postalCode: string;
+  /** City name */
+  city: string;
+  /** GPS coordinates of the address */
+  gps: GPSCoordinates;
+  /** Current user GPS coordinates for address proof */
+  addressProof: GPSCoordinates;
+  /** Reverse geocoded address from user coordinates */
+  reverseAddressProof: string;
+  /** Distance between gps and addressProof (in KM) */
+  distance: number;
+}
+
+/** ID document information for KYC registration */
+export interface Fiat24IdDocument {
+  /** Gender */
+  gender: GenderCode;
+  /** First name in Latin characters */
+  firstName: string;
+  /** Last name in Latin characters */
+  lastName: string;
+  /** Full name in original language */
+  nameOfHolder: string;
+  /** Birthday in DD.MM.YYYY format */
+  birthday: string;
+  /** Document number */
+  documentNumber: string;
+  /** Document type: P=Passport, I=National ID */
+  documentType: DocumentTypeCode;
+  /** Document expiry date in DD.MM.YYYY format */
+  documentValidUntil: string;
+  /** Issuer country ISO3 code */
+  issuerCountry: string;
+  /** Nationality ISO3 code */
+  nationality: string;
+}
+
+/** TAN signature request body for Fiat24 API */
+export interface Fiat24TanSignatureRequest {
+  /** Blockchain chain ID */
+  chainId: number;
+  /** NFT ID */
+  nftId: number;
+  /** User email */
+  email: string;
+  /** User profile information */
+  profile: Fiat24UserProfile;
+  /** User address information */
+  address: Fiat24Address;
+  /** ID document information */
+  id: Fiat24IdDocument;
+}
+
+/** TAN signature API response */
+export interface Fiat24TanSignatureResponse {
+  /** Response status code */
+  status: number;
+  /** Response data */
+  data: {
+    /** Timestamp in milliseconds */
+    tanDateMs: number;
+    /** Message to sign */
+    messageToSign: string;
+  };
+}

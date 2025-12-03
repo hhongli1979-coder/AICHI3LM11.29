@@ -8,9 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Users, Plus, Trash, Shield, EnvelopeSimple, Crown, Eye, PencilSimple } from '@phosphor-icons/react';
+import { Users, Plus, Trash, Shield, EnvelopeSimple, Crown, Eye, PencilSimple, IdentificationCard } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { formatTimeAgo } from '@/lib/mock-data';
+import { KYCRegistrationForm } from './KYCRegistrationForm';
 
 interface TeamMember {
   id: string;
@@ -127,8 +128,12 @@ export function OrganizationSettings() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="team" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="team">Team Members</TabsTrigger>
+              <TabsTrigger value="kyc" className="gap-1">
+                <IdentificationCard size={16} weight="duotone" />
+                KYC
+              </TabsTrigger>
               <TabsTrigger value="general">General</TabsTrigger>
               <TabsTrigger value="billing">Billing</TabsTrigger>
             </TabsList>
@@ -299,6 +304,11 @@ export function OrganizationSettings() {
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* KYC Registration Tab */}
+            <TabsContent value="kyc" className="space-y-4">
+              <KYCRegistrationForm />
             </TabsContent>
 
             {/* General Tab */}

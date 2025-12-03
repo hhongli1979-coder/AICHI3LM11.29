@@ -33,6 +33,168 @@ export const NETWORKS = {
 };
 
 // ============================================================================
+// Fiat24 KYC Registration Constants
+// ============================================================================
+
+/**
+ * Occupation types for KYC registration
+ * Used in profile.mainOccupation field
+ */
+export const OCCUPATIONS: Record<string, string> = {
+  "EMP": "Employed",
+  "SLF": "Self-employed / Freelancer",
+  "RET": "Retired / Pension recipient",
+  "STU": "Trainee / Student",
+  "LOS": "Unemployed"
+};
+
+/**
+ * Job category types for KYC registration
+ * Used in profile.jobCategory field
+ */
+export const JOB_CATEGORIES: Record<string, string> = {
+  "EEE": "Employee",
+  "MNG": "Manager",
+  "CLV": "C-Level / Executive Board",
+  "DIR": "Director / Member of the Management Board"
+};
+
+/**
+ * Purpose types for account usage
+ * Used in profile.purposes field (comma-separated list)
+ */
+export const PURPOSES_LIST: Record<string, string> = {
+  "SLR": "Salary account",
+  "EXP": "Living expenses",
+  "PNS": "Savings / Pension",
+  "PTP": "Peer-to-peer payments",
+  "IVT": "Investments",
+  "FRX": "Money exchange",
+  "TUP": "Crypto off-ramp"
+};
+
+/**
+ * Source of funds types for KYC registration
+ * Used in profile.sourceOfFunds field
+ */
+export const SOURCE_OF_FUNDS: Record<string, string> = {
+  "SAV": "Savings and Pension",
+  "BIZ": "Own business operations or salary",
+  "ERB": "Inheritance",
+  "INV": "Capital gain from traditional investments",
+  "DIG": "Digital Asset Investment",
+  "REA": "Capital gain from real estate",
+  "RUL": "Compensation from legal rulings"
+};
+
+/**
+ * Business sector types for KYC registration
+ * Used in profile.sector field
+ */
+export const SECTORS_MAPPING: Record<string, string> = {
+  "ACC": "Accountancy",
+  "ADM": "Administrative / HR / Recruitment",
+  "SEX": "Adult Entertainment / Dating Business",
+  "AGR": "Agriculture / Forestry / Fishing",
+  "NUC": "Atomic/Nuclear-related",
+  "ANT": "Arts and Antiques Dealer",
+  "BRK": "Broker / Dealer",
+  "CAS": "Casinos / Gambling and connected (all forms)",
+  "TSM": "Catering and Restaurants / Hotel industry / Cleaning",
+  "NGO": "Charities and Social services / NGO / Religious or political organisations",
+  "BAU": "Construction / Real Estate",
+  "BTC": "Crypto Exchange / Broker",
+  "ART": "Culture / Entertainment / Theme parks",
+  "EDU": "Education",
+  "WTR": "Electricity / Water Supply / Sewage / Waste Management",
+  "EMG": "Emergency Serving",
+  "BNK": "Financial Services - Retail Banking",
+  "PBK": "Financial Services - Private Banking",
+  "FIN": "Financial Services - Foreign Exchange Dealer",
+  "ISU": "Financial Services - Insurance",
+  "MTA": "Financial Services - Payment Services",
+  "TRA": "Financial Services – Regulated money transfer agent",
+  "GOV": "Government / Public Administration / Defence",
+  "MED": "Healthcare / Medical",
+  "INT": "Information Technology",
+  "JEW": "Jewellery incl. All Precious Stones and Metals",
+  "LAW": "Legal",
+  "MAN": "Manufacturing excl. tobacco",
+  "MKT": "Marketing / Media / Communications / Social media",
+  "MIN": "Mining and Quarrying",
+  "FAR": "Pharmaceuticals",
+  "OIL": "Oils and Gas",
+  "TBK": "Tobacco",
+  "SAL": "Retail sales excl. tobacco",
+  "RUB": "Rubber and Plastic",
+  "DEV": "Science / Engineering / Technology",
+  "WEL": "Sports and Wellness",
+  "SCW": "Social Work",
+  "TSP": "Transportation and Storage",
+  "WPN": "Weapon or Armament manufacturing and trade",
+};
+
+/**
+ * Non-allowed business sectors for KYC registration
+ * These sectors cannot be selected during registration
+ */
+export const NON_ALLOWED_SECTORS: string[] = [
+  "SEX", "ANT", "NUC", "BRK", "CAS", "NGO", "BTC", "EMG", "PBK", "FIN", 
+  "ISU", "TRA", "MTA", "GOV", "JEW", "MIN", "OIL", "FAR", "SCW", "TBK", 
+  "TSP", "WPN"
+];
+
+/**
+ * Annual salary brackets for KYC registration
+ * Used in profile.annualSalary field
+ */
+export const SALARIES: Record<string, string> = {
+  "B1": "under 50'000",
+  "B2": "50'000 - 100'000",
+  "B3": "100'000 - 500'000",
+  "B4": "500'000 - 1'000'000",
+  "B5": "over 1'000'000",
+};
+
+/**
+ * Total assets brackets for KYC registration
+ * Used in profile.totalAssets field
+ */
+export const TOTAL_ASSETS: Record<string, string> = {
+  "B1": "under 100'000",
+  "B2": "100'000 - 500'000",
+  "B3": "500'000 - 1'000'000",
+  "B4": "1'000'000 - 10'000'000",
+  "B5": "over 10'000'000"
+};
+
+/**
+ * Get allowed sectors for KYC registration
+ * Filters out non-allowed sectors from the full sector list
+ * 
+ * @returns Record of allowed sector codes and their descriptions
+ */
+export function getAllowedSectors(): Record<string, string> {
+  const allowedSectors: Record<string, string> = {};
+  for (const [code, description] of Object.entries(SECTORS_MAPPING)) {
+    if (!NON_ALLOWED_SECTORS.includes(code)) {
+      allowedSectors[code] = description;
+    }
+  }
+  return allowedSectors;
+}
+
+/**
+ * Check if a sector code is allowed
+ * 
+ * @param sectorCode - The sector code to check
+ * @returns boolean indicating if the sector is allowed
+ */
+export function isSectorAllowed(sectorCode: string): boolean {
+  return !NON_ALLOWED_SECTORS.includes(sectorCode);
+}
+
+// ============================================================================
 // Wallet Mock Data
 // ============================================================================
 
