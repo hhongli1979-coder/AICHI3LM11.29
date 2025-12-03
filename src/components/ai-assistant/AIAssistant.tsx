@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,13 +21,18 @@ import {
   Memory,
   Gear,
   Database,
+  Plugs,
+  PlugsConnected,
 } from '@phosphor-icons/react';
 import {
   generateMockAIAssistantState,
   formatTimeAgo,
+  generateMockAIModelSettings,
 } from '@/lib/mock-data';
 import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
 import { AIModelSettingsPanel } from './AIModelSettings';
+import { OllamaClient, type OllamaConnectionStatus, type OllamaChatMessage } from '@/lib/ollama-client';
+import { toast } from 'sonner';
 
 function getCapabilityIcon(iconName: string) {
   const icons: Record<string, React.ReactNode> = {
@@ -213,15 +218,90 @@ export function AIAssistant() {
   const [state, setState] = useState(generateMockAIAssistantState);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [ollamaStatus, setOllamaStatus] = useState<OllamaConnectionStatus>({ connected: false });
+  const [useOllama, setUseOllama] = useState(false);
+  const [streamingContent, setStreamingContent] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const ollamaClientRef = useRef<OllamaClient | null>(null);
+
+  // Initialize Ollama client and check connection
+  useEffect(() => {
+    const modelSettings = generateMockAIModelSettings();
+    const defaultModel = modelSettings.models.find(m => m.isDefault) || modelSettings.models[0];
+    
+    if (defaultModel) {
+      const baseUrl = defaultModel.apiEndpoint
+        .replace(/\/api\/(generate|chat)$/, '')
+        .replace(/\/$/, '') || 'http://localhost:11434';
+      
+      ollamaClientRef.current = new OllamaClient(baseUrl);
+      
+      // Check connection status
+      ollamaClientRef.current.checkConnection().then((status) => {
+        setOllamaStatus(status);
+        if (status.connected) {
+          setUseOllama(true);
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [state.currentConversation]);
+  }, [state.currentConversation, streamingContent]);
 
-  const handleSendMessage = () => {
+  const handleOllamaChat = useCallback(async (userInput: string) => {
+    if (!ollamaClientRef.current || !ollamaStatus.connected) {
+      return null;
+    }
+
+    const modelSettings = generateMockAIModelSettings();
+    const defaultModel = modelSettings.models.find(m => m.isDefault) || modelSettings.models[0];
+    
+    if (!defaultModel) {
+      return null;
+    }
+
+    // Build conversation history for context
+    const messages: OllamaChatMessage[] = state.currentConversation.map((msg) => ({
+      role: msg.role as 'user' | 'assistant',
+      content: msg.content,
+    }));
+    
+    // Add current user message
+    messages.push({ role: 'user', content: userInput });
+
+    try {
+      // Use streaming for better UX
+      let fullContent = '';
+      setStreamingContent('');
+      
+      await ollamaClientRef.current.streamChat(
+        defaultModel.modelName,
+        messages,
+        (chunk) => {
+          fullContent += chunk;
+          setStreamingContent(fullContent);
+        },
+        {
+          temperature: defaultModel.temperature,
+          maxTokens: defaultModel.maxTokens,
+          systemPrompt: defaultModel.systemPrompt,
+        }
+      );
+
+      setStreamingContent('');
+      return fullContent;
+    } catch (error) {
+      console.error('Ollama chat error:', error);
+      toast.error('Ollama 连接失败，使用本地模拟响应');
+      return null;
+    }
+  }, [ollamaStatus.connected, state.currentConversation]);
+
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: AIMessage = {
@@ -237,26 +317,49 @@ export function AIAssistant() {
       lastActiveAt: Date.now(),
     }));
 
+    const currentInput = inputValue;
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: AIMessage = {
-        id: `msg-${Date.now()}`,
-        role: 'assistant',
-        content: generateAIResponse(inputValue),
-        timestamp: Date.now(),
-        action: detectAction(inputValue),
-      };
+    // Try Ollama first if enabled, fallback to mock response
+    let responseContent: string | null = null;
+    
+    if (useOllama && ollamaStatus.connected) {
+      responseContent = await handleOllamaChat(currentInput);
+    }
 
-      setState((prev) => ({
-        ...prev,
-        currentConversation: [...prev.currentConversation, aiResponse],
-        lastActiveAt: Date.now(),
-      }));
-      setIsTyping(false);
-    }, 1500);
+    // Fallback to mock response if Ollama is not available or failed
+    if (!responseContent) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      responseContent = generateAIResponse(currentInput);
+    }
+
+    const aiResponse: AIMessage = {
+      id: `msg-${Date.now()}`,
+      role: 'assistant',
+      content: responseContent,
+      timestamp: Date.now(),
+      action: detectAction(currentInput),
+    };
+
+    setState((prev) => ({
+      ...prev,
+      currentConversation: [...prev.currentConversation, aiResponse],
+      lastActiveAt: Date.now(),
+    }));
+    setIsTyping(false);
+  };
+
+  const handleRefreshOllamaConnection = async () => {
+    if (ollamaClientRef.current) {
+      const status = await ollamaClientRef.current.checkConnection();
+      setOllamaStatus(status);
+      if (status.connected) {
+        toast.success(`已连接到 Ollama，可用模型: ${status.models?.join(', ') || '无'}`);
+      } else {
+        toast.error(status.error || 'Ollama 连接失败');
+      }
+    }
   };
 
   const handleToggleCapability = (id: string) => {
@@ -286,10 +389,43 @@ export function AIAssistant() {
             </p>
           </div>
         </div>
-        <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
-          <Sparkle size={14} weight="fill" />
-          {state.isActive ? '活跃中' : '休眠'}
-        </Badge>
+        <div className="flex items-center gap-2">
+          {/* Ollama Connection Status */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={handleRefreshOllamaConnection}
+          >
+            {ollamaStatus.connected ? (
+              <>
+                <PlugsConnected size={16} weight="duotone" className="text-green-500" />
+                <span className="hidden sm:inline text-green-600">Ollama 已连接</span>
+              </>
+            ) : (
+              <>
+                <Plugs size={16} weight="duotone" className="text-muted-foreground" />
+                <span className="hidden sm:inline">Ollama 未连接</span>
+              </>
+            )}
+          </Button>
+          
+          {/* Use Ollama Toggle */}
+          {ollamaStatus.connected && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border bg-card">
+              <span className="text-xs text-muted-foreground">使用 Ollama</span>
+              <Switch
+                checked={useOllama}
+                onCheckedChange={setUseOllama}
+              />
+            </div>
+          )}
+          
+          <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
+            <Sparkle size={14} weight="fill" />
+            {state.isActive ? '活跃中' : '休眠'}
+          </Badge>
+        </div>
       </div>
 
       <Tabs defaultValue="chat" className="space-y-4">
@@ -319,9 +455,20 @@ export function AIAssistant() {
               <CardTitle className="text-lg flex items-center gap-2">
                 <ChatCircle size={20} weight="duotone" />
                 智能对话
+                {useOllama && ollamaStatus.connected && (
+                  <Badge variant="outline" className="text-xs gap-1 bg-green-50 text-green-700 border-green-300">
+                    <PlugsConnected size={12} />
+                    Ollama
+                  </Badge>
+                )}
               </CardTitle>
               <CardDescription>
                 使用自然语言与 AI 助手交流，执行钱包操作
+                {ollamaStatus.models && ollamaStatus.models.length > 0 && (
+                  <span className="text-xs ml-2">
+                    (可用模型: {ollamaStatus.models.slice(0, 3).join(', ')}{ollamaStatus.models.length > 3 ? '...' : ''})
+                  </span>
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -329,12 +476,29 @@ export function AIAssistant() {
                 {state.currentConversation.map((message) => (
                   <MessageBubble key={message.id} message={message} />
                 ))}
-                {isTyping && (
+                {/* Show streaming content when using Ollama */}
+                {streamingContent && (
+                  <div className="flex justify-start mb-4">
+                    <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-muted">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Robot size={16} weight="duotone" className="text-primary" />
+                        <span className="text-xs font-medium text-primary">OmniCore AI</span>
+                        <Badge variant="outline" className="text-xs py-0 bg-purple-50 text-purple-700 border-purple-300">
+                          Ollama 流式响应
+                        </Badge>
+                      </div>
+                      <div className="text-sm whitespace-pre-wrap">{streamingContent}</div>
+                    </div>
+                  </div>
+                )}
+                {isTyping && !streamingContent && (
                   <div className="flex justify-start mb-4">
                     <div className="bg-muted rounded-2xl px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Robot size={16} weight="duotone" className="text-primary animate-pulse" />
-                        <span className="text-sm text-muted-foreground">AI 正在思考...</span>
+                        <span className="text-sm text-muted-foreground">
+                          {useOllama && ollamaStatus.connected ? 'Ollama 正在思考...' : 'AI 正在思考...'}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -345,10 +509,11 @@ export function AIAssistant() {
                   placeholder="输入您的问题或指令..."
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  onKeyDown={(e) => e.key === 'Enter' && !isTyping && handleSendMessage()}
+                  disabled={isTyping}
                   className="flex-1"
                 />
-                <Button onClick={handleSendMessage} className="gap-2">
+                <Button onClick={handleSendMessage} className="gap-2" disabled={isTyping}>
                   <PaperPlaneTilt size={18} weight="fill" />
                   发送
                 </Button>
@@ -361,6 +526,7 @@ export function AIAssistant() {
                     size="sm"
                     onClick={() => setInputValue(suggestion)}
                     className="text-xs"
+                    disabled={isTyping}
                   >
                     {suggestion}
                   </Button>
