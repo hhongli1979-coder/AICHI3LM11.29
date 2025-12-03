@@ -302,7 +302,7 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
                 <Label htmlFor="modelName">模型标识 *</Label>
                 <Input
                   id="modelName"
-                  placeholder="例如：llama3:8b, gpt-4"
+                  placeholder="例如：llama4:latest, llama3.3:70b, llama3:8b, gpt-4"
                   value={formData.modelName}
                   onChange={(e) => setFormData({ ...formData, modelName: e.target.value })}
                 />
