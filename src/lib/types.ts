@@ -405,7 +405,7 @@ export interface AICapability {
 // ============================================================================
 
 /** Supported AI model providers */
-export type AIModelProvider = 'openai' | 'anthropic' | 'ollama' | 'omega-ai' | 'custom' | 'local';
+export type AIModelProvider = 'openai' | 'anthropic' | 'ollama' | 'omega-ai' | 'jiagu' | 'custom' | 'local';
 
 /** AI model configuration */
 export interface AIModelConfig {
@@ -463,4 +463,87 @@ export interface CustomEndpoint {
   headers: Record<string, string>;
   /** Whether endpoint is enabled */
   enabled: boolean;
+}
+
+// ============================================================================
+// Chinese NLP (Jiagu) Integration Types - 中文自然语言处理
+// ============================================================================
+
+/** Jiagu NLP capability types */
+export type JiaguCapability = 
+  | 'segmentation'     // 分词
+  | 'pos_tagging'      // 词性标注
+  | 'ner'              // 命名实体识别
+  | 'knowledge_graph'  // 知识图谱
+  | 'sentiment'        // 情感分析
+  | 'keywords'         // 关键词提取
+  | 'summarization'    // 文本摘要
+  | 'new_word';        // 新词发现
+
+/** Jiagu NLP configuration */
+export interface JiaguConfig {
+  /** Unique identifier */
+  id: string;
+  /** Whether Jiagu NLP is enabled */
+  enabled: boolean;
+  /** Jiagu API endpoint */
+  apiEndpoint: string;
+  /** Enabled capabilities */
+  enabledCapabilities: JiaguCapability[];
+  /** Default tokenization mode: 'msr' | 'pku' | 'cnc' */
+  tokenizationMode: 'msr' | 'pku' | 'cnc';
+  /** Unix timestamp of creation */
+  createdAt: number;
+  /** Unix timestamp of last update */
+  updatedAt: number;
+}
+
+/** Jiagu NLP analysis result */
+export interface JiaguAnalysisResult {
+  /** Unique identifier */
+  id: string;
+  /** Original text input */
+  text: string;
+  /** Word segmentation result */
+  segments?: string[];
+  /** POS tags for each segment */
+  posTags?: Array<{ word: string; tag: string }>;
+  /** Named entities found */
+  entities?: Array<{ text: string; type: 'PER' | 'LOC' | 'ORG'; start: number; end: number }>;
+  /** Knowledge graph triples */
+  knowledgeTriples?: Array<{ subject: string; predicate: string; object: string }>;
+  /** Sentiment score (-1 to 1) */
+  sentimentScore?: number;
+  /** Extracted keywords with weights */
+  keywords?: Array<{ word: string; weight: number }>;
+  /** Generated summary */
+  summary?: string;
+  /** Discovered new words */
+  newWords?: string[];
+  /** Processing time in ms */
+  processingTime: number;
+  /** Unix timestamp of analysis */
+  analyzedAt: number;
+}
+
+// ============================================================================
+// Integrated AI Engine Configuration - 集成AI引擎配置
+// ============================================================================
+
+/** Integrated AI engine combining Omega-AI and Jiagu */
+export interface IntegratedAIEngine {
+  /** Unique identifier */
+  id: string;
+  /** Engine name */
+  name: string;
+  /** Omega-AI model configuration */
+  omegaAIConfig?: AIModelConfig;
+  /** Jiagu NLP configuration */
+  jiaguConfig?: JiaguConfig;
+  /** Whether the integrated engine is enabled */
+  enabled: boolean;
+  /** Processing mode: 'sequential' (Jiagu then Omega-AI) or 'parallel' */
+  processingMode: 'sequential' | 'parallel';
+  /** Unix timestamp of creation */
+  createdAt: number;
 }

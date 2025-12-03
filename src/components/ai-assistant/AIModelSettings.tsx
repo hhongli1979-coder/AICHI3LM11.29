@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   Select,
@@ -39,9 +39,19 @@ import {
   Lightning,
   Database,
   Link,
+  Translate,
+  TextAa,
+  Tag,
+  UserCircle,
+  Graph,
+  Smiley,
+  FileText,
+  Sparkle,
+  ArrowsLeftRight,
+  Brain,
 } from '@phosphor-icons/react';
-import { generateMockAIModelSettings } from '@/lib/mock-data';
-import type { AIModelConfig, AIModelSettings, AIModelProvider, CustomEndpoint } from '@/lib/types';
+import { generateMockAIModelSettings, generateMockJiaguConfig, generateMockIntegratedAIEngine, getJiaguCapabilityInfo } from '@/lib/mock-data';
+import type { AIModelConfig, AIModelSettings, AIModelProvider, CustomEndpoint, JiaguConfig, JiaguCapability, IntegratedAIEngine } from '@/lib/types';
 import { toast } from 'sonner';
 
 function getProviderIcon(provider: AIModelProvider) {
@@ -54,6 +64,10 @@ function getProviderIcon(provider: AIModelProvider) {
       return <Globe size={18} weight="duotone" className="text-blue-500" />;
     case 'anthropic':
       return <Lightning size={18} weight="duotone" className="text-amber-500" />;
+    case 'omega-ai':
+      return <Brain size={18} weight="duotone" className="text-cyan-500" />;
+    case 'jiagu':
+      return <Translate size={18} weight="duotone" className="text-red-500" />;
     case 'custom':
       return <Code size={18} weight="duotone" className="text-pink-500" />;
     default:
@@ -71,6 +85,10 @@ function getProviderLabel(provider: AIModelProvider): string {
       return 'OpenAI';
     case 'anthropic':
       return 'Anthropic';
+    case 'omega-ai':
+      return 'Omega-AI';
+    case 'jiagu':
+      return '甲骨 NLP';
     case 'custom':
       return '自定义';
     default:
@@ -88,6 +106,10 @@ function getProviderBadgeColor(provider: AIModelProvider): string {
       return 'bg-blue-100 text-blue-700 border-blue-300';
     case 'anthropic':
       return 'bg-amber-100 text-amber-700 border-amber-300';
+    case 'omega-ai':
+      return 'bg-cyan-100 text-cyan-700 border-cyan-300';
+    case 'jiagu':
+      return 'bg-red-100 text-red-700 border-red-300';
     case 'custom':
       return 'bg-pink-100 text-pink-700 border-pink-300';
     default:
@@ -274,6 +296,18 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
                         Ollama
                       </div>
                     </SelectItem>
+                    <SelectItem value="omega-ai">
+                      <div className="flex items-center gap-2">
+                        <Brain size={16} />
+                        Omega-AI 深度学习
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="jiagu">
+                      <div className="flex items-center gap-2">
+                        <Translate size={16} />
+                        甲骨 中文NLP
+                      </div>
+                    </SelectItem>
                     <SelectItem value="openai">
                       <div className="flex items-center gap-2">
                         <Globe size={16} />
@@ -449,6 +483,8 @@ export function AIModelSettingsPanel() {
   const [settings, setSettings] = useState<AIModelSettings>(generateMockAIModelSettings);
   const [addModelOpen, setAddModelOpen] = useState(false);
   const [editingModel, setEditingModel] = useState<AIModelConfig | null>(null);
+  const [jiaguConfig, setJiaguConfig] = useState<JiaguConfig>(generateMockJiaguConfig);
+  const [integratedEngine, setIntegratedEngine] = useState<IntegratedAIEngine>(generateMockIntegratedAIEngine);
 
   const handleToggleModel = (id: string) => {
     setSettings((prev) => ({
@@ -518,8 +554,243 @@ export function AIModelSettingsPanel() {
     toast.success('端点已删除');
   };
 
+  const handleToggleJiaguCapability = (capability: JiaguCapability) => {
+    setJiaguConfig((prev) => ({
+      ...prev,
+      enabledCapabilities: prev.enabledCapabilities.includes(capability)
+        ? prev.enabledCapabilities.filter((c) => c !== capability)
+        : [...prev.enabledCapabilities, capability],
+      updatedAt: Date.now(),
+    }));
+    toast.success('能力设置已更新');
+  };
+
+  const allJiaguCapabilities: JiaguCapability[] = [
+    'segmentation', 'pos_tagging', 'ner', 'knowledge_graph',
+    'sentiment', 'keywords', 'summarization', 'new_word'
+  ];
+
+  const getCapabilityIcon = (icon: string) => {
+    const icons: Record<string, React.ReactNode> = {
+      TextAa: <TextAa size={16} weight="duotone" />,
+      Tag: <Tag size={16} weight="duotone" />,
+      UserCircle: <UserCircle size={16} weight="duotone" />,
+      Graph: <Graph size={16} weight="duotone" />,
+      Smiley: <Smiley size={16} weight="duotone" />,
+      Key: <Key size={16} weight="duotone" />,
+      FileText: <FileText size={16} weight="duotone" />,
+      Sparkle: <Sparkle size={16} weight="duotone" />,
+    };
+    return icons[icon] || <Sparkle size={16} weight="duotone" />;
+  };
+
   return (
     <div className="space-y-6">
+      {/* Integrated AI Engine Card */}
+      <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <ArrowsLeftRight size={20} weight="duotone" className="text-primary" />
+                集成AI引擎
+              </CardTitle>
+              <CardDescription>
+                Omega-AI 深度学习 + 甲骨 中文NLP 无缝集成
+              </CardDescription>
+            </div>
+            <Badge variant={integratedEngine.enabled ? 'default' : 'secondary'} className="gap-1">
+              {integratedEngine.enabled ? '已启用' : '已禁用'}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Omega-AI Status */}
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 rounded-lg bg-cyan-100">
+                  <Brain size={20} weight="duotone" className="text-cyan-600" />
+                </div>
+                <div>
+                  <div className="font-medium">Omega-AI 深度学习</div>
+                  <div className="text-xs text-muted-foreground">自动求导 • 多GPU训练 • CUDA加速</div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">模型状态</span>
+                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    在线
+                  </Badge>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">当前模型</span>
+                  <span>omega-ai-transformer</span>
+                </div>
+                <Progress value={75} className="h-1" />
+                <div className="text-xs text-muted-foreground text-right">GPU利用率: 75%</div>
+              </div>
+            </div>
+
+            {/* Jiagu Status */}
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 rounded-lg bg-red-100">
+                  <Translate size={20} weight="duotone" className="text-red-600" />
+                </div>
+                <div>
+                  <div className="font-medium">甲骨 中文NLP</div>
+                  <div className="text-xs text-muted-foreground">分词 • 词性标注 • 命名实体 • 情感分析</div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">服务状态</span>
+                  <Badge variant="outline" className={jiaguConfig.enabled ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-700 border-gray-200'}>
+                    {jiaguConfig.enabled ? '在线' : '离线'}
+                  </Badge>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">分词模式</span>
+                  <span>{jiaguConfig.tokenizationMode.toUpperCase()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">已启用能力</span>
+                  <span>{jiaguConfig.enabledCapabilities.length} / {allJiaguCapabilities.length}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="flex items-center justify-between p-4 rounded-lg border">
+            <div className="flex items-center gap-3">
+              <ArrowsLeftRight size={20} weight="duotone" className="text-primary" />
+              <div>
+                <div className="font-medium">启用无缝集成</div>
+                <div className="text-sm text-muted-foreground">
+                  中文输入自动通过甲骨NLP预处理，再交由Omega-AI生成响应
+                </div>
+              </div>
+            </div>
+            <Switch
+              checked={integratedEngine.enabled}
+              onCheckedChange={(checked) =>
+                setIntegratedEngine((prev) => ({ ...prev, enabled: checked }))
+              }
+            />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Label className="text-sm text-muted-foreground">处理模式:</Label>
+            <Select
+              value={integratedEngine.processingMode}
+              onValueChange={(value: 'sequential' | 'parallel') =>
+                setIntegratedEngine((prev) => ({ ...prev, processingMode: value }))
+              }
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sequential">顺序处理</SelectItem>
+                <SelectItem value="parallel">并行处理</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Jiagu NLP Configuration */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Translate size={20} weight="duotone" className="text-red-500" />
+                甲骨 中文NLP配置
+              </CardTitle>
+              <CardDescription>
+                配置中文自然语言处理能力，支持分词、词性标注、命名实体识别等
+              </CardDescription>
+            </div>
+            <Switch
+              checked={jiaguConfig.enabled}
+              onCheckedChange={(checked) =>
+                setJiaguConfig((prev) => ({ ...prev, enabled: checked, updatedAt: Date.now() }))
+              }
+            />
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="jiaguEndpoint">API 端点</Label>
+              <Input
+                id="jiaguEndpoint"
+                value={jiaguConfig.apiEndpoint}
+                onChange={(e) => setJiaguConfig((prev) => ({ ...prev, apiEndpoint: e.target.value }))}
+                placeholder="http://localhost:8888/api/nlp"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tokenMode">分词模式</Label>
+              <Select
+                value={jiaguConfig.tokenizationMode}
+                onValueChange={(value: 'msr' | 'pku' | 'cnc') =>
+                  setJiaguConfig((prev) => ({ ...prev, tokenizationMode: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="msr">MSR (微软)</SelectItem>
+                  <SelectItem value="pku">PKU (北大)</SelectItem>
+                  <SelectItem value="cnc">CNC (国家语委)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div>
+            <Label className="mb-3 block">NLP 能力配置</Label>
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+              {allJiaguCapabilities.map((capability) => {
+                const info = getJiaguCapabilityInfo(capability);
+                const isEnabled = jiaguConfig.enabledCapabilities.includes(capability);
+                return (
+                  <div
+                    key={capability}
+                    className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                      isEnabled
+                        ? 'border-red-300 bg-red-50'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => handleToggleJiaguCapability(capability)}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className={`${isEnabled ? 'text-red-600' : 'text-gray-400'}`}>
+                        {getCapabilityIcon(info.icon)}
+                      </div>
+                      <span className={`font-medium text-sm ${isEnabled ? 'text-red-700' : 'text-gray-600'}`}>
+                        {info.name}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{info.description}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Original Model Configuration Card */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">

@@ -7,7 +7,7 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, JiaguConfig, JiaguAnalysisResult, IntegratedAIEngine } from './types';
 
 // ============================================================================
 // Network Configuration
@@ -798,4 +798,130 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
   };
+}
+
+// ============================================================================
+// Jiagu Chinese NLP Mock Data - 甲骨中文自然语言处理
+// ============================================================================
+
+/**
+ * Generate mock Jiagu NLP configuration
+ * 
+ * @returns Mock JiaguConfig object
+ */
+export function generateMockJiaguConfig(): JiaguConfig {
+  return {
+    id: 'jiagu-1',
+    enabled: true,
+    apiEndpoint: 'http://localhost:8888/api/nlp',
+    enabledCapabilities: ['segmentation', 'pos_tagging', 'ner', 'sentiment', 'keywords'],
+    tokenizationMode: 'pku',
+    createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000,
+    updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+  };
+}
+
+/**
+ * Generate mock Jiagu NLP analysis results for demonstration
+ * 
+ * @returns Array of mock JiaguAnalysisResult objects
+ */
+export function generateMockJiaguAnalysisResults(): JiaguAnalysisResult[] {
+  return [
+    {
+      id: 'analysis-1',
+      text: '将5000 USDC从Treasury Vault转账到供应商钱包',
+      segments: ['将', '5000', 'USDC', '从', 'Treasury', 'Vault', '转账', '到', '供应商', '钱包'],
+      posTags: [
+        { word: '将', tag: 'p' },
+        { word: '5000', tag: 'm' },
+        { word: 'USDC', tag: 'nx' },
+        { word: '从', tag: 'p' },
+        { word: 'Treasury', tag: 'nx' },
+        { word: 'Vault', tag: 'nx' },
+        { word: '转账', tag: 'v' },
+        { word: '到', tag: 'v' },
+        { word: '供应商', tag: 'n' },
+        { word: '钱包', tag: 'n' },
+      ],
+      entities: [
+        { text: 'Treasury Vault', type: 'ORG', start: 10, end: 24 },
+      ],
+      sentimentScore: 0.1,
+      keywords: [
+        { word: '转账', weight: 0.9 },
+        { word: 'USDC', weight: 0.85 },
+        { word: '钱包', weight: 0.7 },
+        { word: '供应商', weight: 0.65 },
+      ],
+      processingTime: 45,
+      analyzedAt: Date.now() - 5 * 60 * 1000,
+    },
+    {
+      id: 'analysis-2',
+      text: '分析最近的DeFi收益策略风险',
+      segments: ['分析', '最近', '的', 'DeFi', '收益', '策略', '风险'],
+      posTags: [
+        { word: '分析', tag: 'v' },
+        { word: '最近', tag: 't' },
+        { word: '的', tag: 'u' },
+        { word: 'DeFi', tag: 'nx' },
+        { word: '收益', tag: 'n' },
+        { word: '策略', tag: 'n' },
+        { word: '风险', tag: 'n' },
+      ],
+      entities: [],
+      sentimentScore: -0.2,
+      keywords: [
+        { word: '风险', weight: 0.95 },
+        { word: 'DeFi', weight: 0.9 },
+        { word: '策略', weight: 0.8 },
+        { word: '收益', weight: 0.75 },
+        { word: '分析', weight: 0.6 },
+      ],
+      processingTime: 38,
+      analyzedAt: Date.now() - 10 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Generate mock integrated AI engine configuration
+ * 
+ * @returns Mock IntegratedAIEngine object
+ */
+export function generateMockIntegratedAIEngine(): IntegratedAIEngine {
+  const omegaAIConfig = generateMockAIModelConfigs().find(m => m.provider === 'omega-ai');
+  const jiaguConfig = generateMockJiaguConfig();
+  
+  return {
+    id: 'integrated-engine-1',
+    name: 'OmniCore 智能引擎',
+    omegaAIConfig,
+    jiaguConfig,
+    enabled: true,
+    processingMode: 'sequential',
+    createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+  };
+}
+
+/**
+ * Get Jiagu capability display information
+ * 
+ * @param capability - Jiagu capability type
+ * @returns Display name and description in Chinese
+ */
+export function getJiaguCapabilityInfo(capability: string): { name: string; description: string; icon: string } {
+  const info: Record<string, { name: string; description: string; icon: string }> = {
+    segmentation: { name: '分词', description: '支持MSR/PKU/CNC多种分词模式', icon: 'TextAa' },
+    pos_tagging: { name: '词性标注', description: '识别每个词的语法属性', icon: 'Tag' },
+    ner: { name: '命名实体识别', description: '识别人名、地名、机构名', icon: 'UserCircle' },
+    knowledge_graph: { name: '知识图谱', description: '抽取三元组关系', icon: 'Graph' },
+    sentiment: { name: '情感分析', description: 'BiLSTM模型分析文本情感倾向', icon: 'Smiley' },
+    keywords: { name: '关键词提取', description: '识别文本中的核心词汇', icon: 'Key' },
+    summarization: { name: '文本摘要', description: '压缩长文本为简短摘要', icon: 'FileText' },
+    new_word: { name: '新词发现', description: '检测未知词汇', icon: 'Sparkle' },
+  };
+  
+  return info[capability] || { name: capability, description: '', icon: 'Question' };
 }
