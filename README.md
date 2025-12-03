@@ -76,6 +76,21 @@ npm run preview
 | `npm run lint` | Run ESLint code linting |
 | `npm run kill` | Free port 5000 if stuck |
 
+### Docker (ogegge)
+
+```bash
+# Production environment (port 80)
+docker compose up ogegge -d
+
+# Development environment (port 5173)
+docker compose --profile dev up ogegge-dev
+
+# Build images
+docker compose build
+```
+
+See [DOCKER.md](./DOCKER.md) for detailed Docker usage.
+
 ---
 
 ## Tech Stack
@@ -137,6 +152,7 @@ src/
 - [中文文档](./README-zh.md) - Chinese documentation
 - [PRD.md](./PRD.md) - Product Requirements Document
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution Guidelines
+- [DOCKER.md](./DOCKER.md) - Docker Image Management Guide (ogegge)
 
 ---
 

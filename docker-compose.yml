@@ -1,43 +1,59 @@
-version: '3.8'
+# =============================================================================
+# OmniCore Wallet - Centralized Docker Environment Management
+# All environments are managed here with the ogegge image
+# =============================================================================
 
 services:
-  app:
+  # =============================================================================
+  # ogegge - Production Image (React + Vite Frontend)
+  # =============================================================================
+  ogegge:
     build:
       context: .
       dockerfile: Dockerfile
+      target: production
+    image: omnicore/ogegge:latest
+    container_name: ogegge-production
     ports:
       - "80:80"
-    depends_on:
-      - mysql
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # =============================================================================
+  # ogegge-dev - Development Image (Vite Dev Server)
+  # =============================================================================
+  ogegge-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    image: omnicore/ogegge:dev
+    container_name: ogegge-development
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
     networks:
       - app-network
     environment:
-      - APP_URL=http://localhost
-      - DB_CONNECTION=mysql
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_DATABASE=laravel
-      - DB_USERNAME=laravel
-      - DB_PASSWORD=laravel
-      - MAIL_MAILER=smtp
-      - MAIL_HOST=your_smtp_host
-      - MAIL_PORT=465
-      - MAIL_USERNAME=your_smtp_username
-      - MAIL_PASSWORD=your_smtp_password
-      - MAIL_ENCRYPTION=ssl
-      - MAIL_FROM_ADDRESS=your_email@example.com
-      - MAIL_FROM_NAME=no-reply
-      - AWS_ACCESS_KEY_ID=your_aws_access_key
-      - AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-      - AWS_BUCKET=your_aws_bucket
-      - AWS_DEFAULT_REGION=your_aws_region
-      - GOOGLE_MAP_API_KEY=your_google_map_api_key
-    volumes:
-      - .:/var/www/html
-      - storage:/var/www/html/storage
+      - NODE_ENV=development
+    profiles:
+      - dev
 
+  # =============================================================================
+  # Legacy Services (kept for backward compatibility)
+  # =============================================================================
   mysql:
     image: mysql:8.0
+    container_name: ogegge-mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel
@@ -48,9 +64,12 @@ services:
       - ./mysql-custom.cnf:/etc/mysql/conf.d/custom.cnf
     networks:
       - app-network
+    profiles:
+      - legacy
 
   phpmyadmin:
     image: phpmyadmin:latest
+    container_name: ogegge-phpmyadmin
     ports:
       - "8080:80"
     environment:
@@ -61,18 +80,24 @@ services:
       - mysql
     networks:
       - app-network
+    profiles:
+      - legacy
 
+  # Note: queue service is kept for backward compatibility with PHP/Laravel setups
+  # It is not used with the current React frontend and is disabled by default
   queue:
     image: php:8.3-fpm-alpine
+    container_name: ogegge-queue
     command: php /var/www/html/artisan queue:work --tries=3
     depends_on:
-      - app
       - mysql
     volumes:
       - .:/var/www/html
       - storage:/var/www/html/storage
     networks:
       - app-network
+    profiles:
+      - legacy
 
 volumes:
   mysql-data:

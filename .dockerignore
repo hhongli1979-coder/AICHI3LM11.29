@@ -1,0 +1,71 @@
+# =============================================================================
+# OmniCore Wallet - Docker Build Ignore File
+# Files and directories to exclude from Docker build context
+# =============================================================================
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+build
+out
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# IDE and editor
+.idea
+.vscode
+*.swp
+*.swo
+*~
+.vs
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pglite-debug.log
+
+# Testing
+coverage
+.nyc_output
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.docker
+
+# Documentation
+*.md
+LICENSE*
+CONTRIBUTING.md
+SECURITY.md
+PRD.md
+
+# Miscellaneous
+*.bak
+*.tmp
+*.temp
+.spark-initial-sha
+spark.meta.json
+push.bat
+push.ps1
+新建 文本文档.txt
+materialize_v13.11.0
