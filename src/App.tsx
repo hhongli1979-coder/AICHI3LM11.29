@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Car, ShoppingCart } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -16,6 +16,9 @@ import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
 import { VoiceAssistant } from '@/components/ai-assistant/VoiceAssistant';
 import { CryptoExchange, FiatExchange } from '@/components/payment/CryptoExchange';
 import { ThirdPartyPayment } from '@/components/payment/ThirdPartyPayment';
+import { DriverApp } from '@/components/taxi/DriverApp';
+import { PassengerApp } from '@/components/taxi/PassengerApp';
+import { ProxyPurchase } from '@/components/taxi/ProxyPurchase';
 import {
   generateMockWallets,
   generateMockTransactions,
@@ -113,26 +116,38 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid lg:grid-cols-12">
             <TabsTrigger value="overview" className="gap-2">
               <ChartLine size={18} weight="duotone" />
-              <span className="hidden sm:inline">Overview</span>
+              <span className="hidden sm:inline">总览</span>
             </TabsTrigger>
             <TabsTrigger value="wallets" className="gap-2">
               <Wallet size={18} weight="duotone" />
-              <span className="hidden sm:inline">Wallets</span>
+              <span className="hidden sm:inline">钱包</span>
+            </TabsTrigger>
+            <TabsTrigger value="payments" className="gap-2">
+              <CreditCard size={18} weight="duotone" />
+              <span className="hidden sm:inline">支付</span>
+            </TabsTrigger>
+            <TabsTrigger value="taxi-driver" className="gap-2">
+              <Car size={18} weight="duotone" />
+              <span className="hidden sm:inline">司机端</span>
+            </TabsTrigger>
+            <TabsTrigger value="taxi-passenger" className="gap-2">
+              <Car size={18} weight="duotone" />
+              <span className="hidden sm:inline">乘客端</span>
+            </TabsTrigger>
+            <TabsTrigger value="proxy" className="gap-2">
+              <ShoppingCart size={18} weight="duotone" />
+              <span className="hidden sm:inline">代购</span>
             </TabsTrigger>
             <TabsTrigger value="transactions" className="gap-2">
               <ArrowsLeftRight size={18} weight="duotone" />
-              <span className="hidden sm:inline">Transactions</span>
+              <span className="hidden sm:inline">交易</span>
             </TabsTrigger>
             <TabsTrigger value="defi" className="gap-2">
               <ChartLine size={18} weight="duotone" />
               <span className="hidden sm:inline">DeFi</span>
-            </TabsTrigger>
-            <TabsTrigger value="payments" className="gap-2">
-              <CreditCard size={18} weight="duotone" />
-              <span className="hidden sm:inline">Payments</span>
             </TabsTrigger>
             <TabsTrigger value="omni" className="gap-2">
               <Coins size={18} weight="duotone" />
@@ -144,11 +159,11 @@ function App() {
             </TabsTrigger>
             <TabsTrigger value="addressbook" className="gap-2">
               <AddressBookIcon size={18} weight="duotone" />
-              <span className="hidden sm:inline">Contacts</span>
+              <span className="hidden sm:inline">通讯录</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Gear size={18} weight="duotone" />
-              <span className="hidden sm:inline">Settings</span>
+              <span className="hidden sm:inline">设置</span>
             </TabsTrigger>
           </TabsList>
           
@@ -242,6 +257,21 @@ function App() {
             <ThirdPartyPayment />
           </TabsContent>
           
+          {/* Taxi Driver App */}
+          <TabsContent value="taxi-driver" className="space-y-6">
+            <DriverApp />
+          </TabsContent>
+          
+          {/* Taxi Passenger App */}
+          <TabsContent value="taxi-passenger" className="space-y-6">
+            <PassengerApp />
+          </TabsContent>
+          
+          {/* Proxy Purchase */}
+          <TabsContent value="proxy" className="space-y-6">
+            <ProxyPurchase />
+          </TabsContent>
+          
           <TabsContent value="omni" className="space-y-6">
             <OmniTokenDashboard stats={omniStats} />
           </TabsContent>
@@ -265,8 +295,8 @@ function App() {
       
       <footer className="border-t mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          <p>OmniCore Wallet - Enterprise Smart Wallet Platform | Powered by blockchain technology</p>
-          <p className="mt-2">Multi-chain support • Multi-signature security • DeFi integration • Global payments</p>
+          <p>OmniCore 智能支付平台 - 加密支付 · 出租车 · 代购 · AI智能体</p>
+          <p className="mt-2">多链支持 • 语音助手 • 加密收款 • 全球代购</p>
         </div>
       </footer>
 
