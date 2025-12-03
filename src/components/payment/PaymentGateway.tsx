@@ -83,10 +83,14 @@ export function PaymentGateway({ payments }: PaymentGatewayProps) {
     }
   };
 
-  const handleCopyLink = (paymentUrl?: string) => {
+  const handleCopyLink = async (paymentUrl?: string) => {
     if (paymentUrl) {
-      navigator.clipboard.writeText(paymentUrl);
-      toast.success('链接已复制到剪贴板');
+      try {
+        await navigator.clipboard.writeText(paymentUrl);
+        toast.success('链接已复制到剪贴板');
+      } catch {
+        toast.error('复制失败，请手动复制链接');
+      }
     }
   };
 

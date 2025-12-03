@@ -21,6 +21,9 @@ import {
 import { toast } from 'sonner';
 import type { PaymentChannel } from '@/lib/types';
 
+// Payment link base URL - can be configured for different environments
+const PAYMENT_BASE_URL = 'https://pay.omnicore.io';
+
 interface CreatePaymentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -105,7 +108,7 @@ export function CreatePaymentDialog({ open, onOpenChange }: CreatePaymentDialogP
 
     // 生成模拟的收款链接
     const paymentId = `pay-${Date.now().toString(36)}`;
-    const link = `https://pay.omnicore.io/${paymentId}`;
+    const link = `${PAYMENT_BASE_URL}/${paymentId}`;
     setCreatedLink(link);
     
     toast.success('收款链接创建成功！', {
@@ -116,10 +119,14 @@ export function CreatePaymentDialog({ open, onOpenChange }: CreatePaymentDialogP
     setStep(4);
   };
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     if (createdLink) {
-      navigator.clipboard.writeText(createdLink);
-      toast.success('链接已复制到剪贴板');
+      try {
+        await navigator.clipboard.writeText(createdLink);
+        toast.success('链接已复制到剪贴板');
+      } catch {
+        toast.error('复制失败，请手动复制链接');
+      }
     }
   };
 
