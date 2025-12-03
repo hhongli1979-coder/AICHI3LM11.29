@@ -174,7 +174,7 @@ export function KYCRegistrationForm() {
     formData.postalCode && formData.city;
 
   const isStep3Valid = formData.gender && formData.firstName && formData.lastName && 
-    formData.birthday && formData.documentNumber && formData.documentType && 
+    formData.nameOfHolder && formData.birthday && formData.documentNumber && formData.documentType && 
     formData.documentValidUntil && formData.issuerCountry && formData.nationality;
 
   return (
