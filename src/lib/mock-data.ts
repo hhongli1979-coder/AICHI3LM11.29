@@ -736,7 +736,7 @@ export function generateMockAIModelConfigs(): AIModelConfig[] {
       updatedAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
     },
     {
-      id: 'model-4',
+      id: 'model-3',
       name: 'Llama 3.2 (省钱首选)',
       provider: 'llama',
       modelName: 'llama-3.2-90b-vision-preview',
@@ -751,7 +751,7 @@ export function generateMockAIModelConfigs(): AIModelConfig[] {
       updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
     },
     {
-      id: 'model-3',
+      id: 'model-4',
       name: '自定义模型接口',
       provider: 'custom',
       modelName: 'custom-finance-llm',
