@@ -91,6 +91,17 @@ npm run preview
 | Sonner | 2.x | Toast Notifications |
 | GitHub Spark | 0.42 | Platform Framework |
 
+### MindSpore Deep Learning Engine
+
+The platform supports integration with Huawei's [MindSpore](https://gitee.com/mindspore/mindspore) deep learning framework for:
+
+- **Financial Risk Analysis** - Real-time transaction risk assessment using deep learning
+- **Transaction Pattern Recognition** - Intelligent detection of abnormal behaviors and fraud patterns
+- **Market Trend Prediction** - Time-series models for market trend forecasting
+- **Smart Decision Recommendations** - Personalized recommendations based on historical data and user behavior
+
+MindSpore supports multiple hardware backends (Ascend/GPU/CPU) for efficient local deployment. For more details, see the [MindSpore Documentation](https://www.mindspore.cn/).
+
 ---
 
 ## Project Structure

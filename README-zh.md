@@ -114,6 +114,17 @@ npm run preview
 
 项目使用 GitHub Spark 框架，需要在 `vite.config.ts` 中保持 `sparkPlugin()` 和 `createIconImportProxy()` 配置。
 
+### MindSpore 深度学习引擎
+
+平台支持集成华为 [MindSpore](https://gitee.com/mindspore/mindspore) 深度学习框架，可用于：
+
+- **金融风控分析** - 基于深度学习的交易风险实时评估
+- **交易模式识别** - 智能识别异常交易行为和欺诈模式
+- **市场趋势预测** - 利用时序模型预测市场走势
+- **智能决策建议** - 基于历史数据和用户行为的个性化推荐
+
+MindSpore 支持 Ascend/GPU/CPU 等多种硬件后端，可实现高效的本地化部署。详细信息请参考 [MindSpore 官方文档](https://www.mindspore.cn/)。
+
 ---
 
 ## 项目结构
