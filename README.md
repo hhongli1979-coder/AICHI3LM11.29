@@ -180,13 +180,13 @@ import { Wallet, ChartLine } from '@phosphor-icons/react';
 
 ### likeadmin SaaS Framework
 
-[likeadmin SaaS](https://gitee.com/likeadmin/likeadmin_php_saas) is an open-source framework designed for rapid SaaS business project development, featuring:
+OmniCore Wallet shares SaaS architecture principles with other multi-tenant platforms. For developers interested in building SaaS applications with similar multi-tenant and multi-platform patterns, the [likeadmin SaaS](https://gitee.com/likeadmin/likeadmin_php_saas) framework offers complementary approaches:
 
 - **Multi-Platform Support**: Platform backend, admin backend, WeChat mini-program, mobile H5, and PC
 - **Multi-Tenant Architecture**: Built-in multi-tenant support for efficient SaaS product development
 - **Tech Stack**: PHP8, TypeScript, ThinkPHP6, Vue3, Vite5, Element Plus 2.8
 
-If you are building SaaS business projects, you can reference its design concepts and implementation approaches.
+While likeadmin uses a PHP/ThinkPHP backend (vs. OmniCore's React/TypeScript frontend), both projects demonstrate enterprise-grade multi-tenant SaaS patterns that can inform your architecture decisions.
 
 ---
 

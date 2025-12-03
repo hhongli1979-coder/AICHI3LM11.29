@@ -257,13 +257,13 @@ npm install --legacy-peer-deps
 
 ### likeadmin SaaS 框架
 
-[likeadmin SaaS](https://gitee.com/likeadmin/likeadmin_php_saas) 是一套专为快速开发 SaaS 业务项目而设计的开源框架，包含：
+OmniCore 钱包与其他多租户平台共享 SaaS 架构原则。对于有兴趣构建具有类似多租户和多平台模式的 SaaS 应用的开发者，[likeadmin SaaS](https://gitee.com/likeadmin/likeadmin_php_saas) 框架提供了互补的方案：
 
 - **多端支持**：平台后台、管理后台、微信小程序、手机 H5、PC 端
 - **多租户架构**：内置多租户支持，助力高效打造 SaaS 产品
 - **技术栈**：PHP8、TypeScript、ThinkPHP6、Vue3、Vite5、Element Plus 2.8
 
-如果您正在构建 SaaS 业务项目，可以参考该框架的设计理念和实现方式。
+虽然 likeadmin 使用 PHP/ThinkPHP 后端（而 OmniCore 使用 React/TypeScript 前端），但两个项目都展示了可以为您的架构决策提供参考的企业级多租户 SaaS 模式。
 
 ---
 
