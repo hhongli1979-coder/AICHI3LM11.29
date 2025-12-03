@@ -239,3 +239,64 @@ export interface CustomEndpoint {
   headers: Record<string, string>;
   enabled: boolean;
 }
+
+// Super Intelligent Agent Types - 超级智能体类型
+export type SuperAgentLevel = 'personal' | 'enterprise' | 'city';
+
+export type SuperAgentStatus = 'active' | 'learning' | 'idle' | 'syncing';
+
+export interface SuperAgentCapability {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: 'reasoning' | 'execution' | 'coordination' | 'collaboration';
+  enabled: boolean;
+  proficiency: number; // 0-100
+}
+
+export interface SubAgent {
+  id: string;
+  name: string;
+  specialty: string;
+  status: SuperAgentStatus;
+  taskCount: number;
+  successRate: number;
+  icon: string;
+}
+
+export interface SuperAgentTask {
+  id: string;
+  name: string;
+  description: string;
+  status: 'pending' | 'executing' | 'completed' | 'failed';
+  assignedAgents: string[];
+  progress: number;
+  createdAt: number;
+  completedAt?: number;
+}
+
+export interface EdgeCloudConfig {
+  edgeEnabled: boolean;
+  cloudEnabled: boolean;
+  dataLocalProcessing: boolean;
+  edgeInferenceRatio: number; // 0-100, percentage of tasks processed on edge
+  syncFrequency: 'realtime' | 'periodic' | 'manual';
+  latency: number; // ms
+}
+
+export interface SuperAgentInstance {
+  id: string;
+  name: string;
+  level: SuperAgentLevel;
+  status: SuperAgentStatus;
+  description: string;
+  capabilities: SuperAgentCapability[];
+  subAgents: SubAgent[];
+  activeTasks: SuperAgentTask[];
+  edgeCloudConfig: EdgeCloudConfig;
+  totalTasksCompleted: number;
+  averageSuccessRate: number;
+  createdAt: number;
+  lastActiveAt: number;
+}
