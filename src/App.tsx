@@ -6,6 +6,7 @@ import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, Addr
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
+import { HomeWalletPanel } from '@/components/wallet/HomeWalletPanel';
 import { TransactionList } from '@/components/transaction/TransactionList';
 import { DeFiPositions } from '@/components/defi/DeFiPositions';
 import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
@@ -156,24 +157,17 @@ function App() {
               defiYield={averageApy}
             />
             
-            <div className="grid gap-6 lg:grid-cols-2">
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-2xl font-bold mb-4">Your Wallets</h2>
-                  <div className="space-y-4">
-                    {wallets.slice(0, 2).map((wallet) => (
-                      <WalletCard key={wallet.id} wallet={wallet} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-6">
-                <TransactionList transactions={transactions.slice(0, 3)} />
-              </div>
-            </div>
+            {/* Deep Integrated Wallet System - Homepage Display */}
+            <HomeWalletPanel 
+              wallets={wallets} 
+              onCreateWallet={() => setCreateWalletOpen(true)} 
+            />
             
-            <DeFiPositions positions={defiPositions} />
+            {/* Recent Transactions Section */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              <TransactionList transactions={transactions.slice(0, 3)} />
+              <DeFiPositions positions={defiPositions.slice(0, 2)} />
+            </div>
           </TabsContent>
           
           <TabsContent value="wallets" className="space-y-6">
