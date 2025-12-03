@@ -50,6 +50,8 @@ function getProviderIcon(provider: AIModelProvider) {
       return <Desktop size={18} weight="duotone" className="text-green-500" />;
     case 'ollama':
       return <Robot size={18} weight="duotone" className="text-purple-500" />;
+    case 'llama':
+      return <Robot size={18} weight="duotone" className="text-indigo-500" />;
     case 'openai':
       return <Globe size={18} weight="duotone" className="text-blue-500" />;
     case 'anthropic':
@@ -67,6 +69,8 @@ function getProviderLabel(provider: AIModelProvider): string {
       return '本地模型';
     case 'ollama':
       return 'Ollama';
+    case 'llama':
+      return 'Llama';
     case 'openai':
       return 'OpenAI';
     case 'anthropic':
@@ -84,6 +88,8 @@ function getProviderBadgeColor(provider: AIModelProvider): string {
       return 'bg-green-100 text-green-700 border-green-300';
     case 'ollama':
       return 'bg-purple-100 text-purple-700 border-purple-300';
+    case 'llama':
+      return 'bg-indigo-100 text-indigo-700 border-indigo-300';
     case 'openai':
       return 'bg-blue-100 text-blue-700 border-blue-300';
     case 'anthropic':
@@ -274,6 +280,12 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
                         Ollama
                       </div>
                     </SelectItem>
+                    <SelectItem value="llama">
+                      <div className="flex items-center gap-2">
+                        <Robot size={16} />
+                        Llama (省钱首选)
+                      </div>
+                    </SelectItem>
                     <SelectItem value="openai">
                       <div className="flex items-center gap-2">
                         <Globe size={16} />
@@ -318,7 +330,7 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
               </div>
             </div>
 
-            {(formData.provider === 'openai' || formData.provider === 'anthropic' || formData.provider === 'custom') && (
+            {(formData.provider === 'openai' || formData.provider === 'anthropic' || formData.provider === 'llama' || formData.provider === 'custom') && (
               <div className="space-y-2">
                 <Label htmlFor="apiKey" className="flex items-center gap-2">
                   <Key size={14} />
