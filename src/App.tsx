@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Car, ShoppingCart } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Car, ShoppingCart, HardDrives } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -19,6 +19,8 @@ import { ThirdPartyPayment } from '@/components/payment/ThirdPartyPayment';
 import { DriverApp } from '@/components/taxi/DriverApp';
 import { PassengerApp } from '@/components/taxi/PassengerApp';
 import { ProxyPurchase } from '@/components/taxi/ProxyPurchase';
+import { DefiLlamaDashboard } from '@/components/admin/DefiLlamaDashboard';
+import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import {
   generateMockWallets,
   generateMockTransactions,
@@ -116,7 +118,7 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid lg:grid-cols-12">
+          <TabsList className="flex flex-wrap gap-1 h-auto p-1">
             <TabsTrigger value="overview" className="gap-2">
               <ChartLine size={18} weight="duotone" />
               <span className="hidden sm:inline">总览</span>
@@ -141,21 +143,29 @@ function App() {
               <ShoppingCart size={18} weight="duotone" />
               <span className="hidden sm:inline">代购</span>
             </TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-2">
-              <ArrowsLeftRight size={18} weight="duotone" />
-              <span className="hidden sm:inline">交易</span>
-            </TabsTrigger>
             <TabsTrigger value="defi" className="gap-2">
               <ChartLine size={18} weight="duotone" />
               <span className="hidden sm:inline">DeFi</span>
             </TabsTrigger>
-            <TabsTrigger value="omni" className="gap-2">
-              <Coins size={18} weight="duotone" />
-              <span className="hidden sm:inline">OMNI</span>
+            <TabsTrigger value="defillama" className="gap-2">
+              <HardDrives size={18} weight="duotone" />
+              <span className="hidden sm:inline">DefiLlama</span>
+            </TabsTrigger>
+            <TabsTrigger value="admin" className="gap-2">
+              <Gear size={18} weight="duotone" />
+              <span className="hidden sm:inline">后台管理</span>
             </TabsTrigger>
             <TabsTrigger value="ai-assistant" className="gap-2">
               <Robot size={18} weight="duotone" />
               <span className="hidden sm:inline">AI助手</span>
+            </TabsTrigger>
+            <TabsTrigger value="transactions" className="gap-2">
+              <ArrowsLeftRight size={18} weight="duotone" />
+              <span className="hidden sm:inline">交易</span>
+            </TabsTrigger>
+            <TabsTrigger value="omni" className="gap-2">
+              <Coins size={18} weight="duotone" />
+              <span className="hidden sm:inline">OMNI</span>
             </TabsTrigger>
             <TabsTrigger value="addressbook" className="gap-2">
               <AddressBookIcon size={18} weight="duotone" />
@@ -272,6 +282,16 @@ function App() {
             <ProxyPurchase />
           </TabsContent>
           
+          {/* DefiLlama Dashboard */}
+          <TabsContent value="defillama" className="space-y-6">
+            <DefiLlamaDashboard />
+          </TabsContent>
+          
+          {/* Admin Dashboard */}
+          <TabsContent value="admin" className="space-y-6">
+            <AdminDashboard />
+          </TabsContent>
+          
           <TabsContent value="omni" className="space-y-6">
             <OmniTokenDashboard stats={omniStats} />
           </TabsContent>
@@ -295,8 +315,8 @@ function App() {
       
       <footer className="border-t mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          <p>OmniCore 智能支付平台 - 加密支付 · 出租车 · 代购 · AI智能体</p>
-          <p className="mt-2">多链支持 • 语音助手 • 加密收款 • 全球代购</p>
+          <p>OmniCore 智能支付平台 - 加密支付 · 出租车 · 代购 · AI智能体 · DefiLlama</p>
+          <p className="mt-2">多链支持 • 语音助手 • 加密收款 • 全球代购 • DeFi后台管理</p>
         </div>
       </footer>
 
