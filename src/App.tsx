@@ -6,6 +6,7 @@ import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, Addr
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
+import { ConnectWallet } from '@/components/wallet/ConnectWallet';
 import { TransactionList } from '@/components/transaction/TransactionList';
 import { DeFiPositions } from '@/components/defi/DeFiPositions';
 import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
@@ -185,6 +186,13 @@ function App() {
               </Button>
             </div>
             
+            {/* Real Wallet Connection */}
+            <div className="mb-6">
+              <ConnectWallet />
+            </div>
+            
+            {/* Mock Wallets */}
+            <h3 className="text-xl font-semibold mt-8 mb-4">Portfolio Wallets</h3>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {wallets.map((wallet) => (
                 <WalletCard key={wallet.id} wallet={wallet} />
