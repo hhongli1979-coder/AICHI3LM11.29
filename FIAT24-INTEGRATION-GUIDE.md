@@ -26,11 +26,13 @@ Fiat24 智能合约部署在 Arbitrum 区块链上，提供去中心化的银行
 
 ### 合约地址
 
+> **注意：** 以下为示例格式，实际合约地址请参考 [Fiat24 官方文档](https://docs.fiat24.com)。
+
 | 合约名称 | 网络 | 地址 |
 |---------|------|------|
-| Fiat24Token | Arbitrum One | `0x...` |
-| Fiat24Account | Arbitrum One | `0x...` |
-| Fiat24Gateway | Arbitrum One | `0x...` |
+| Fiat24Token | Arbitrum One | `0x...`（示例） |
+| Fiat24Account | Arbitrum One | `0x...`（示例） |
+| Fiat24Gateway | Arbitrum One | `0x...`（示例） |
 
 ### 接口定义
 
@@ -97,7 +99,10 @@ contract MyPaymentApp {
 
 ```javascript
 // 使用 ethers.js 监听 Fiat24 事件
-const provider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
+// 兼容 ethers v5 和 v6
+// v5: new ethers.providers.JsonRpcProvider(url)
+// v6: new ethers.JsonRpcProvider(url)
+const provider = new ethers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
 const fiat24Contract = new ethers.Contract(FIAT24_ADDRESS, FIAT24_ABI, provider);
 
 fiat24Contract.on("Transfer", (from, to, amount, currency, event) => {
@@ -409,12 +414,14 @@ Fiat24 在 Dune Analytics 上提供了预建的报告模板，帮助您快速分
 
 ### 可用模板
 
+> **注意：** 以下链接为示例格式，实际 Dune 仪表板链接请访问 [Fiat24 Dune 主页](https://dune.com/fiat24)。
+
 | 模板名称 | 描述 | Dune 链接 |
 |---------|------|----------|
-| 交易量分析 | 每日/每月交易量统计 | [查看模板](https://dune.com/fiat24/transactions) |
-| 账户增长 | 新账户注册趋势 | [查看模板](https://dune.com/fiat24/accounts) |
-| 货币分布 | 各货币使用占比 | [查看模板](https://dune.com/fiat24/currencies) |
-| 用户活跃度 | 活跃用户和留存率 | [查看模板](https://dune.com/fiat24/activity) |
+| 交易量分析 | 每日/每月交易量统计 | [查看模板](https://dune.com/fiat24/transactions)（示例） |
+| 账户增长 | 新账户注册趋势 | [查看模板](https://dune.com/fiat24/accounts)（示例） |
+| 货币分布 | 各货币使用占比 | [查看模板](https://dune.com/fiat24/currencies)（示例） |
+| 用户活跃度 | 活跃用户和留存率 | [查看模板](https://dune.com/fiat24/activity)（示例） |
 
 ### 自定义查询示例
 
@@ -489,7 +496,11 @@ Fiat24 提供可嵌入的客户服务组件，包括在线聊天、帮助中心�
 
 ### React 组件
 
+> **注意：** 以下为示例代码，实际包名和 API 请参考 Fiat24 官方 SDK 文档。
+
 ```jsx
+// 示例：假设 Fiat24 提供官方 React SDK
+// 实际包名请参考 Fiat24 开发者文档
 import { Fiat24Support } from '@fiat24/support-react';
 
 function App() {
