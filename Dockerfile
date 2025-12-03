@@ -12,9 +12,9 @@ RUN npm install --legacy-peer-deps
 # Copy source code
 COPY . .
 
-# Build the application using vite
-# The build script should be: tsc -b --noCheck && vite build
-RUN npx vite build
+# Build the application
+# Use npm run build if available, otherwise fall back to npx vite build
+RUN if grep -q '"build"' package.json; then npm run build; else npx vite build; fi
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
