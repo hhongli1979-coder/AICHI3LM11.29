@@ -95,11 +95,20 @@ export function HomeWalletPanel({ wallets, onCreateWallet }: HomeWalletPanelProp
       <div className="grid gap-6 md:grid-cols-2">
         {primaryWallets.map((wallet, index) => {
           const network = NETWORKS[wallet.network];
-          const tokenValue = wallet.tokens.reduce((sum, token) => 
-            sum + parseFloat(token.valueUsd), 0
-          );
           const nativeValue = parseFloat(wallet.balance.usd.replace(/,/g, ''));
-          const totalWalletValue = nativeValue;
+          
+          // Get native token symbol based on network
+          const getNativeSymbol = (networkName: string): string => {
+            const symbolMap: Record<string, string> = {
+              'Ethereum': 'ETH',
+              'Polygon': 'MATIC',
+              'BNB Chain': 'BNB',
+              'Arbitrum': 'ETH',
+              'Optimism': 'ETH',
+              'Avalanche': 'AVAX'
+            };
+            return symbolMap[networkName] || 'ETH';
+          };
           
           return (
             <Card 
@@ -162,14 +171,12 @@ export function HomeWalletPanel({ wallets, onCreateWallet }: HomeWalletPanelProp
                 {/* Balance Section */}
                 <div className="mb-4">
                   <div className="text-3xl font-bold">
-                    {formatCurrency(totalWalletValue)}
+                    {formatCurrency(nativeValue)}
                   </div>
                   <div className="text-sm text-muted-foreground flex items-center gap-2">
                     <span>{wallet.balance.native}</span>
                     <span className="text-xs px-1.5 py-0.5 bg-muted rounded">
-                      {network.name === 'Ethereum' ? 'ETH' : 
-                       network.name === 'Polygon' ? 'MATIC' : 
-                       network.name === 'Arbitrum' ? 'ETH' : 'BNB'}
+                      {getNativeSymbol(network.name)}
                     </span>
                   </div>
                 </div>
