@@ -1,0 +1,17 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/GTWalsheimPro-Bold.ttf",
+      "sha1": "5cb890f35454069a283b30eb05ce3f216d65ff18"
+    },
+    {
+      "path": "src/assets/fonts/GTWalsheimPro-Medium.ttf",
+      "sha1": "ad1877fb65fc6cc7e0f0f4a087c09842b9836f05"
+    },
+    {
+      "path": "src/assets/fonts/GTWalsheimPro-Regular.ttf",
+      "sha1": "03b3aec5e961aa91f360aac8d990d456bbca0b5a"
+    }
+  ]
+}

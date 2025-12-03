@@ -1,0 +1,11 @@
+{
+    "name": "Sslcommerz",
+    "alias": "sslcommerz",
+    "description": "SSLCommerz is a payment gateway that offers secure and seamless online payment solutions.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Sslcommerz\\Providers\\SslcommerzServiceProvider"
+    ],
+    "files": []
+}

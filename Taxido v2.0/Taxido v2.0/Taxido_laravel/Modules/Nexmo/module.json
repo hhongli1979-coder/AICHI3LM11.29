@@ -1,0 +1,11 @@
+{
+    "name": "Nexmo",
+    "alias": "nexmo",
+    "description": "Nexmo is a cloud communication platform for SMS, voice, and messaging services.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Nexmo\\Providers\\NexmoServiceProvider"
+    ],
+    "files": []
+}

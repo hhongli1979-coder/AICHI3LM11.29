@@ -1,0 +1,11 @@
+{
+    "name": "RazorPay",
+    "alias": "razorpay",
+    "description": "Razorpay is a payment gateway that simplifies online payments for businesses and customers.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\RazorPay\\Providers\\RazorPayServiceProvider"
+    ],
+    "files": []
+}

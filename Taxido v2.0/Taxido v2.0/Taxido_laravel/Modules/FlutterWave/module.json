@@ -1,0 +1,11 @@
+{
+    "name": "FlutterWave",
+    "alias": "flutterwave",
+    "description": "Integrate Flutterwave to support payment processing across Africa with multiple currencies and methods.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\FlutterWave\\Providers\\FlutterWaveServiceProvider"
+    ],
+    "files": []
+}

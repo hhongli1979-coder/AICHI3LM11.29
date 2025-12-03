@@ -1,0 +1,118 @@
+/**=====================
+      Tree CSS Start
+==========================**/
+
+.jstree-default {
+    .jstree-anchor {
+        width: auto;
+    }
+
+    .jstree-children {
+        .jstree-node {
+            margin-left: 30px;
+        }
+    }
+}
+
+.jstree {
+    .jstree-container-ul {
+        &.jstree-children {
+            .jstree-node {
+                .jstree-anchor {
+                    position: relative;
+                    border: none;
+                    margin: 0;
+
+                    .jstree-icon {
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        background-size: 30px 30px;
+                        margin: 0 !important;
+                    }
+
+                    .actions {
+                        opacity: 0;
+                        transform: scale(0.8);
+                        visibility: hidden;
+                        transition: all 0.2s ease;
+                        position: absolute;
+                        right: -70px;
+                        top: -4px;
+                    }
+
+                    &:hover {
+                        .actions {
+                            opacity: 1;
+                            transform: scale(1);
+                            visibility: visible;
+                            transition: all 0.2s ease;
+
+                        }
+                    }
+
+                    &.jstree-hovered {
+                        background: unset;
+                    }
+
+                    &.jstree-clicked {
+                        color: var(--primary-color);
+                        background: unset;
+                        border: unset;
+                        box-shadow: none;
+                    }
+                }
+
+                &.jstree-open {
+                    .jstree-anchor {
+                        .jstree-icon {
+                            background-position: center;
+                            background-repeat: no-repeat;
+                            background-size: 30px 30px;
+                        }
+                    }
+                }
+
+                ul {
+                    li {
+                        .jstree-anchor {
+                            .jstree-icon.ti-file {
+                                background-position: center;
+                                background-repeat: no-repeat;
+                                background-size: 30px 30px;
+
+                                &:before {
+                                    display: none;
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            i {
+                font-size: 20px;
+                color: #0b64c3;
+            }
+        }
+    }
+
+}
+
+.no-data {
+    .jstree {
+        min-height: 220px;
+    }
+
+    .no-data-detail {
+        margin-left: 0 !important;
+
+        .jstree-icon {
+            display: none;
+        }
+    }
+}
+
+/**=====================
+      Tree CSS Start
+==========================**/

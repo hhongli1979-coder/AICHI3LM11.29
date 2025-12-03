@@ -1,0 +1,10 @@
+@mixin size($size) {
+    width: $size;
+    height: $size;
+}
+
+/* Remix Font */
+@mixin font {
+    font-family: remixicon;
+    font-style: normal;
+}

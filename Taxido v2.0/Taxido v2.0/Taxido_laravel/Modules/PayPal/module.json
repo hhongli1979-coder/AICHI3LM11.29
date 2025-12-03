@@ -1,0 +1,11 @@
+{
+    "name": "PayPal",
+    "alias": "paypal",
+    "description": "PayPal is a secure online payment platform for global transactions and money transfers.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\PayPal\\Providers\\PayPalServiceProvider"
+    ],
+    "files": []
+}

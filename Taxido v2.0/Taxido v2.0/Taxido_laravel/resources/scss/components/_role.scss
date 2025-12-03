@@ -1,0 +1,114 @@
+/**=====================
+Role CSS Start
+==========================**/
+
+.permission {
+    position: relative;
+
+    h5 {
+        font-size: calc(14px + (15 - 14) * ((100vw - 320px) / (1920 - 320)));
+        font-weight: 500;
+        color: $dark-color;
+        margin-bottom: 16px;
+
+        span {
+            color: $notify-color;
+        }
+    }
+
+    .invalid-feedback {
+        position: absolute;
+        top: 20px;
+        left: 150px;
+    }
+
+    .permission-section {
+        ul {
+            overflow: auto;
+            height: 440px;
+            li {
+                padding: 15px;
+                border-radius: $border-radius;
+                background-color: rgba($dark-color, 0.03);
+                display: flex;
+                align-items: center;
+                -webkit-column-break-inside: avoid;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                overflow: auto;
+                margin-bottom: calc(10px + (16 - 10) * ((100vw - 320px) / (1920 - 320)));
+
+                &:has(label.error) {
+                    .form-group {
+                        position: static;
+                    }
+                }
+                &:first-child{
+                    position: sticky;
+                    z-index: 2;
+                    top: 0;
+                    box-shadow: 0 5px 11px #dddddd57;
+                    background: #f8f8f8;
+                }
+                &:has(label.error[style="display: none;"]) {
+                    position: relative;
+                    overflow: unset;
+                    margin-bottom: calc(10px + (16 - 10) * ((100vw - 320px) / (1920 - 320)));
+
+                    .form-group {
+                        position: static;
+                    }
+                }
+
+                h5 {
+                    font-weight: 500;
+                    margin-bottom: 0;
+                    text-transform: capitalize;
+                    min-width: 140px;
+                    margin-right: 10px;
+                }
+
+                .form-group {
+                    label {
+                        margin-bottom: 0;
+                        text-transform: capitalize;
+                        cursor: pointer;
+                        white-space: nowrap;
+                        font-weight: 400;
+                        color: rgba($dark-color, 0.85);
+                        line-height: 1;
+
+                        +label {
+                            margin-left: 26px;
+
+                        }
+
+                        input {
+                            margin-right: 14px !important;
+                        }
+
+                        &.error {
+                            color: $notify-color;
+                            font-size: 13px;
+                            font-weight: 400;
+                            margin: 0;
+                            letter-spacing: 0.7px;
+                            line-height: 1.5;
+                            position: absolute;
+                            top: 3px;
+                            left: 119px;
+                        }
+                    }
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+/**=====================
+  Role CSS Ends
+  ==========================**/

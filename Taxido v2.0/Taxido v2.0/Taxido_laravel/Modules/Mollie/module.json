@@ -1,0 +1,11 @@
+{
+    "name": "Mollie",
+    "alias": "mollie",
+    "description": "Mollie is a payment gateway that enables businesses to accept online payments easily",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Mollie\\Providers\\MollieServiceProvider"
+    ],
+    "files": []
+}

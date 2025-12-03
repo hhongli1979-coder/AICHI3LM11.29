@@ -1,0 +1,11 @@
+{
+    "name": "TwoFactor",
+    "alias": "twofactor",
+    "description": "TwoFactor is a security service that provides two-factor authentication for enhanced online account protection.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\TwoFactor\\Providers\\TwoFactorServiceProvider"
+    ],
+    "files": []
+}

@@ -1,0 +1,90 @@
+import { StyleSheet } from "react-native";
+import { appFonts, windowHeight, windowWidth } from "@src/themes";
+import { appColors } from "@src/themes";
+
+export const styles = StyleSheet.create({
+  view: { flex: 1 },
+  mainView: {
+    marginHorizontal: windowWidth(20),
+    marginTop: windowHeight(10),
+  },
+  inputBox: {
+    backgroundColor: appColors.whiteColor,
+    height: windowHeight(45),
+    borderRadius: windowHeight(5),
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: windowHeight(5),
+  },
+  iconContainer: {
+    height: windowHeight(35),
+    width: windowHeight(35),
+    backgroundColor: appColors.lightGray,
+    borderRadius: windowHeight(30),
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: windowWidth(10),
+  },
+  input: {
+    flex: 1,
+    fontFamily: appFonts.regular,
+    color: appColors.gray,
+    marginLeft: windowWidth(10),
+  },
+  swapButton: {
+    position: "absolute",
+    right: windowWidth(20),
+    top: windowHeight(35),
+    backgroundColor: appColors.whiteColor,
+    height: windowHeight(35),
+    width: windowHeight(35),
+    borderRadius: windowHeight(20),
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 10,
+    borderWidth: windowHeight(1),
+    borderColor: appColors.border,
+  },
+  inputBoxDropDown: {
+    backgroundColor: appColors.whiteColor,
+    borderRadius: windowHeight(5),
+    alignItems: "center",
+    marginVertical: windowHeight(5),
+    paddingVertical: windowHeight(5),
+  },
+  btn: {
+    marginTop: windowHeight(5),
+    marginHorizontal: windowWidth(20),
+    position: "absolute",
+    bottom: windowHeight(20),
+    right: 0,
+    left: 0,
+  },
+  vehicleNumber: { marginHorizontal: windowWidth(15), fontFamily: appFonts.semiBold },
+  addNewVehicle: {
+    marginHorizontal: windowWidth(8),
+    fontFamily: appFonts.semiBold,
+    color: appColors.primary,
+  },
+  addView: {
+    flexDirection: "row",
+    borderWidth: windowHeight(1),
+    borderColor: appColors.border,
+    borderRadius: windowHeight(5),
+    padding: windowHeight(8),
+    alignItems: "center",
+    marginVertical: windowHeight(10),
+  },
+  addMainView: { width: "100%", paddingHorizontal: windowWidth(10) },
+  line: {
+    borderBottomWidth: windowHeight(1),
+    borderBottomColor: appColors.border,
+    marginVertical: windowHeight(5),
+  },
+  bottomView: { flexDirection: 'row', alignItems: 'center' },
+  bottomView1: { flexDirection: 'row', alignItems: 'center', marginVertical: windowHeight(5) },
+  dropDownEnable: {
+    marginHorizontal: windowWidth(15),
+    justifyContent: "center",
+  },
+});

@@ -1,0 +1,21 @@
+Instructions for Bulk Import - Pages
+
+-------------------------------------------------------------------
+Pages Data Format
+-------------------------------------------------------------------
+
+
+1. title: (Required) Enter the title of the page. Maximum 255 characters allowed. The title must be unique.
+
+2. slug: (Required) Enter the slug for the page. The slug must be unique, used for generating the URL.
+
+3. content: (Required) Enter the content of the page.
+
+4. status: (Required) Set as '1' for active or '0' for inactive to determine the page's status.
+
+5. meta_title: (Optional) Provide the SEO meta title for the page.
+
+6. meta_description: (Optional) Provide the SEO meta description for the page.
+
+7. page_meta_image: (Optional) Provide the URL to the page's meta image (for SEO purposes). If not provided, the default meta image will be used.
+

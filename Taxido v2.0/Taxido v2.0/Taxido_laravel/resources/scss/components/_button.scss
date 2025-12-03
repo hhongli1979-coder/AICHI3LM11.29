@@ -1,0 +1,199 @@
+/*=====================
+ button css start
+==========================*/
+
+button {
+    cursor: pointer;
+}
+
+.btn {
+    font-size: $btn-font-size;
+    padding: $btn-padding;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+
+    &.btn-primary,
+    &.btn-solid {
+        background-color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        color: $white !important;
+
+        &:active {
+            background-color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+    }
+
+    &:focus {
+        box-shadow: none !important;
+    }
+
+    &.btn-outline {
+        color: var(--primary-color) !important;
+        border: 1px solid var(--primary-color);
+        background: transparent;
+        font-size: 14px;
+        white-space: nowrap;
+        line-height: 1;
+
+        &.btn-gray {
+            background: $bg-gray;
+        }
+
+        &:hover {
+            background-color: var(--primary-color);
+            color: $white !important;
+            border-color: transparent;
+
+            .dark-spinner {
+                border: 2px solid $dark-color;
+                border-top-color: $dark-color;
+            }
+
+            .spinner {
+                border-color: #fff;
+                border-top-color: transparent;
+            }
+        }
+
+        .spinner {
+            border-color: var(--primary-color);
+            border-top-color: transparent;
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+    &.btn-outline-gray {
+        color: rgba($dark-color, 0.8) !important;
+        border: 1px solid rgba($dark-color, 0.5);
+
+        &:hover {
+            background-color: rgba($dark-color, 0.04) !important;
+        }
+    }
+
+    &.btn-sm {
+        padding: $btn-sm-padding;
+        font-size: $btn-sm-font-size;
+    }
+
+    &.btn-secondary {
+        background-color: $secondary-color;
+        border: 1px solid $secondary-color;
+        color: $white;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            background-color: rgba($secondary-color, 0.1);
+            border: 1px solid transparent;
+            color: $white;
+        }
+    }
+}
+
+@each $btn-name,
+$btn-color in (primary, var(--primary-color)),
+(secondary, $secondary-color),
+(info, $info-color),
+(warning, $warning-color),
+(danger, $danger-color),
+(success, $success-color),
+(light, $light-color),
+(dark, $dark-color) {
+    .btn-#{$btn-name} {
+        background-color: $btn-color !important;
+        color: $white;
+        border: 1px solid $btn-color;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            background-color: $btn-color !important;
+            color: $white;
+            border: 1px solid $btn-color;
+        }
+    }
+}
+
+.edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin-left: auto;
+    margin-top: 24px;
+}
+
+.btn-popup {
+    a {
+        background-color: $white !important;
+        color: $dark-color;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &:hover {
+            color: $dark-color;
+        }
+    }
+
+    i {
+        font-size: 16px;
+        color: White;
+    }
+}
+
+.submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 8px;
+    margin-top: 10px;
+
+    .btn {
+        line-height: 1;
+        padding: $submit-btn-padding;
+    }
+
+    .remove-faq {
+        font-size: 16px !important;
+        border: 1px solid $secondary-color;
+        color: $secondary-color;
+        display: block !important;
+        padding: 10px 19px;
+        line-height: 1.3;
+
+        &:hover {
+            background-color: $secondary-color;
+            color: #fff;
+            border-color: transparent;
+        }
+    }
+}
+
+.add-location-button {
+    border-top: 1px solid $white-dark;
+    padding-top: 12px;
+    margin-top: 16px;
+}
+
+.added-button {
+    border-top: 1px solid $white-dark;
+    padding-top: 12px;
+    margin-top: 16px;
+}
+
+.preload-gif{
+    height: 100px;
+    width: 100px;
+}
+
+/**=====================
+ Button CSS end
+==========================**/

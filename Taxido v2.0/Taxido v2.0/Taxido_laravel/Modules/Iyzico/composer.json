@@ -1,0 +1,33 @@
+{
+    "name": "nwidart/iyzico",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "require": {
+        "iyzico/iyzipay-php" : "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Iyzico\\": "app/",
+            "Modules\\Iyzico\\Database\\Factories\\": "database/factories/",
+            "Modules\\Iyzico\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Iyzico\\Tests\\": "tests/"
+        }
+    }
+}

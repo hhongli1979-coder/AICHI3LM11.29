@@ -1,0 +1,11 @@
+{
+    "name": "Paystack",
+    "alias": "paystack",
+    "description": "Paystack is an online payment solution that helps businesses accept and manage payments",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Paystack\\Providers\\PaystackServiceProvider"
+    ],
+    "files": []
+}

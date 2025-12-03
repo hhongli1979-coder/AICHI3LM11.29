@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'failed' => 'Estas credenciales no coinciden con nuestros registros.',
+    'password' => 'La contraseña proporcionada es incorrecta.',
+    'throttle' => 'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en :seconds segundos.',
+    'otp_sent' => '¡Hemos enviado un OTP al número de teléfono registrado!',
+    'logged_out' => '¡Has cerrado sesión! Esperamos verte pronto de nuevo.',
+    'invalid_token' => 'El token proporcionado no es reconocido.',
+    'invalid_detail' => 'El detalle proporcionado debe ser de consumidor, ¡Por favor intenta de nuevo!',
+    'token_verified' => 'El token de verificación ha sido verificado exitosamente.',
+    'no_linked_email' => 'No hay ninguna cuenta vinculada al correo electrónico proporcionado.',
+    'password_changed' => '¡Tu contraseña ha sido cambiada exitosamente!',
+    'disabled_account' => 'No puedes iniciar sesión con una cuenta desactivada.',
+    'no_linked_number' => 'No hay ninguna cuenta vinculada al número proporcionado.',
+    'invalid_email_token' => 'El correo electrónico o el token proporcionado no es reconocido.',
+    'invalid_credentials' => 'Las credenciales ingresadas son incorrectas, ¡Por favor intenta de nuevo!',
+    'something_went_wrong' => 'Algo salió mal',
+    'await_store_approval' => 'Por favor espera la aprobación de la tienda antes de iniciar sesión.',
+    'invalid_access_token' => 'El token de acceso proporcionado no es válido. Por favor intenta de nuevo.',
+    'login_method_disabled' => 'El método de inicio de sesión proporcionado no está habilitado actualmente.',
+    'email_verification_sent' => '¡Hemos enviado un código de verificación al correo registrado!',
+    'multi_vendor_deactivated' => 'La función de múltiples proveedores está actualmente desactivada.',
+    'invalid_backend_credentials' => 'Las credenciales de backend ingresadas son incorrectas, ¡Por favor intenta de nuevo!',
+    'file' => 'auth',
+];

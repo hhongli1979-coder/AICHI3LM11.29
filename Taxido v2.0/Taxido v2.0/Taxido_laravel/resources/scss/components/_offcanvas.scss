@@ -1,0 +1,30 @@
+.offcanvas {
+    &.driver-details-offcanvas {
+        width: 350px;
+        border: none;
+        color: $dark-font;
+        box-shadow: 6px 4px 10px #7777771a;
+
+        .offcanvas-header {
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eee;
+
+            .btn-close {
+                padding: 0;
+                margin: 0 0 0 auto;
+                opacity: 1;
+                background: none;
+                width: auto;
+                height: auto;
+                line-height: 1;
+                font-size: 23px;
+            }
+
+            .offcanvas-title {
+
+
+                font-size: 20px;
+            }
+        }
+    }
+}

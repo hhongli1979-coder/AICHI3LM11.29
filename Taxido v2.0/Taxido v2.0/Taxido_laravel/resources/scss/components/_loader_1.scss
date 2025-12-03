@@ -1,0 +1,44 @@
+/**=====================
+      Loader CSS Start
+==========================**/
+
+#progress-loader {
+    height: 4px;
+    border-radius: 20px;
+    transition: 0.4s linear;
+    transition-property: width, background-color;
+    width: 100%;
+    animation: progressAnimation 4s;
+    position: absolute;
+    top: -80px;
+    left: 0;
+    right: 0;
+}
+
+.page-loader {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    z-index: 6;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes progressAnimation {
+    0% {
+        width: 0%;
+        background-color: $primary-color;
+    }
+
+    100% {
+        width: 100%;
+        background-color: $primary-color;
+    }
+}
+
+
+/**=====================
+      Loader CSS End
+==========================**/

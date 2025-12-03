@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use Exception;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Exceptions\ExceptionHandler;
+use App\Repositories\Api\PageRepository;
+
+class PageController extends Controller
+{   
+    public $repository;
+
+    public function __construct(PageRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        try{    
+
+            $pages = $this->filter($this->repository,$request);
+            return $pages->latest('created_at')->paginate($request->paginate ?? $pages->count() ?: null);
+        }catch(Exception $e)
+        {
+            throw new ExceptionHandler($e->getMessage(),$e->getCode());
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
+        return $this->repository->findOrFail($id);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
+    public function getPagesBySlug($slug)
+    {
+        return $this->repository->getPagesBySlug($slug);
+    }
+    public function filter($pages , $request)
+    {
+         if ($request->field && $request->sort) {
+            $pages = $pages->orderBy($request->field, $request->sort);
+        }
+
+        if (isset($request->status)) {
+            $pages = $pages->where('status', $request->status);
+        }
+        
+        return $pages;
+    }   
+}

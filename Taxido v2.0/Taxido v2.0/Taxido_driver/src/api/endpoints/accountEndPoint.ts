@@ -1,0 +1,12 @@
+export const editProfile = 'updateProfile'
+export const changePassword = 'updatePassword'
+export const deleteAccount = 'driver/deleteAccount'
+export const driverSelf = 'driver/self'
+export const editBank = 'update/payment-account'
+export const documentUpdate = 'update/document'
+export const updateVehicleRegi = 'update/vehicle'
+export const fleetSelf = 'fleet/self'
+export const country = 'country'
+export const preference = 'preference'
+export const phoneOrEmail = "driver/updatePhoneOrEmail";
+export const verifyPhoneOrEmail = "driver/verifyPhoneOrEmail"

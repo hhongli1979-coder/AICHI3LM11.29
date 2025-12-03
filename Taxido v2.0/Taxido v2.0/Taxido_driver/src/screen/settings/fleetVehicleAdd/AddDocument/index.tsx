@@ -1,0 +1,417 @@
+import { View, Text, ScrollView, Platform, TouchableOpacity } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Button, Header, notificationHelper } from '../../../../commonComponents'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation, useTheme } from '@react-navigation/native'
+import { useValues } from '../../../../utils/context'
+import appColors from '../../../../theme/appColors'
+import { TitleView } from '../../../auth/component'
+import styles from './styles'
+import { DocumentPickerResponse } from 'react-native-document-picker'
+import renderDocumentUpload from './component'
+import { documentGet, fleetVehicleList } from '../../../../api/store/action'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet'
+import appFonts from '../../../../theme/appFonts'
+import Icons from '../../../../utils/icons/icons'
+import { fontSizes, windowHeight, windowWidth } from '../../../../theme/appConstant'
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
+import { URL } from '../../../../api/config'
+import { getValue } from '../../../../utils/localstorage'
+
+export function AddDocument({ route }: any) {
+    const dispatch = useDispatch()
+    const { formDatas, vehicleData, type } = route.params;
+    const { colors } = useTheme()
+    const { translateData } = useSelector((state: any) => state.setting)
+    const { textRtlStyle, setDocumentDetail, isDark, viewRtlStyle, rtl } = useValues()
+    const { documentData } = useSelector((state: any) => state.documents)
+    const [uploadedDocuments, setUploadedDocuments] = useState<any>({})
+    const [expiryDates, setExpiryDates] = useState<Record<string, Date | null>>({})
+    const [showWarning, setShowWarning] = useState<Record<string, boolean>>({})
+    const [showDatePicker, setShowDatePicker] = useState<{ visible: boolean; slug: string | null }>({ visible: false, slug: null })
+    const bars = Array(2).fill(0)
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+    const [selectedDocSlug, setSelectedDocSlug] = useState<string | null>(null)
+    const snapPoints = ['30%']
+    const [loading, setLoading] = useState(false)
+    const navigation = useNavigation<Navigation>()
+
+    useEffect(() => {
+        getDocument()
+    }, [])
+
+    const getDocument = () => {
+        dispatch(documentGet({ type: 'vehicle' }))
+    }
+
+
+    useEffect(() => {
+        const prefillDocs: Record<string, any> = {}
+        const prefillDates: Record<string, any> = {}
+
+        documentData?.data?.forEach((doc) => {
+            const existing = vehicleData?.documents?.find(
+                (v) => v.document?.slug === doc.slug
+            )
+
+            if (existing) {
+                // prefill image
+                prefillDocs[doc.slug] = [
+                    {
+                        uri: existing.document_image_url,
+                        name: `${doc.slug}.jpg`,
+                        type: 'image/jpeg',
+                    },
+                ]
+
+                // prefill expiry date if required
+                if (existing.expired_at) {
+                    prefillDates[doc.slug] = new Date(existing.expired_at)
+                        .toISOString()
+                        .split('T')[0]
+                }
+            }
+        })
+
+        setUploadedDocuments(prefillDocs)
+        setExpiryDates(prefillDates)
+    }, [vehicleData, documentData])
+
+
+    const gotoDocument = () => {
+        let warnings: Record<string, boolean> = {}
+        let hasEmptyDocument = false
+        let hasMissingExpiryDate = false
+
+        documentData?.data?.forEach((doc) => {
+            const isDocUploaded = uploadedDocuments[doc.slug]
+            const requiresExpiryDate = doc.need_expired_date === 1
+            const expiryDateValue = expiryDates[doc.slug]
+
+            if (!isDocUploaded) {
+                warnings[doc.slug] = true
+                hasEmptyDocument = true
+            }
+
+            if (isDocUploaded && requiresExpiryDate && !expiryDateValue) {
+                warnings[doc.slug] = true
+                hasMissingExpiryDate = true
+            }
+        })
+
+        setShowWarning(warnings)
+
+        if (hasEmptyDocument || hasMissingExpiryDate) {
+            return
+        }
+
+        const result = Object.keys(uploadedDocuments).reduce((acc, key) => {
+            acc[key] = {
+                file: uploadedDocuments[key],
+                expiryDate: documentData?.data?.find((d) => d.slug === key)?.need_expired_date === 1
+                    ? expiryDates[key] || null
+                    : null,
+            }
+            return acc
+        }, {} as Record<string, { file: DocumentPickerResponse | null; expiryDate: Date | null }>)
+
+        setDocumentDetail(result)
+        addVehicle()
+    }
+
+    const openBottomSheet = (documentType: string) => {
+        setSelectedDocSlug(documentType)
+        bottomSheetModalRef.current?.present()
+    }
+    const handleImageSelection = async (type: 'gallery' | 'camera') => {
+        try {
+            let res
+            if (type === 'gallery') {
+                res = await launchImageLibrary({
+                    mediaType: 'photo',
+                    quality: 1,
+                })
+            } else {
+                res = await launchCamera({
+                    mediaType: 'photo',
+                    quality: 1,
+                })
+            }
+            if (res?.assets && selectedDocSlug) {
+                const file = res.assets[0]
+                setUploadedDocuments((prevDocs) => ({
+                    ...prevDocs,
+                    [selectedDocSlug]: [file],
+                }))
+
+                setShowWarning((prevWarnings) => ({
+                    ...prevWarnings,
+                    [selectedDocSlug]: false,
+                }))
+            }
+
+        } catch (err) {
+        } finally {
+            bottomSheetModalRef.current?.dismiss()
+        }
+    }
+
+    const onDateChange = (event, selectedDate) => {
+        const currentSlug = showDatePicker.slug
+        if (event.type === 'set' && selectedDate && currentSlug) {
+            const formattedDate = new Date(selectedDate).toISOString().split('T')[0]
+            const updatedDates = { ...expiryDates, [currentSlug]: formattedDate }
+            setExpiryDates(updatedDates)
+        }
+        setShowDatePicker({ visible: false, slug: null })
+    }
+
+    const getValidDate = (value) => {
+        const date = new Date(value)
+        return isNaN(date.getTime()) ? new Date() : date
+    }
+
+
+
+    const addVehicle = async () => {
+        setLoading(true);
+        const token = await getValue('token');
+
+        try {
+            const formData = new FormData();
+            formData.append('name', formDatas.vehicleName);
+            formData.append('vehicle_type_id', formDatas.selectedVehicleID);
+            formData.append('color', formDatas.vehicleColor);
+            formData.append('model', formDatas.vehicleModel);
+            formData.append('model_year', formDatas.vehicleModelYear);
+            formData.append('plate_number', formDatas.vehicleNumber);
+
+            Object.keys(uploadedDocuments).forEach((key, index) => {
+                const docsArray = uploadedDocuments[key]; // this is an array
+                const expiryDate = expiryDates[key];      // expiry date
+
+                if (docsArray && docsArray.length > 0) {
+                    docsArray.forEach((doc, docIndex) => {
+                        formData.append(`documents[${index}][file]`, {
+                            uri: doc.uri,
+                            type: doc.type,
+                            name: doc.fileName || doc.name,
+                        });
+                        formData.append(`documents[${index}][slug]`, key);
+                        if (expiryDate) {
+                            formData.append(`documents[${index}][expired_at]`, expiryDate);
+                        }
+                    });
+                }
+            });
+
+            const response = await fetch(`${URL}/api/fleet/vehicleInfo`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = await response.json();
+
+
+            if (data?.id) {
+                notificationHelper('', translateData?.vehicleAddsucess, 'success');
+                await dispatch(fleetVehicleList());
+
+                navigation.replace('ManageVehicle');
+
+            } else {
+                notificationHelper('', data?.message ?? 'Something went wrong', 'error');
+                setLoading(false);
+
+            }
+        } catch (error) {
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateVehicle = async () => {
+        setLoading(true);
+        const token = await getValue('token');
+
+        try {
+            const formData = new FormData();
+            formData.append('name', formDatas.vehicleName);
+            formData.append('vehicle_type_id', formDatas.selectedVehicleID);
+            formData.append('color', formDatas.vehicleColor);
+            formData.append('model', formDatas.vehicleModel);
+            formData.append('model_year', formDatas.vehicleModelYear);
+            formData.append('plate_number', formDatas.vehicleNumber);
+            formData.append('_method', 'PUT');
+
+            Object.keys(uploadedDocuments).forEach((key, index) => {
+                const docs = uploadedDocuments[key];   // array of files
+                const expiryDate = expiryDates[key];
+
+                if (docs && docs.length > 0) {
+                    docs.forEach((doc, docIndex) => {
+                        formData.append(`documents[${index}][file]`, {
+                            uri: doc.uri,
+                            type: doc.type,
+                            name: doc.name,
+                        });
+                        formData.append(`documents[${index}][slug]`, key);
+                        if (expiryDate) {
+                            formData.append(`documents[${index}][expired_at]`, expiryDate);
+                        }
+                    });
+                }
+            });
+
+
+            const response = await fetch(`${URL}/api/fleet/vehicleInfo/${vehicleData?.id}`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = await response.json();
+
+
+            if (data?.id) {
+                notificationHelper('', translateData?.vehicleupdatesucess, 'success');
+                await dispatch(fleetVehicleList());
+                navigation.replace('ManageVehicle');
+            } else {
+                notificationHelper('', data?.message ?? 'Something went wrong', 'error');
+                setLoading(false);
+            }
+        } catch (error) {
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    return (
+        <BottomSheetModalProvider>
+            <View>
+                <Header title={translateData?.addVehicle} backgroundColor={isDark ? colors.card : appColors.white} />
+                <View style={{ backgroundColor: isDark ? colors.card : appColors.white }}>
+                    <View style={[styles.container, { flexDirection: viewRtlStyle }]}>
+                        {bars?.map((_, index) => (
+                            <View
+                                key={index}
+                                style={[
+                                    index < 2
+                                        ? styles.filledBar
+                                        : [
+                                            styles.emptyBar,
+                                            {
+                                                backgroundColor: isDark
+                                                    ? appColors.darkFillBar
+                                                    : appColors.subPrimary,
+                                            },
+                                        ],
+                                ]}
+                            />
+                        ))}
+                    </View>
+                </View>
+                <ScrollView>
+                    <View style={styles.space}>
+                        <TitleView title={translateData?.addVehicleDetails} subTitle={translateData?.addVehicleDetailssetup} />
+                        {documentData?.data?.map((doc) => (
+                            <View key={doc.id} style={styles.dateContainer}>
+                                {renderDocumentUpload({
+                                    uploadedDocuments,
+                                    handleDocumentUpload: (slug) => {
+                                        openBottomSheet(slug)
+                                    },
+                                    documentType: doc.slug,
+                                    label: `Upload ${doc.name}`,
+                                    expiryDate: expiryDates[doc.slug],
+                                    needExpiryDate: doc.need_expired_date === 1,
+                                    onPressDate: (slug) => setShowDatePicker({ visible: true, slug }),
+                                })}
+
+                                {showWarning[doc.slug] && (
+                                    <Text
+                                        style={[
+                                            styles.titleText,
+                                            {
+                                                textAlign: textRtlStyle,
+                                                color: appColors.red,
+                                                marginTop: 5,
+                                            },
+                                        ]}
+                                    >
+                                        {uploadedDocuments[doc.slug] && doc.need_expired_date === 1 && !expiryDates[doc.slug]
+                                            ? translateData.expiryDateRequired
+                                            : `${doc.name} ${translateData.isRequired}`}
+                                    </Text>
+                                )}
+                            </View>
+                        ))}
+                    </View>
+                </ScrollView>
+                {type === 'edit' ?
+                    <Button onPress={updateVehicle} title={translateData?.uploadBytes} backgroundColor={appColors.primary} color={appColors.white} loading={loading} />
+                    :
+                    <Button onPress={gotoDocument} title={translateData?.submit} backgroundColor={appColors.primary} color={appColors.white} loading={loading} />
+                }
+                {showDatePicker.visible && showDatePicker.slug && (
+                    <DateTimePicker
+                        value={getValidDate(expiryDates[showDatePicker.slug])}
+                        mode="date"
+                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                        onChange={onDateChange}
+                        minimumDate={new Date()}
+                    />
+                )}
+
+                <BottomSheetModal
+                    ref={bottomSheetModalRef}
+                    snapPoints={snapPoints}
+                    handleIndicatorStyle={{ backgroundColor: appColors.primary, width: '13%' }}
+                    backgroundStyle={{
+                        backgroundColor: isDark ? appColors.bgDark : appColors.white,
+                    }}
+                >
+                    <BottomSheetView style={{ padding: windowHeight(2) }}>
+                        <Text style={{ fontFamily: appFonts.medium, fontSize: fontSizes.FONT4HALF, color: isDark ? appColors.white : appColors.black, marginBottom: windowHeight(2) }}>
+                            {translateData.selectOne}
+                        </Text>
+
+                        <TouchableOpacity
+                            onPress={() => handleImageSelection('gallery')}
+                            style={{ flexDirection: rtl ? 'row-reverse' : 'row', alignItems: 'center', marginBottom: windowHeight(2) }}
+                        >
+                            <View style={{ backgroundColor: isDark ? appColors.dotDark : appColors.cardicon, height: windowHeight(5), width: windowHeight(5), borderRadius: windowHeight(3), justifyContent: 'center', alignItems: 'center' }}>
+                                <Icons.Gallery />
+                            </View>
+                            <Text style={{ fontSize: fontSizes.FONT3HALF, fontFamily: appFonts.medium, marginLeft: windowWidth(3), color: isDark ? appColors.darkText : appColors.black }}>
+                                {translateData.chooseFromGallery}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => handleImageSelection('camera')}
+                            style={{ flexDirection: rtl ? 'row-reverse' : 'row', alignItems: 'center', marginBottom: windowHeight(2) }}
+                        >
+                            <View style={{ backgroundColor: isDark ? appColors.dotDark : appColors.cardicon, height: windowHeight(5), width: windowHeight(5), borderRadius: windowHeight(3), justifyContent: 'center', alignItems: 'center' }}>
+                                <Icons.Camera1 />
+                            </View>
+                            <Text style={{ fontSize: fontSizes.FONT3HALF, fontFamily: appFonts.medium, marginLeft: windowWidth(3), color: isDark ? appColors.darkText : appColors.black }}>
+                                {translateData.openCamera}
+                            </Text>
+                        </TouchableOpacity>
+                    </BottomSheetView>
+                </BottomSheetModal>
+            </View>
+        </BottomSheetModalProvider>
+    )
+}

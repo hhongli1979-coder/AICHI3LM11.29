@@ -1,0 +1,11 @@
+{
+    "name": "Msg91",
+    "alias": "msg91",
+    "description": "MSG91 is a messaging platform for SMS, email, and voice communication services.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Msg91\\Providers\\Msg91ServiceProvider"
+    ],
+    "files": []
+}

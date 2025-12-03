@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/twofactor",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\TwoFactor\\": "app/",
+            "Modules\\TwoFactor\\Database\\Factories\\": "database/factories/",
+            "Modules\\TwoFactor\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\TwoFactor\\Tests\\": "tests/"
+        }
+    }
+}

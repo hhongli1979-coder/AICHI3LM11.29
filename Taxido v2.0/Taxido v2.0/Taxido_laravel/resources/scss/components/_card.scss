@@ -1,0 +1,478 @@
+/**=====================
+      Card CSS Start
+==========================**/
+.card {
+    border: $card-border-width;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    border-radius: $card-border-radius;
+    box-shadow: $card-box-shadow;
+
+    &:empty {
+        display: none;
+    }
+
+    &:has(.header-img) {
+        border-radius: 0.375rem;
+        box-shadow: rgba(29, 35, 39, 0.04) 0px 4px 16px;
+
+        .card-header {
+            border-bottom: 1px solid $white-dark;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: $white;
+            padding: 16px 20px;
+        }
+    }
+
+    &.payment-card {
+        box-shadow: none;
+        height: 100%;
+        display: block;
+
+        .card-header {
+            display: block;
+            background-color: #f8f8f87a;
+            border: 1px solid rgba($white-dark, 0.612);
+            border-radius: 10px;
+            height: 100%;
+
+            .top-payment {
+                display: flex;
+                align-items: center;
+                flex-direction: row-reverse;
+                justify-content: space-between;
+                gap: 14px;
+
+                .header-img {
+                    gap: 10px;
+                    align-items: flex-start;
+
+                    img {
+                        width: 88px;
+                        background-color: #fff;
+                        height: 53px;
+                        object-fit: contain;
+                        padding: 6px;
+                        border-radius: 5px;
+                        border: 1px solid rgba(238, 238, 238, 0.6117647059);
+                    }
+
+                    .header-name {
+                        width: calc(100% - 88px - 10px);
+
+                        p {
+                            font-size: 15px;
+                            margin-bottom: 3px;
+                            font-weight: 500;
+                            color: #222;
+                        }
+
+                        .badge {
+                            background-color: var(--primary-color);
+                            width: max-content;
+                            height: auto;
+                            border-radius: 2px;
+                            font-size: 11px;
+                        }
+                    }
+                }
+            }
+
+            .contain {
+                border-top: 1px solid $white-dark;
+                margin-top: 13px;
+                padding-top: 13px;
+
+                p {
+                    font-size: 15px;
+                    line-height: 1.5;
+                    margin: 0;
+                    letter-spacing: 0.3px;
+                }
+
+                .payment-keys {
+                    display: grid;
+                    gap: 3px;
+
+                    li {
+                        font-size: 14px;
+                        color: #777;
+                        position: relative;
+                        padding-left: 23px;
+                        line-height: 1.9;
+
+                        i {
+                            position: absolute;
+                            top: 5px;
+                            line-height: 1;
+                            left: 0;
+                            font-size: 16px;
+                        }
+
+                        span {
+                            color: #222;
+                            font-weight: 500;
+                        }
+                    }
+                }
+            }
+        }
+
+        .footer {
+            border-top: 1px solid $white-dark;
+            padding-top: 20px;
+
+            .btn {
+                background-color: transparent;
+                border: 1px solid var(--primary-color);
+                color: var(--primary-color);
+                padding: 10px 17px;
+                letter-spacing: 0.8px;
+
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: #fff;
+                    border-color: transparent;
+                }
+            }
+        }
+    }
+}
+
+.header-img {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    img {
+        width: 62px;
+        height: auto;
+    }
+
+    h5 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 500;
+        line-height: 1.3;
+    }
+}
+
+.status-div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    label {
+        margin: 0;
+    }
+}
+
+.widget-card-box {
+    .widget-card {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 12px;
+        margin-bottom: 0;
+        border-radius: 12px;
+        background: $white;
+        letter-spacing: 0.5px;
+        padding: 20px;
+        overflow: hidden;
+        position: relative;
+
+        h6 {
+            font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+            line-height: 1.2;
+            margin-bottom: 7px;
+            font-weight: 500;
+            color: $grey;
+        }
+
+        h2 {
+            font-size: calc(21px + .0025*(100vw - 320px));
+            font-weight: 600;
+            color: $dark-font;
+            display: flex;
+            align-items: flex-end;
+            line-height: 1;
+            text-transform: capitalize;
+            margin: 0;
+        }
+
+        .widget-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 4px;
+            width: calc(44px + .005*(100vw - 320px));
+            height: calc(44px + .005*(100vw - 320px));
+
+
+            i {
+                font-size: 24px;
+            }
+        }
+
+        .widget-bg-icon {
+            position: absolute;
+            right: -10px;
+            opacity: .05;
+            transform: rotate(10deg);
+            filter: grayscale(1);
+            transition: all .5s ease;
+
+            i {
+                font-size: 60px;
+                color: $dark-color;
+            }
+        }
+    }
+
+    &:nth-child(1) {
+        .widget-card {
+            .widget-icon {
+                background-color: rgba($primary-color, 0.1);
+
+                i {
+                    color: var(--primary-color);
+                }
+            }
+        }
+    }
+
+    &:nth-child(2) {
+        .widget-card {
+            .widget-icon {
+                background-color: rgba($secondary-color, 0.1);
+
+                i {
+                    color: $secondary-color;
+                }
+            }
+        }
+    }
+
+    &:nth-child(3) {
+        .widget-card {
+            .widget-icon {
+                background-color: rgba($warning-color, 0.1);
+
+                i {
+                    color: $warning-color;
+                }
+            }
+        }
+    }
+
+    &:nth-child(4) {
+        .widget-card {
+            .widget-icon {
+                background-color: rgba($success-color, 0.1);
+
+                i {
+                    color: $success-color;
+                }
+            }
+        }
+    }
+
+    &:nth-child(5) {
+        .widget-card {
+            .widget-icon {
+                background-color: rgba($badge-danger, 0.1);
+
+                i {
+                    color: $badge-danger;
+                }
+            }
+        }
+    }
+
+    &:nth-child(6) {
+        .widget-card {
+            .widget-icon {
+                background-color: rgba($tertiary-color, 0.1);
+
+                i {
+                    color: $tertiary-color;
+                }
+            }
+        }
+    }
+
+    &:nth-child(7) {
+        .widget-card {
+            .widget-icon {
+                background-color: rgba($info-color, 0.1);
+
+                i {
+                    color: $info-color;
+                }
+            }
+        }
+    }
+
+    &:nth-child(8) {
+        .widget-card {
+            .widget-icon {
+                background-color: rgba($dark-color, 0.1);
+
+                i {
+                    color: $dark-color;
+                }
+            }
+        }
+    }
+}
+
+.total-tickets-widget {
+    margin-bottom: -26px;
+
+    .tickets-widget-card {
+        border: 1px solid $white-dark;
+        border-radius: 4px;
+        padding: 10px;
+        font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+        font-weight: 400;
+        color: rgba($dark-color, 0.8);
+        line-height: 1.5;
+        background-color: $white !important;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        h5 {
+            margin: 0;
+        }
+
+        .badge {
+            width: max-content;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1;
+
+        }
+    }
+
+    .info {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        margin-bottom: 16px;
+
+        li {
+            padding: 4px calc(6px + (10 - 6) * ((100vw - 320px) / (1920 - 320)));
+            background: linear-gradient(180deg, #e1e1e2 0%, rgba(#e1e1e2, 0.04) 100%);
+            border-radius: 5px;
+            margin-right: calc(8px + (12 - 8) * ((100vw - 320px) / (1920 - 320)));
+            position: relative;
+            text-align: center;
+            min-width: calc(76px + (100 - 76) * ((100vw - 320px) / (1920 - 320)));
+
+            h5 {
+                margin: 0;
+                font-size: calc(12px + (14 - 12) * ((100vw - 320px) / (1920 - 320)));
+                font-weight: 500;
+                opacity: 0.8;
+                line-height: 1.1;
+            }
+
+            span {
+                font-size: calc(12px + (14 - 12) * ((100vw - 320px) / (1920 - 320)));
+                font-weight: 600;
+                color: $dark-color;
+            }
+
+            +li {
+                padding-left: calc(8px + (12 - 8) * ((100vw - 320px) / (1920 - 320)));
+                margin-left: calc(8px + (12 - 8) * ((100vw - 320px) / (1920 - 320)));
+
+                &:before {
+                    content: "";
+                    top: 50%;
+                    background-color: rgba($dark-color, 0.1);
+                    transform: translate(-15px, -50%);
+                    left: calc(6px + (2 - 6) * ((100vw - 320px) / (1920 - 320)));
+                    position: absolute;
+                    height: 30px;
+                    width: 1px;
+                }
+            }
+        }
+    }
+}
+
+.form-field-box {
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    box-shadow: rgba(29, 35, 39, 0.03) 0px 4px 12px;
+
+    .form-title {
+        padding-bottom: 11px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid $white-dark;
+
+        h4 {
+            margin: 0;
+            font-weight: 500;
+        }
+    }
+
+    .form-content-list {
+        display: grid;
+        gap: 5px;
+
+        li {
+            font-size: 16px;
+
+            span {
+                color: $grey;
+            }
+        }
+    }
+
+    .from-btn-group {
+        margin-top: 16px;
+        display: flex;
+        padding-top: 13px;
+        border-top: 1px solid $white-dark;
+        gap: 15px;
+
+        .btn {
+            display: block !important;
+            font-size: 15px !important;
+            padding: 8px 20px;
+
+            &.edit-btn {
+                background-color: transparent;
+                color: var(--primary-color);
+                border: 1px solid var(--primary-color);
+
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: $white;
+                    border-color: transparent;
+                }
+            }
+
+            &.delete-btn {
+                background-color: transparent;
+                color: $danger-color;
+                border: 1px solid $danger-color;
+
+                &:hover {
+                    background-color: $danger-color;
+                    color: $white;
+                    border-color: transparent;
+                }
+            }
+        }
+    }
+}

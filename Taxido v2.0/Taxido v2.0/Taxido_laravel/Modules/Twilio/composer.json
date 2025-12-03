@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/twilio",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Twilio\\": "app/",
+            "Modules\\Twilio\\Database\\Factories\\": "database/factories/",
+            "Modules\\Twilio\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Twilio\\Tests\\": "tests/"
+        }
+    }
+}

@@ -1,0 +1,3 @@
+title,slug,content,is_featured,is_sticky,status,blog_thumbnail_url,blog_meta_image_url,meta_title,meta_description,categories,tags
+My First Blog,my-first-blog,This is the content of my first blog.,1,0,1,https://example.com/images/first-blog-thumbnail.jpg,https://example.com/images/first-blog-meta.jpg,My First Blog Meta Title,This is a meta description for the first blog.,1,2,3,4
+

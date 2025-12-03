@@ -1,0 +1,185 @@
+/**=====================
+      Tables CSS Start
+==========================**/
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    gap: calc(0px + (6 - 0) * ((100vw - 320px) / (1920 - 320)));
+    flex-wrap: wrap;
+
+    &:empty {
+        display: none;
+    }
+
+    .page-item {
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        z-index: 0;
+
+        &[aria-label="« Previous"],
+        &[aria-label="Next »"] {
+
+            a,
+            span {
+                position: relative;
+                font-size: 0;
+                color: transparent;
+
+                &::before {
+                    color: rgba($dark-color, 0.8);
+                    font-size: 18px;
+                    line-height: 1;
+                    font-family: remixicon;
+                    font-style: normal;
+                    -webkit-font-smoothing: antialiased;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            }
+        }
+
+        &[aria-label="Next »"] {
+
+            a,
+            span {
+                &::before {
+                    content: "\ea6e";
+                }
+            }
+        }
+
+        &[aria-label="« Previous"] {
+
+            a,
+            span {
+                &::before {
+                    content: "\ea64";
+                }
+            }
+        }
+
+        .page-link {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: none;
+            margin: 0 !important;
+            font-size: 14px;
+            background-color: transparent;
+            color: rgba($dark-color, 0.8);
+            line-height: 1;
+            transition: none;
+
+            &[rel="next"],
+            &[rel="prev"] {
+                position: relative;
+                font-size: 0;
+                color: transparent;
+
+                &::before {
+                    color: rgba($dark-color, 0.8);
+                    font-size: 18px;
+                    line-height: 1;
+                    font-family: remixicon;
+                    font-style: normal;
+                    -webkit-font-smoothing: antialiased;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            }
+
+            &[rel="next"] {
+                &::before {
+                    content: "\ea6e";
+                }
+            }
+
+            &[rel="prev"] {
+                &::before {
+                    content: "\ea64";
+                }
+            }
+        }
+
+        &:first-child,
+        &:last-child {
+            .page-link {
+                font-size: 30px;
+                font-weight: 300;
+                line-height: 1;
+            }
+        }
+
+        &:last-child {
+            .page-link {
+                padding-left: 2px;
+            }
+        }
+
+        &.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+
+            .page-link {
+                color: $white;
+                z-index: 0;
+            }
+
+            &:hover {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+
+                .page-link {
+                    color: $white;
+                }
+            }
+        }
+
+        &:hover {
+            background-color: transparent;
+            border-color: transparent;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--primary-color);
+                opacity: 0.1;
+            }
+
+            &::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: calc(100% + 2px);
+                height: calc(100% + 2px);
+                border: 1px solid var(--primary-color);
+                opacity: 0.1;
+            }
+
+            a {
+                color: var(--primary-color);
+            }
+        }
+    }
+}
+
+/**=====================
+      Tables CSS Start
+==========================**/

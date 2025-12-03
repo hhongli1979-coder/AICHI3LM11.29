@@ -1,0 +1,11 @@
+{
+    "name": "BKash",
+    "alias": "bkash",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\BKash\\Providers\\BKashServiceProvider"
+    ],
+    "files": []
+}

@@ -1,0 +1,132 @@
+/*=====================
+ Badge css start
+==========================*/
+
+$background-name: primary,
+secondary,
+success,
+danger,
+info,
+light,
+dark,
+warning;
+$background-color: var(--primary-color),
+$secondary-color,
+$success-color,
+$danger-color,
+$info-color,
+$light-color,
+$dark-color,
+$warning-color;
+
+@each $var in $background-name {
+  $i: index($background-name, $var);
+
+  .badge-version-#{$var} {
+    background-color: rgba(nth($background-color, $i), 0.1) !important;
+    color: nth($background-color, $i);
+    border: 1px solid nth($background-color, $i);
+  }
+}
+
+.badge-version-primary {
+  background-color: transparent !important;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    opacity: 0.1;
+  }
+}
+
+/* Badges */
+[class*="badge-version-"] {
+  &.badge {
+    border-radius: 0.3125rem;
+    padding: 5px 10px;
+    display: inline-block;
+    width: max-content;
+    height: auto;
+    font-weight: bold;
+    letter-spacing: 0.75px;
+    line-height: 1.1;
+  }
+}
+
+/* payment status badges */
+$background-name: paid,
+pending,
+completed,
+failed,
+notPaid,
+requested,
+scheduled,
+accepted,
+rejected,
+arrived,
+started,
+cancelled;
+$background-color: $primary-color,
+$warning-color,
+$primary-color,
+$danger-color,
+$warning-color,
+$requested-color,
+$scheduled-color,
+$accepted-color,
+$rejected-color,
+$arrived-color,
+$started-color,
+$cancelled-color;
+
+@each $var in $background-name {
+  $i: index($background-name, $var);
+
+  .badge-#{$var} {
+    background-color: nth($background-color, $i) !important;
+    color: $white;
+    border: 1px solid nth($background-color, $i);
+  }
+}
+
+/* ride status badges */
+$background-name: completed,
+active,
+cancel highlight,
+accent,
+positive,
+negative,
+attention,
+progress,
+critical,
+calm,
+tertairy;
+$background-color: $primary-color,
+$warning-color,
+$secondary-color $highlight-color,
+$accent-color,
+$positive-color,
+$negative-color,
+$attention-color,
+$progress-color,
+$critical-color,
+$calm-color,
+$tertiary-color;
+
+@each $var in $background-name {
+  $i: index($background-name, $var);
+
+  .badge-#{$var} {
+    background-color: nth($background-color, $i) !important;
+    color: $white;
+    border: 1px solid nth($background-color, $i);
+  }
+}

@@ -1,0 +1,353 @@
+/**=====================
+      Tabs CSS Start
+==========================**/
+.horizontal-tab {
+    display: flex;
+    align-items: center;
+    flex-wrap: unset;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-bottom: 20px;
+    gap: 14px;
+    border-bottom: 1px solid rgba($gray-color, 0.5);
+    padding-bottom: 10px;
+
+    &.custom-scroll {
+        &::-webkit-scrollbar {
+            width: 0;
+            height: 3px;
+        }
+    }
+
+    .nav-item {
+        display: inline-block;
+        width: auto;
+        border-radius: 6px;
+        background-color: transparent;
+        margin-bottom: 0;
+
+        .nav-link {
+            background-color: transparent;
+            border-radius: 6px;
+            padding: 10px 20px;
+            color: #212529;
+            font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+            border: none;
+            text-transform: capitalize;
+            display: flex;
+            gap: 10px;
+            white-space: nowrap;
+            box-shadow: none;
+
+            i {
+                font-size: 20px;
+                line-height: 1.2;
+
+                &.danger {
+                    color: $danger-color;
+                    display: none;
+                }
+
+            }
+
+            &.active {
+                color: var(--primary-color);
+                font-weight: 500;
+                border: none;
+                border-radius: 6px;
+                position: relative;
+                z-index: 0;
+                overflow: hidden;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: var(--primary-color);
+                    opacity: 0.1;
+                    z-index: -1;
+                }
+            }
+        }
+    }
+}
+
+.vertical-tabs {
+    .nav-pills {
+        border: none;
+        position: sticky !important;
+        top: 90px;
+        flex-wrap: nowrap;
+
+        .nav-link {
+            margin: 0 0 6px;
+            position: relative;
+            background-color: $white;
+            border-radius: 6px;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: calc(6px + (10 - 6) * ((100vw - 320px) / (1920 - 320)));
+            display: flex;
+            align-items: center;
+            gap: calc(8px + (13 - 8) * ((100vw - 320px) / (1920 - 320)));
+            color: rgba($dark-color, 0.6);
+            font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+            font-weight: 500;
+            text-transform: capitalize;
+            border: 1px solid $white-dark;
+            overflow: hidden;
+
+            &+.nav-link {
+                margin-top: 8px;
+            }
+
+            &.active {
+                background-color: transparent;
+                color: var(--primary-color);
+
+                i {
+                    background-color: $white;
+                }
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    height: calc(100% - 17px);
+                    background-color: var(--primary-color);
+                    width: 3px;
+                    transform: translateY(-50%);
+                }
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: var(--primary-color);
+                    opacity: 0.1;
+                    z-index: -1;
+                }
+            }
+
+            i {
+                font-size: 20px;
+                width: 35px;
+                min-width: 35px;
+                height: 35px;
+                background-color: $gray-medium;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+            }
+        }
+    }
+
+    .tab-content {
+        .tab-content {
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .btn {
+            display: flex;
+            margin-left: auto;
+            margin-top: 24px;
+        }
+
+        .btn-remove {
+            margin-top: 24px;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #eee;
+
+            .btn {
+                margin-top: 0;
+            }
+        }
+    }
+
+    &.choose-img {
+        .image-list {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+
+            .image-list-detail {
+                position: relative;
+
+                img {
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 10px;
+                    border: 1px solid $white-dark;
+                    background-color: #ffffff;
+                    padding: 8px;
+                    position: relative;
+                    margin-top: 5px;
+                    font-size: 26px;
+
+                    &.left-img {
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 10px;
+                        border: 1px solid $white-dark;
+                        background-color: #ffffff;
+                        padding: 8px;
+                        position: relative;
+                        margin-top: 5px;
+                    }
+                }
+            }
+        }
+    }
+
+    .col-md-2 {
+        width: 25%;
+    }
+
+    .col-md-10 {
+        width: 74%;
+    }
+
+    .submit-form {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        width: max-content;
+        margin-left: auto;
+        margin-top: 24px;
+
+        input {
+            background: $transparent-color;
+            border: none;
+            box-shadow: none;
+            color: $white;
+        }
+    }
+}
+
+.content-structure {
+    &.screenshot-images {
+        background: #fafafa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    +.content-structure {
+        padding-top: 25px;
+        margin-top: 25px;
+        border-top: 1px dashed $white-dark;
+    }
+}
+
+.instruction-box {
+    margin-top: 28px;
+
+    .instruction-title {
+
+        h4,
+        .h4 {
+            font-size: 20px;
+            font-weight: 600;
+            position: relative;
+            text-transform: capitalize;
+            margin-bottom: 9px;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: $secondary-color;
+            font-weight: 500;
+        }
+    }
+
+    .list-box {
+        margin-top: 20px;
+
+        h5,
+        .h5 {
+            margin-bottom: 9px;
+            font-size: 16px;
+            color: $dark-color;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            display: grid;
+            gap: 5px;
+
+            li {
+                color: rgba($dark-color, 0.6);
+                font-weight: 400;
+                font-size: 14px;
+                display: list-item;
+            }
+        }
+    }
+}
+
+.analytics-section {
+    .nav-tabs {
+        border: none;
+        flex-wrap: nowrap;
+        margin-bottom: 15px;
+        border-bottom: 1px solid $white-dark;
+        gap: 7px;
+        overflow: auto;
+
+        .nav-item {
+            .nav-link {
+                margin-bottom: 0;
+                border: none;
+                border-bottom: 2px solid transparent;
+                padding-top: 0;
+                border-radius: 0;
+                font-size: calc(15px + (16 - 15) * ((100vw - 320px) / (1920 - 320)));
+                background-color: transparent;
+                font-weight: 500;
+                color: $grey;
+                white-space: nowrap;
+
+                &.active {
+                    background-color: transparent;
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
+                }
+            }
+        }
+    }
+
+    .form-group {
+        span {
+            &.text-gray {
+                display: block;
+                color: $grey;
+            }
+        }
+    }
+}
+
+.color-picker {
+    width: 61px;
+    height: 42px;
+    padding: 4px;
+}
+
+
+/**=====================
+      Tabs CSS End
+==========================**/

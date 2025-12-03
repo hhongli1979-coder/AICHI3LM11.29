@@ -1,0 +1,191 @@
+:root {
+    --primary-color: #199675;
+    --sidebar-background-color: linear-gradient(178.98deg, #199675 -453.29%, #212121 91.53%);
+    --font-family: "Inter", serif;
+    --primary: #3a86ff;
+    --primary-dark: #2667cc;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --danger: #f44336;
+    --info: #2196f3;
+    --dark: #212529;
+    --light: #f8f9fa;
+    --gray: #6c757d;
+    --gray-light: #e9ecef;
+    --border-radius: 12px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+$color_1: var(--dark);
+$color_2: var(--primary);
+$color_3: white;
+$color_4: var(--warning);
+$color_5: var(--gray);
+$color_6: var(--success);
+/* fonts */
+
+$remixixon: remixicon;
+
+/* colors */
+$white: #ffffff;
+$white-dark: #eeeeee;
+$black: #000000;
+$dark-font: #222222;
+$grey: #777777;
+$grey-light:#7A8591;
+$notify-color:#d7191c;
+$input-bg: $white-dark;
+$input-grp-bg: #e9ecef;
+$grey3: #efefef;
+$grey2: #ddd;
+
+/* dashboard-colors */
+$dashboard-primary: #199675;
+$dashboard-danger: #D94238;
+$dashboard-warning: #ECB238;
+$dashboard-tertiary: #F39159;
+$dashboard-light: #86909C;
+$dashboard-info: #47A1E5;
+
+
+$text-danger:#E44141;
+
+
+/* dark layout variable */
+$dark-body:#2b2b2b;
+$dark-top:#232323;
+$dark-border:#404040;
+$dark-link:#cbcbcb;
+$white-1:#f1f3f5;
+$white-2:#eaedef;
+$white-3:#e7eaec;
+$white-4:#dee2e6;
+$white-5:#cfd4da;
+$inner-box-color: #212121;
+
+/* Theme colors variables */
+$primary-color: #199675;
+$primary-light-color: #eaf6f3;
+$secondary-color: #ff5443;
+$success-color: #27AF4D;
+$info-color : #00a8ff;
+$warning-color: #ffb900;
+$danger-color: #E44141;
+$tertiary-color : #AD46FF;
+$dark-color: #171C26;
+$light-color : #F7F8F9;
+$light-semi-gray :#eff0f1;
+$light-gray :#e8ebf2;
+$dark-color2 : #2a3142;
+$transparent-color: transparent;
+$notice-success: #00a32a;
+$badge-danger: #d63638;
+$gray-color: #e1e1e2;
+$gray-medium: #eff1ee;
+$gray-color-1: #f7f7f7;
+
+/* Status Color */
+$highlight-color: #FFC107;
+$accent-color: #3F51B5;
+$positive-color: #4CAF50;
+$negative-color: #F44336;
+$attention-color: #FF9800;
+$progress-color: #8BC34A;
+$critical-color: #E91E63;
+$calm-color: #00BFFF;
+
+$requested-color:#47A1E5;
+$scheduled-color: #F39159;
+$accepted-color:#199675;
+$rejected-color: #D94238;
+$arrived-color: #86909C;
+$started-color: #ECB238;
+$cancelled-color: #D94238;
+$completed-color: #27A644;
+
+/* Tables settings */
+$th-padding: 15px 14px;
+
+/* General variables */
+$theme-body-font-color: #313131;
+$theme-body-sub-title-color: $grey;
+$border-radius: 4px;
+$bg-gray: #f6f7f7;
+$bg-gray-1:#dee2e6;
+
+/* sidebar main settings */
+$sidebar-width: 255px;
+$sidebar-position: fixed;
+$sidebar-shadow: 0px 4px 35px 0px rgba(32, 93, 238, 0.07);
+$sidebar-z-index: 6;
+$sidebar-transition: 0.3s;
+$sidebar-radius: 0 20px 20px 0;
+$sidebar-font-color: $dark-color;
+$sidebar-hover-color: #81b7e9;
+$sidebar-gap: 6px;
+
+/* main header left settings */
+$main-header-padding : 12px;
+$main-header-z-index : 9;
+$main-header-padding: 0;
+$main-header-nav-right : 0px;
+$main-header-nav-icon-size : 18px;
+$main-header-nav-icon-color : $primary-color;
+
+/* page settings */
+$page-body-padding : 27px 15px;
+
+/* Header settings */
+$main-header-position: fixed;
+$main-header-top: 0;
+$main-header-z-index: 10;
+$header-size: 70px;
+$header-hover-bg: #2c3338;
+$header-li-padding: 6px 10px;
+
+/* Footer settings */
+$footer-size: 56px;
+
+/* General tag settings */
+$body-bg-color: #F2F2F2;
+$body-font-size: 14px;
+$ul-padding-left: 0px;
+$ul-padding-right: 0px;
+$sm-font-size : 13px;
+$paragraph-line-height : 1.5;
+$paragraph-letter-spacing : 0.7px;
+
+
+/* Card settings */
+$card-padding :20px;
+$card-border-width :0px;
+$card-border-radius :0;
+$card-box-shadow: rgba(29, 35, 39, 0.1) 0px 4px 12px;
+$card-header-font-weight : 600;
+$card-header-font-size : 20px;
+$card-header-font-transform : capitalize;
+$card-header-font-color : $dark-color;
+
+/* buttons setting */
+$btn-font-size : calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+$btn-padding: calc(9px + (10 - 9) * ((100vw - 320px) / (1920 - 320))) calc(12px + (14 - 12) * ((100vw - 320px) / (1920 - 320)));
+$submit-btn-padding: calc(8px + (10 - 8) * ((100vw - 320px) / (1920 - 320))) calc(12px + (16 - 12) * ((100vw - 320px) / (1920 - 320)));
+$btn-sm-padding : 4px 8px;
+$btn-sm-font-size: 14px;
+
+/* sidebar profile settings */
+$sidebar-menu-list-style: none;
+$sidebar-menu-list-margin: 0;
+$sidebar-icon-size: 20px;
+$sidebar-icon-margin: 8px;
+$sidebar-icon-stroke-width: 2px;
+$sidebar-font-size: 14px;
+$sidebar-letter-spacing: 0.5px;
+$sidebar-txt-transform: capitalize;
+$sidebar-font-weight: 400;
+$sidebar-padding: 10px 14px;
+$sidebar-text-transform: capitalize;
+
+/* general */
+$inside-padding: 20px;

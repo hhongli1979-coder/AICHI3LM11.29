@@ -1,0 +1,11 @@
+{
+    "name": "Twilio",
+    "alias": "twilio",
+    "description": "Twilio is a cloud communications platform that enables businesses to integrate messaging, voice, and video capabilities into applications.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Twilio\\Providers\\TwilioServiceProvider"
+    ],
+    "files": []
+}

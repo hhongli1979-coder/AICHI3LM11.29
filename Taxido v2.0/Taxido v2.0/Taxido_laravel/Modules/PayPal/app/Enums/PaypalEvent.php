@@ -1,0 +1,18 @@
+<?php
+
+namespace Modules\PayPal\Enums;
+
+enum PaypalEvent: string
+{
+    const COMPLETED = 'PAYMENT.CAPTURE.COMPLETED';
+
+    const PENDING = 'PAYMENT.CAPTURE.PENDING';
+
+    const REFUNDED = 'PAYMENT.CAPTURE.REFUNDED';
+
+    const DECLINED = 'PAYMENT.CAPTURE.DECLINED';
+
+    const CANCELLED = 'PAYMENT.CAPTURE.CANCELLED';
+
+    const ORDER_ALREADY_CAPTURED = 'ORDER_ALREADY_CAPTURED';
+}

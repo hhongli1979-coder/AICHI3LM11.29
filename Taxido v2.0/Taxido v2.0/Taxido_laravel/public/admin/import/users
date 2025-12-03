@@ -1,0 +1,23 @@
+Instructions for Bulk Import - Users
+
+-------------------------------------------------------------------
+User Data Format
+-------------------------------------------------------------------
+
+
+1. name: (Required) Enter the full name of the user. Maximum 255 characters allowed. The name must be unique.
+
+2. email: (Required) Enter the email address of the user. It must be a valid email format (e.g., user@example.com). The email must be unique.
+
+3. country_code: (Required) Enter the country code for the user's phone number. Example: +1 for USA, +44 for UK.
+
+4. phone: (Required) Enter the phone number of the user. The phone number must be unique and should contain only digits. It must be between 6 to 15 digits long.
+
+5. password: (Required) Enter the password for the user. The password must be at least 8 characters long.
+
+6. status: (Required) Set as '0' for inactive or '1' for active to determine the user's status.
+
+7. profile_image: (Optional) If the user has a profile image, provide the URL of the image. If not provided, the user will have a default image.
+
+
+

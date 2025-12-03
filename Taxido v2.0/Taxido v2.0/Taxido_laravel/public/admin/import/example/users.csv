@@ -1,0 +1,3 @@
+name,email,country_code,phone,password,status,profile_image_url
+John Doe,johndoe@example.com,1,1234567890,password123,1,https://example.com/images/johndoe.jpg
+

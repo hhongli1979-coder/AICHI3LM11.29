@@ -1,0 +1,409 @@
+/*=====================
+ Ride css start
+==========================*/
+.detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .detail-item {
+        padding-top: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        line-height: 1.2;
+
+        &:first-child {
+            padding-top: 0;
+        }
+
+        +li {
+            border-top: 2px dashed rgba($gray-color, 0.5);
+        }
+
+        h5 {
+            font-size: calc(13px + (15 - 13) * ((100vw - 320px) / (1920 - 320)));
+            line-height: 1.2;
+            font-weight: 500;
+            color: $dark-color;
+            margin: 0;
+            padding-right: 5px;
+            min-width: 120px;
+            float: left;
+        }
+
+        span {
+            font-size: calc(13px + (15 - 13) * ((100vw - 320px) / (1920 - 320)));
+            line-height: 1.2;
+            font-weight: 400;
+            color: $dark-color;
+            word-break: break-all;
+
+            &.bg-light-primary {
+                padding: 4px 11px;
+                border-radius: 5px;
+                color: var(--primary-color);
+            }
+
+            img {
+                width: 100px;
+                height: auto;
+            }
+
+            &.badge {
+                font-size: 13px;
+                line-height: 1.2;
+                font-weight: 400;
+                word-break: break-all;
+                width: auto;
+                height: auto;
+                border-radius: 5px;
+                color: #fff;
+            }
+
+            .user-box {
+                .rate-box {
+                    margin-top: 4px;
+                }
+            }
+        }
+
+        .number-plate {
+            background-color: rgba(255, 185, 0, 0.11);
+            color: #ffb900;
+            border-radius: 4px;
+            padding: 5px 14px;
+            font-weight: 600;
+            display: inline-block;
+            border: 1px dashed #ffb900;
+        }
+
+        .note-warning {
+            background-color: rgba($primary-color, 0.1);
+            border-color: rgba($primary-color, 0.1);
+            color: var(--primary-color);
+        }
+    }
+
+    .no-detail-list {
+        h4 {
+            text-align: left;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1.1;
+            color: rgba($dark-color, 0.7);
+        }
+    }
+}
+
+.map-view {
+    width: 100%;
+    height: calc(100% - 0px);
+
+    @media (max-width: 1399px) {
+        height: 400px;
+    }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        min-height: 255px;
+    }
+}
+
+.tracking-path {
+    li {
+        padding-bottom: 22px;
+        position: relative;
+        padding-left: 30px;
+        display: block;
+        font-size: calc(13px + (15 - 13) * ((100vw - 320px) / (1920 - 320)));
+
+        &.start-point,
+        &.stop-point {
+            &:before {
+                position: absolute;
+                content: "";
+                border: 3px solid $dark-color;
+                border-radius: 100%;
+                top: 0;
+                left: 0;
+                height: 20px;
+                width: 20px;
+                background-color: $white;
+                z-index: 1;
+            }
+
+            &:after {
+                position: absolute;
+                content: "";
+                border: 1px dashed rgba($dark-color, 0.6);
+                top: 0;
+                left: 9px;
+                height: 100%;
+                z-index: 0;
+            }
+        }
+
+        &.start-point {
+            span {
+                width: 8px;
+                height: 8px;
+                border-radius: 100%;
+                background-color: $dark-color;
+                position: absolute;
+                z-index: 2;
+                top: 6px;
+                left: 6px;
+            }
+        }
+
+        &.stop-point {
+            span {
+                position: absolute;
+                z-index: 2;
+                top: 4px;
+                left: 6px;
+                font-size: 12px;
+                line-height: 1;
+            }
+        }
+
+        &.end-point {
+            padding-bottom: 0;
+
+            &:before {
+                position: absolute;
+                content: "";
+                background-image: url('@/svg/location.svg');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                top: 0;
+                left: 0;
+                height: 20px;
+                width: 20px;
+            }
+        }
+    }
+}
+
+.application-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    li {
+        border: 1px solid $gray-color;
+        border-radius: 6px;
+        padding: 10px;
+
+        .application-sec {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+
+            .user-box {
+                gap: 12px;
+
+                .name {
+                    font-weight: 500;
+                    margin-bottom: 4px;
+                }
+
+                .badge {
+                    padding: calc(4px + (6 - 4) * ((100vw - 320px) / (1920 - 320))) calc(10px + (12 - 10) * ((100vw - 320px) / (1920 - 320)));
+                }
+            }
+
+            .price {
+                border: none;
+                font-weight: 500;
+                margin: 0;
+                padding-bottom: 4px;
+                font-size: calc(13px + (15 - 13) * ((100vw - 320px) / (1920 - 320)));
+            }
+        }
+    }
+}
+
+.user-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    img {
+        border-radius: 100%;
+        height: 45px !important;
+        width: 45px !important;
+    }
+
+    .name {
+        margin-bottom: 2px;
+        display: inline-block;
+    }
+
+    .vehicle-type {
+        display: inline-block;
+    }
+}
+
+.vehicle-box {
+    img {
+        height: 45px !important;
+    }
+}
+
+.ride-main,
+.driver-detail {
+    .badge {
+        font-size: 12px;
+        padding: 8px 10px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        width: max-content;
+        height: auto;
+    }
+}
+
+.rate-box {
+    width: max-content;
+    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: $white;
+    background-color: $warning-color;
+    margin-top: 12px;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.review-content {
+    .review-card {
+        border: 1px solid $gray-color;
+        padding: 10px;
+        border-radius: 6px;
+
+        +.review-card {
+            margin-top: 20px;
+        }
+
+        .review-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: 8px;
+            position: relative;
+
+            .review-image-box {
+                display: flex;
+                align-items: start;
+                gap: 10px;
+                width: 100%;
+
+                h4 {
+                    font-weight: 600;
+                    font-size: calc(14px + (15 - 14) * ((100vw - 320px) / (1920 - 320)));
+                    margin-bottom: 6px;
+                }
+
+                span {
+                    color: rgba($dark-color, 0.6);
+                    font-weight: 500;
+                    white-space: nowrap;
+                }
+
+                h4 {
+                    width: 100%;
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    text-overflow: ellipsis;
+                    word-break: break-all;
+                }
+            }
+        }
+
+        img {
+            border-radius: 100%;
+            height: calc(30px + (40 - 30) * ((100vw - 320px) / (1920 - 320)));
+            width: calc(30px + (40 - 30) * ((100vw - 320px) / (1920 - 320)));
+            min-width: calc(30px + (40 - 30) * ((100vw - 320px) / (1920 - 320)));
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 1.3;
+            margin: 0;
+        }
+    }
+}
+
+.review-box {
+    .review-box-content {
+        +.review-box-content {
+            margin-top: 20px;
+        }
+    }
+
+    h6 {
+        font-weight: 500;
+        margin-bottom: 12px;
+    }
+
+    .review-list {
+        border: 1px solid $gray-color;
+        border-radius: 6px;
+        padding: 10px;
+
+        .review-sec {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding-bottom: 12px;
+
+            .rate {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+
+                i {
+                    color: $gray-color;
+                    font-size: 16px;
+                    line-height: 1;
+
+                    &.fill {
+                        color: $warning-color;
+                    }
+                }
+            }
+
+            .date {
+                color: rgba($dark-color, 0.6);
+                font-size: 12px;
+                font-weight: 500;
+            }
+        }
+
+        p {
+            margin: 0;
+            font-size: calc(13px + (14 - 13) * ((100vw - 320px) / (1920 - 320)));
+        }
+    }
+}
+
+
+/*=====================
+ Ride css end
+==========================*/

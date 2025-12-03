@@ -1,0 +1,214 @@
+/*=====================
+ Category css start
+==========================*/
+.category-main {
+    .categories-container {
+        i {
+            font-size: 18px;
+        }
+    }
+}
+
+.dd-list {
+    .dd-list {
+        .dd3-item {
+            .dd3-content {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                display: block;
+            }
+        }
+    }
+
+    .dd-item {
+        cursor: pointer;
+
+        .dd3-handle {
+            position: absolute;
+            margin: 0;
+            left: 0;
+            top: 0;
+            height: unset;
+            cursor: pointer;
+            width: 34px;
+            text-indent: 30px;
+            white-space: nowrap;
+            overflow: hidden;
+            background-color: rgba(239, 241, 238, 0.4);
+            border: 1px solid rgba($dark-color, 0.01);
+            border-right: none;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            padding: 8px 10px;
+
+            &:before {
+                content: "\ec5f";
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 50%;
+                width: 100%;
+                text-align: center;
+                text-indent: 0;
+                color: rgba($dark-color, 0.45);
+                font-size: 18px;
+                font-weight: normal;
+                font-family: "remixicon";
+                transform: translateY(-50%);
+            }
+        }
+
+        .dd3-content {
+            display: block;
+            height: unset;
+            margin: 14px 0;
+            padding: 8px 60px 8px 42px;
+            color: $dark-color;
+            text-decoration: none;
+            font-weight: 400;
+            background-color: $white;
+            border: 1px solid $white-dark;
+            border-radius: $border-radius;
+            font-size: 14px;
+
+            a {
+                color: $dark-color;
+                font-weight: 400;
+            }
+
+            form {
+                margin: 0;
+            }
+
+            @media (min-width:992px) {
+                &:hover {
+
+                    button,
+                    a {
+
+                        &.delete,
+                        &.edit {
+                            opacity: 1;
+                            visibility: visible;
+                            transition: all 0.2s ease;
+                        }
+                    }
+                }
+            }
+
+            @media (max-width:991px) {
+
+                button,
+                a {
+
+                    &.delete,
+                    &.edit {
+                        opacity: 1;
+                        visibility: visible;
+                        transition: all 0.2s ease;
+                    }
+                }
+            }
+        }
+
+        >button {
+            margin-left: 30px;
+            width: 24px;
+            height: 24px;
+        }
+
+        &.active {
+            .dd3-content {
+                font-weight: 500;
+
+                a {
+                    font-weight: 500;
+                }
+            }
+        }
+
+        &.disabled {
+            opacity: 0.6;
+        }
+    }
+
+    .not-found {
+        margin-top: 50px;
+        text-align: center;
+        font-weight: 500;
+        font-size: 22px;
+    }
+
+    .edit {
+        position: absolute;
+        right: 33px;
+        top: 8px;
+        line-height: 1;
+        font-size: 18px;
+        cursor: pointer;
+        font-weight: 400 !important;
+        color: $notice-success !important;
+
+        a {
+            color: $notice-success !important;
+        }
+    }
+
+    .delete {
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        line-height: 1;
+        font-size: 18px;
+        cursor: pointer;
+        color: #ff6e70 !important;
+    }
+
+    button,
+    a {
+
+        &.delete,
+        &.edit {
+
+            &:focus,
+            &:hover,
+            &:active {
+                border: none !important;
+                box-shadow: none;
+                outline: none;
+                background-color: transparent !important;
+            }
+
+            &.delete,
+            &.edit {
+                border: none;
+                background-color: transparent;
+                padding: 0;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.2s ease;
+            }
+        }
+    }
+}
+
+.dd-empty {
+    display: none;
+}
+
+.dd-dragel {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.dd-placeholder {
+    background-color: $white !important;
+    border: 1px dashed #ddd !important;
+    border-radius: $border-radius;
+}
+
+/*=====================
+ Category css start
+==========================*/

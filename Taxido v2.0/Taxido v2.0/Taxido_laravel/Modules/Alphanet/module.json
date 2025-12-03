@@ -1,0 +1,11 @@
+{
+    "name": "Alphanet",
+    "alias": "alphanet",
+    "description": "Alphanet is a digital payment platform for secure online transactions and services.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Alphanet\\Providers\\AlphanetServiceProvider"
+    ],
+    "files": []
+}

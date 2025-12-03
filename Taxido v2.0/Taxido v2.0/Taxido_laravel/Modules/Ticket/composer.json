@@ -1,0 +1,36 @@
+{
+    "name": "nwidart/ticket",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "require": {
+        "webklex/laravel-imap": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Ticket\\": "app/",
+            "Modules\\Ticket\\Database\\Factories\\": "database/factories/",
+            "Modules\\Ticket\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "files": [
+            "app/Helpers/Helpers.php"
+        ],
+        "psr-4": {
+            "Modules\\Ticket\\Tests\\": "tests/"
+        }
+    }
+}

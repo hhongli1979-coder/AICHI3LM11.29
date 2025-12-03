@@ -1,0 +1,38 @@
+{
+  "name": "nwidart/taxido",
+  "description": "",
+  "authors": [
+    {
+      "name": "Nicolas Widart",
+      "email": "n.widart@gmail.com"
+    }
+  ],
+  "extra": {
+    "laravel": {
+      "providers": [],
+      "aliases": {}
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "jackiedo/dotenv-editor": "*",
+    "matanyadaev/laravel-eloquent-spatial": "*",
+    "prettus/l5-repository": "^2.9.0",
+    "spatie/laravel-permission": "^6.0"
+  },
+  "autoload": {
+    "files": [
+      "app/Helpers/Helpers.php"
+    ],
+    "psr-4": {
+      "Modules\\Taxido\\": "app/",
+      "Modules\\Taxido\\Database\\Factories\\": "database/factories/",
+      "Modules\\Taxido\\Database\\Seeders\\": "database/seeders/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Modules\\Taxido\\Tests\\": "tests/"
+    }
+  }
+}

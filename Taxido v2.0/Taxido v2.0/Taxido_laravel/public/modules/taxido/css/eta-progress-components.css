@@ -1,0 +1,484 @@
+/**
+ * ETA and Progress Components Styles
+ *
+ * Additional styles for ETA calculation, progress tracking, and status timeline components
+ * to enhance the visual presentation and user experience.
+ *
+ * Requirements: 7.5, 2.3, 7.4
+ */
+
+/* Progre Bar Enhancements */
+.progress-bar-container {
+    position: relative;
+    background: #e9ecef;
+    border-radius: 6px;
+    height: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.5s ease-in-out;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(255,255,255,0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255,255,255,0.2) 50%,
+        rgba(255,255,255,0.2) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 20px 20px;
+    animation: progress-stripes 1s linear infinite;
+}
+
+@keyframes progress-stripes {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 0; }
+}
+
+/* Progress Bar Color Variants */
+.progress-bar-primary {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+}
+
+.progress-bar-success {
+    background: linear-gradient(90deg, #28a745, #1e7e34);
+}
+
+.progress-bar-info {
+    background: linear-gradient(90deg, #17a2b8, #117a8b);
+}
+
+.progress-bar-warning {
+    background: linear-gradient(90deg, #ffc107, #e0a800);
+}
+
+.progress-bar-danger {
+    background: linear-gradient(90deg, #dc3545, #bd2130);
+}
+
+/* ETA Display Enhancements */
+.eta-display {
+    background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+    border: 1px solid #bbdefb;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.eta-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2196f3, #9c27b0);
+}
+
+.eta-time {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1976d2;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.eta-time::before {
+    content: '🕒';
+    font-size: 20px;
+}
+
+.eta-time[data-confidence="high"]::after {
+    content: '✓';
+    color: #28a745;
+    font-size: 16px;
+    margin-left: 4px;
+}
+
+.eta-time[data-confidence="low"]::after {
+    content: '~';
+    color: #ffc107;
+    font-size: 16px;
+    margin-left: 4px;
+}
+
+.eta-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Status Timeline Component Enhancements */
+.status-timeline-component {
+    position: relative;
+    padding: 0;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+    padding-left: 0;
+    transition: all 0.3s ease;
+}
+
+.timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    width: 2px;
+    height: calc(100% + 8px);
+    background: #dee2e6;
+    transition: background-color 0.3s ease;
+}
+
+.timeline-item.active::after {
+    background: linear-gradient(180deg, #28a745, #20c997);
+}
+
+.timeline-item.current::after {
+    background: linear-gradient(180deg, #ffc107, #fd7e14);
+    box-shadow: 0 0 4px rgba(255, 193, 7, 0.5);
+}
+
+.timeline-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #dee2e6;
+    border: 3px solid white;
+    margin-right: 16px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.timeline-item.active .timeline-dot {
+    background: #28a745;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.timeline-item.current .timeline-dot {
+    background: #ffc107;
+    animation: timeline-pulse 2s infinite;
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
+.timeline-item.future .timeline-dot {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    opacity: 0.6;
+}
+
+@keyframes timeline-pulse {
+    0% {
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+        transform: scale(1.15);
+    }
+    50% {
+        box-shadow: 0 6px 16px rgba(255, 193, 7, 0.6);
+        transform: scale(1.2);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+        transform: scale(1.15);
+    }
+}
+
+.timeline-dot i {
+    font-size: 14px;
+    color: white;
+}
+
+.timeline-item.future .timeline-dot i {
+    color: #6c757d;
+}
+
+.timeline-content {
+    flex: 1;
+    padding-top: 2px;
+}
+
+.timeline-title {
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 4px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.timeline-description {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.timeline-time {
+    font-size: 12px;
+    color: #868e96;
+    font-weight: 500;
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.timeline-item.current .timeline-time {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.timeline-item.active .timeline-time {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* Compact Mode for Mobile */
+.status-timeline-component.compact-mode .timeline-item {
+    margin-bottom: 16px;
+}
+
+.status-timeline-component.compact-mode .timeline-dot {
+    width: 28px;
+    height: 28px;
+    margin-right: 12px;
+}
+
+.status-timeline-component.compact-mode .timeline-dot i {
+    font-size: 12px;
+}
+
+.status-timeline-component.compact-mode .timeline-title {
+    font-size: 14px;
+}
+
+.status-timeline-component.compact-mode .timeline-description {
+    display: none; /* Hide descriptions in compact mode */
+}
+
+/* Progress Information Display */
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.progress-percentage {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.distance-remaining,
+.time-remaining {
+    font-size: 13px;
+    color: #6c757d;
+    background: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+/* Connection Status Indicator */
+#connection-status {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffc107;
+    color: #000;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: 1px solid #ffca2c;
+    transition: all 0.3s ease;
+}
+
+#connection-status.connected {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+#connection-status.error {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .eta-display {
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+
+    .eta-time {
+        font-size: 20px;
+    }
+
+    .progress-bar-container {
+        height: 8px;
+        margin-bottom: 12px;
+    }
+
+    .timeline-item {
+        margin-bottom: 16px;
+    }
+
+    .timeline-dot {
+        width: 28px;
+        height: 28px;
+        margin-right: 12px;
+    }
+
+    .timeline-dot i {
+        font-size: 12px;
+    }
+
+    .progress-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .eta-display {
+        padding: 10px;
+    }
+
+    .eta-time {
+        font-size: 18px;
+    }
+
+    .timeline-title {
+        font-size: 14px;
+    }
+
+    .timeline-description {
+        font-size: 12px;
+    }
+
+    .status-timeline-component {
+        padding: 0 8px;
+    }
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+    .progress-bar,
+    .timeline-dot,
+    .timeline-item {
+        transition: none;
+    }
+
+    .timeline-item.current .timeline-dot {
+        animation: none;
+    }
+
+    .progress-bar::after {
+        animation: none;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .progress-bar-container {
+        border: 2px solid #000;
+    }
+
+    .timeline-dot {
+        border: 3px solid #000;
+    }
+
+    .eta-display {
+        border: 2px solid #000;
+    }
+}
+
+/* Focus indicators for keyboard navigation */
+.timeline-item:focus-within .timeline-dot {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* Loading states */
+.eta-time.loading::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #1976d2;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error states */
+.eta-display.error {
+    background: linear-gradient(135deg, #ffebee, #fce4ec);
+    border-color: #f8bbd9;
+}
+
+.eta-display.error .eta-time {
+    color: #d32f2f;
+}
+
+.progress-bar.error {
+    background: linear-gradient(90deg, #dc3545, #bd2130);
+}
+
+/* Success states */
+.eta-display.completed {
+    background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+    border-color: #c8e6c9;
+}
+
+.eta-display.completed .eta-time {
+    color: #2e7d32;
+}
+
+.eta-display.completed .eta-time::before {
+    content: '✅';
+}

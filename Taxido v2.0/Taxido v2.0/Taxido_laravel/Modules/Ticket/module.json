@@ -1,0 +1,11 @@
+{
+    "name": "Ticket",
+    "alias": "ticket",
+    "description": "Ticket Support for tracking and resolving user support requests.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Ticket\\Providers\\TicketServiceProvider"
+    ],
+    "files": []
+}

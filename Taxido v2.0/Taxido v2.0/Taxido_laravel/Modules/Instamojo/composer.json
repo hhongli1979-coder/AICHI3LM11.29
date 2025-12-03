@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/instamojo",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Instamojo\\": "app/",
+            "Modules\\Instamojo\\Database\\Factories\\": "database/factories/",
+            "Modules\\Instamojo\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Instamojo\\Tests\\": "tests/"
+        }
+    }
+}

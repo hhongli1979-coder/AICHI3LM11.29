@@ -1,0 +1,11 @@
+{
+    "name": "Stripe",
+    "alias": "stripe",
+    "description": "Stripe enables secure online payments, supporting cards, wallets, and global transactions.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Stripe\\Providers\\StripeServiceProvider"
+    ],
+    "files": []
+}

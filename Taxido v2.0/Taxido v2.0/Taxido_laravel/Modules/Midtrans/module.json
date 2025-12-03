@@ -1,0 +1,11 @@
+{
+    "name": "Midtrans",
+    "alias": "midtrans",
+    "description": "Midtrans is a payment gateway that provides businesses in Southeast Asia with reliable and secure online payment processing.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Midtrans\\Providers\\MidtransServiceProvider"
+    ],
+    "files": []
+}

@@ -1,0 +1,11 @@
+{
+    "name": "Taxido",
+    "alias": "taxido",
+    "description": "A cab booking management platform enabling ride management for users and drivers.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Taxido\\Providers\\TaxidoServiceProvider"
+    ],
+    "files": []
+}

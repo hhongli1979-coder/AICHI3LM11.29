@@ -1,0 +1,11 @@
+{
+    "name": "Iyzico",
+    "alias": "iyzico",
+    "description": "Iyzico is a payment gateway providing secure online payment solutions for businesses in Turkey and beyond.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Iyzico\\Providers\\IyzicoServiceProvider"
+    ],
+    "files": []
+}

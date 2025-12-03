@@ -1,0 +1,11 @@
+{
+    "name": "PhonePe",
+    "alias": "phonepe",
+    "description": "PhonePe is a digital payment platform for UPI-based transactions and mobile payments.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\PhonePe\\Providers\\PhonePeServiceProvider"
+    ],
+    "files": []
+}

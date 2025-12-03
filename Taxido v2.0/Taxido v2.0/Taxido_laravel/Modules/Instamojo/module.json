@@ -1,0 +1,11 @@
+{
+    "name": "Instamojo",
+    "alias": "instamojo",
+    "description": "Instamojo is a payment platform that simplifies online payments for businesses and entrepreneurs.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Instamojo\\Providers\\InstamojoServiceProvider"
+    ],
+    "files": []
+}

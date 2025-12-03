@@ -1,0 +1,31 @@
+Instructions for Bulk Import - Blogs
+
+-------------------------------------------------------------------
+Blogs Data Format
+-------------------------------------------------------------------
+
+
+
+1. title: (Required) Enter the title of the blog. Maximum 255 characters allowed. The title must be unique.
+
+2. slug: (Required) Enter the slug for the blog. The slug must be unique, used for generating the URL.
+
+3. content: (Required) Enter the content of the blog post.
+
+4. is_featured: (Required) Set as '1' for featured or '0' for non-featured.
+
+5. is_sticky: (Required) Set as '1' for sticky or '0' for non-sticky.
+
+6. status: (Required) Set as '0' for inactive or '1' for active to determine the blog's status.
+
+7. blog_thumbnail: (Optional) Provide the URL to the blog thumbnail image. If not provided, the default thumbnail will be used.
+
+8. blog_meta_image: (Optional) Provide the URL to the blog meta image (for SEO purposes). If not provided, the default meta image will be used.
+
+9. meta_title: (Optional) Provide the SEO meta title for the blog.
+
+10. meta_description: (Optional) Provide the SEO meta description for the blog.
+
+11. categories: (Optional) Provide a comma-separated list of category IDs that the blog belongs to.
+
+12. tags: (Optional) Provide a comma-separated list of tag IDs associated with the blog.

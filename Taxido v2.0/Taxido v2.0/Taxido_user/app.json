@@ -1,0 +1,8 @@
+{
+  "name": "TaxidoUserApp",
+  "displayName": "TaxidoUserApp",
+    "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx",
+    "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx"
+  }
+}
