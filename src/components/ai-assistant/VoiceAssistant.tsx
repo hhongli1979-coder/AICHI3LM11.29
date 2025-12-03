@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Microphone, MicrophoneSlash, Speaker, Robot, NavigationArrow, CurrencyDollar, Wallet, ArrowRight } from '@phosphor-icons/react';
+import { Microphone, MicrophoneSlash, SpeakerHigh, Robot, NavigationArrow, CurrencyDollar, Wallet, ArrowRight } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 
 interface Message {
@@ -230,7 +230,7 @@ export function VoiceAssistant() {
           </Button>
           {isSpeaking && (
             <Button size="icon" variant="outline" onClick={() => window.speechSynthesis.cancel()}>
-              <Speaker size={20} />
+              <SpeakerHigh size={20} />
             </Button>
           )}
         </div>
