@@ -100,6 +100,7 @@ The platform supports multiple AI model providers:
 | OmniCore Local | Built-in local AI model |
 | Ollama | Open source local LLM runtime |
 | Omega-AI | Java-based deep learning framework with auto-differentiation, multi-GPU training, CUDA/CUDNN support |
+| HearSight | Intelligent audiovisual content analysis tool with ASR, LLM-powered summarization, and multi-language support |
 | Custom Models | Support for OpenAI-compatible APIs |
 
 #### Omega-AI Deep Learning Engine
@@ -111,6 +112,18 @@ The platform supports multiple AI model providers:
 - 🔄 Automatic Differentiation - Built-in autodiff engine
 - 🚀 Multi-GPU Training - Distributed training acceleration
 - ⚡ CUDA/CUDNN Support - GPU-accelerated inference and training
+
+#### HearSight Audiovisual Analysis Engine
+
+[HearSight](https://github.com/li-xiu-qi/HearSight) is an intelligent audiovisual content analysis tool that leverages advanced speech recognition, natural language processing, and large language models to automatically convert video and audio into structured text content with multi-dimensional intelligent analysis.
+
+**Key Features:**
+- 📹 Multi-source Media Import - Support for Bilibili URLs and local uploads (MP4, AVI, MOV, MKV, MP3, WAV, M4A, AAC)
+- 🎯 Precise Speech Recognition - Industry-leading ASR with hotword recognition and real-time timestamps
+- 🧠 Intelligent Content Analysis - LLM-powered paragraph and full-text summarization with persistent storage
+- 💬 Conversational Q&A - Context-aware deep Q&A interaction with single and multi-video analysis
+- 🖼️ Multimodal Integration - Associate key video frames with transcript segments and Q&A results
+- 🌐 Multi-language Translation - Automatic translation to multiple languages with complete persistence
 
 ---
 
