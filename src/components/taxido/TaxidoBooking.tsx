@@ -233,38 +233,41 @@ export function TaxidoBooking() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {fareEstimates.map((fare) => (
-                  <div
-                    key={fare.vehicleType}
-                    className={`p-3 border rounded-lg cursor-pointer transition-all ${
-                      selectedVehicle === fare.vehicleType 
-                        ? 'border-primary bg-primary/5' 
-                        : 'hover:border-muted-foreground/50'
-                    } ${!fare.available ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={() => fare.available && setSelectedVehicle(fare.vehicleType)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <CarSimple size={24} weight="duotone" className="text-primary" />
-                        <div>
-                          <p className="font-medium">{fare.vehicleName}</p>
+                {fareEstimates.map((fare) => {
+                  const isUnavailable = !fare.available;
+                  return (
+                    <div
+                      key={fare.vehicleType}
+                      className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                        selectedVehicle === fare.vehicleType 
+                          ? 'border-primary bg-primary/5' 
+                          : 'hover:border-muted-foreground/50'
+                      } ${isUnavailable ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      onClick={() => !isUnavailable && setSelectedVehicle(fare.vehicleType)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <CarSimple size={24} weight="duotone" className="text-primary" />
+                          <div>
+                            <p className="font-medium">{fare.vehicleName}</p>
+                            <p className="text-sm text-muted-foreground">
+                              约 {fare.estimatedWait} 分钟到达
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold">{formatCurrency(fare.estimatedFare)}</p>
                           <p className="text-sm text-muted-foreground">
-                            约 {fare.estimatedWait} 分钟到达
+                            {fare.estimatedDuration} 分钟
                           </p>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="font-bold">{formatCurrency(fare.estimatedFare)}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {fare.estimatedDuration} 分钟
-                        </p>
-                      </div>
+                      {isUnavailable && (
+                        <Badge variant="secondary" className="mt-2">暂无可用车辆</Badge>
+                      )}
                     </div>
-                    {!fare.available && (
-                      <Badge variant="secondary" className="mt-2">暂无可用车辆</Badge>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </CardContent>
             </Card>
           </div>
@@ -381,14 +384,17 @@ export function TaxidoBooking() {
 
                       {ride.userRating && (
                         <div className="flex items-center gap-1 mt-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              size={16} 
-                              weight={i < ride.userRating! ? 'fill' : 'regular'}
-                              className={i < ride.userRating! ? 'text-yellow-500' : 'text-gray-300'}
-                            />
-                          ))}
+                          {[...Array(5)].map((_, i) => {
+                            const rating = ride.userRating ?? 0;
+                            return (
+                              <Star 
+                                key={i} 
+                                size={16} 
+                                weight={i < rating ? 'fill' : 'regular'}
+                                className={i < rating ? 'text-yellow-500' : 'text-gray-300'}
+                              />
+                            );
+                          })}
                         </div>
                       )}
                     </div>
