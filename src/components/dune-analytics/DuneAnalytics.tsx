@@ -71,7 +71,7 @@ export function DuneAnalytics({ stats }: DuneAnalyticsProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">NFT Verified (30d)</CardTitle>
-            <Badge variant="secondary">{totalVerified}</Badge>
+            <Users size={20} weight="duotone" className="text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalVerified}</div>
