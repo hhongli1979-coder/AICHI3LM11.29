@@ -7,7 +7,7 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, TradingAgent, TradingAgentsConfig, StockAnalysisReport, AgentAnalysisResult } from './types';
 
 // ============================================================================
 // Network Configuration
@@ -798,4 +798,314 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
   };
+}
+
+// ============================================================================
+// TradingAgents Mock Data - 多智能体交易分析
+// Based on TradingAgents-CN framework: https://github.com/hsliuping/TradingAgents-CN
+// ============================================================================
+
+/**
+ * Generate mock trading agents configuration
+ * 
+ * @returns Array of mock TradingAgent objects
+ */
+export function generateMockTradingAgents(): TradingAgent[] {
+  return [
+    {
+      id: 'agent-market',
+      type: 'market_analyst',
+      name: '市场分析师',
+      description: '技术指标分析、K线形态识别、趋势判断',
+      icon: 'ChartLine',
+      enabled: true,
+      modelId: 'model-1',
+    },
+    {
+      id: 'agent-fundamental',
+      type: 'fundamental_analyst',
+      name: '基本面分析师',
+      description: 'PE/PB估值、财务指标、盈利能力分析',
+      icon: 'Calculator',
+      enabled: true,
+      modelId: 'model-1',
+    },
+    {
+      id: 'agent-news',
+      type: 'news_analyst',
+      name: '新闻分析师',
+      description: '新闻舆情分析、市场情绪判断、热点追踪',
+      icon: 'Newspaper',
+      enabled: true,
+      modelId: 'model-2',
+    },
+    {
+      id: 'agent-risk',
+      type: 'risk_analyst',
+      name: '风险分析师',
+      description: '风险评估、止损建议、仓位管理',
+      icon: 'ShieldCheck',
+      enabled: true,
+      modelId: 'model-1',
+    },
+    {
+      id: 'agent-strategy',
+      type: 'strategy_analyst',
+      name: '策略分析师',
+      description: '综合多智能体分析结果，给出最终投资建议',
+      icon: 'Strategy',
+      enabled: true,
+      modelId: 'model-1',
+    },
+  ];
+}
+
+/**
+ * Generate mock TradingAgents configuration
+ * 
+ * @returns Mock TradingAgentsConfig object
+ */
+export function generateMockTradingAgentsConfig(): TradingAgentsConfig {
+  return {
+    agents: generateMockTradingAgents(),
+    defaultMarket: 'A',
+    autoRefreshInterval: 0,
+    enableNewsAnalysis: true,
+    enableAIInsights: true,
+  };
+}
+
+/**
+ * Generate mock stock analysis report
+ * 
+ * @param symbol - Stock symbol
+ * @param name - Stock name
+ * @param market - Stock market
+ * @returns Mock StockAnalysisReport object
+ */
+export function generateMockStockAnalysisReport(
+  symbol: string = '600519',
+  name: string = '贵州茅台',
+  market: 'A' | 'HK' | 'US' = 'A'
+): StockAnalysisReport {
+  const agentResults: AgentAnalysisResult[] = [
+    {
+      agentType: 'market_analyst',
+      agentName: '市场分析师',
+      summary: '股价处于上升趋势，MACD金叉形成，RSI处于中性区间',
+      details: [
+        '股价站稳20日均线，短期趋势向好',
+        'MACD在零轴上方金叉，买入信号明确',
+        '成交量温和放大，资金持续流入',
+        'KDJ指标金叉，短期仍有上涨空间',
+      ],
+      indicators: [
+        { name: 'RSI(14)', value: '55.2', signal: 'neutral', description: '处于中性区间' },
+        { name: 'MACD', value: '12.5', signal: 'bullish', description: '金叉形成' },
+        { name: 'KDJ', value: '68.3', signal: 'bullish', description: '金叉向上' },
+        { name: '布林带', value: '中轨', signal: 'neutral', description: '价格沿中轨运行' },
+      ],
+      recommendation: 'buy',
+      confidence: 75,
+      timestamp: Date.now() - 5 * 60 * 1000,
+    },
+    {
+      agentType: 'fundamental_analyst',
+      agentName: '基本面分析师',
+      summary: '公司基本面优秀，估值处于历史中位数水平',
+      details: [
+        'PE(TTM) 32.5倍，低于行业平均35倍',
+        'ROE 25.8%，盈利能力优秀',
+        '毛利率 91.2%，护城河深厚',
+        '现金流充裕，分红稳定',
+      ],
+      indicators: [
+        { name: 'PE(TTM)', value: '32.5', signal: 'neutral', description: '估值合理' },
+        { name: 'PB', value: '8.2', signal: 'neutral', description: '行业中位' },
+        { name: 'ROE', value: '25.8%', signal: 'bullish', description: '盈利能力强' },
+        { name: '毛利率', value: '91.2%', signal: 'bullish', description: '行业领先' },
+      ],
+      recommendation: 'buy',
+      confidence: 82,
+      timestamp: Date.now() - 4 * 60 * 1000,
+    },
+    {
+      agentType: 'news_analyst',
+      agentName: '新闻分析师',
+      summary: '市场情绪偏暖，近期无重大负面新闻',
+      details: [
+        '公司发布三季度业绩预告，符合预期',
+        '行业政策持续利好消费升级',
+        '机构调研频繁，关注度提升',
+        '社交媒体情绪指数为正向',
+      ],
+      indicators: [
+        { name: '情绪指数', value: '68', signal: 'bullish', description: '偏乐观' },
+        { name: '关注度', value: '高', signal: 'bullish', description: '机构关注' },
+        { name: '新闻热度', value: '中等', signal: 'neutral', description: '正常水平' },
+      ],
+      recommendation: 'hold',
+      confidence: 70,
+      timestamp: Date.now() - 3 * 60 * 1000,
+    },
+    {
+      agentType: 'risk_analyst',
+      agentName: '风险分析师',
+      summary: '当前风险可控，但需关注市场系统性风险',
+      details: [
+        '个股波动率处于中等水平',
+        '流动性良好，日均成交额充足',
+        '需关注宏观经济下行风险',
+        '建议设置5%止损位',
+      ],
+      indicators: [
+        { name: '波动率', value: '18.5%', signal: 'neutral', description: '中等波动' },
+        { name: 'Beta', value: '0.85', signal: 'bullish', description: '低于大盘' },
+        { name: '夏普比率', value: '1.25', signal: 'bullish', description: '风险调整收益好' },
+      ],
+      recommendation: 'buy',
+      confidence: 72,
+      timestamp: Date.now() - 2 * 60 * 1000,
+    },
+    {
+      agentType: 'strategy_analyst',
+      agentName: '策略分析师',
+      summary: '综合分析后建议逢低买入，目标收益15-20%',
+      details: [
+        '技术面：上升趋势确立，支撑位明确',
+        '基本面：估值合理，业绩稳健',
+        '情绪面：市场情绪偏暖',
+        '建议分批建仓，控制仓位在20%以内',
+      ],
+      indicators: [
+        { name: '综合评分', value: '78/100', signal: 'bullish', description: '推荐买入' },
+        { name: '目标收益', value: '15-20%', signal: 'bullish', description: '中期目标' },
+        { name: '风险等级', value: '中等', signal: 'neutral', description: '可控范围' },
+      ],
+      recommendation: 'buy',
+      confidence: 78,
+      timestamp: Date.now() - 1 * 60 * 1000,
+    },
+  ];
+
+  return {
+    id: `report-${Date.now()}`,
+    symbol,
+    name,
+    market,
+    status: 'completed',
+    agentResults,
+    finalRecommendation: 'buy',
+    overallConfidence: 76,
+    executiveSummary: `基于多智能体综合分析，${name}(${symbol})当前处于上升趋势，技术面和基本面均支持看多观点。建议在当前价位逢低建仓，设置5%止损位，目标收益15-20%。`,
+    riskFactors: [
+      '宏观经济下行风险',
+      '行业竞争加剧',
+      '估值处于历史中位，上涨空间有限',
+    ],
+    opportunities: [
+      '消费升级政策持续利好',
+      '品牌护城河深厚',
+      '机构持续加仓',
+    ],
+    targetPrice: '1,980.00',
+    stopLoss: '1,650.00',
+    requestedAt: Date.now() - 10 * 60 * 1000,
+    completedAt: Date.now(),
+  };
+}
+
+/**
+ * Generate sample stock reports for demonstration
+ * 
+ * @returns Array of mock StockAnalysisReport objects
+ */
+export function generateMockStockReports(): StockAnalysisReport[] {
+  return [
+    generateMockStockAnalysisReport('600519', '贵州茅台', 'A'),
+    {
+      ...generateMockStockAnalysisReport('000858', '五粮液', 'A'),
+      id: `report-${Date.now() - 1}`,
+      finalRecommendation: 'hold',
+      overallConfidence: 65,
+      executiveSummary: '五粮液(000858)估值合理，但短期技术面偏弱，建议持有观望。',
+      requestedAt: Date.now() - 30 * 60 * 1000,
+      completedAt: Date.now() - 25 * 60 * 1000,
+    },
+    {
+      ...generateMockStockAnalysisReport('AAPL', '苹果公司', 'US'),
+      id: `report-${Date.now() - 2}`,
+      finalRecommendation: 'strong_buy',
+      overallConfidence: 85,
+      executiveSummary: '苹果公司(AAPL)新品发布在即，技术面突破历史新高，建议积极买入。',
+      targetPrice: '220.00',
+      stopLoss: '180.00',
+      requestedAt: Date.now() - 60 * 60 * 1000,
+      completedAt: Date.now() - 55 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Get recommendation display text
+ * 
+ * @param recommendation - Trading recommendation
+ * @returns Display text in Chinese
+ */
+export function getRecommendationText(recommendation: string): string {
+  switch (recommendation) {
+    case 'strong_buy': return '强烈买入';
+    case 'buy': return '买入';
+    case 'hold': return '持有';
+    case 'sell': return '卖出';
+    case 'strong_sell': return '强烈卖出';
+    default: return '未知';
+  }
+}
+
+/**
+ * Get recommendation color class
+ * 
+ * @param recommendation - Trading recommendation
+ * @returns Tailwind CSS color class
+ */
+export function getRecommendationColor(recommendation: string): string {
+  switch (recommendation) {
+    case 'strong_buy': return 'text-green-600 bg-green-50 border-green-200';
+    case 'buy': return 'text-emerald-600 bg-emerald-50 border-emerald-200';
+    case 'hold': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+    case 'sell': return 'text-orange-600 bg-orange-50 border-orange-200';
+    case 'strong_sell': return 'text-red-600 bg-red-50 border-red-200';
+    default: return 'text-gray-600 bg-gray-50 border-gray-200';
+  }
+}
+
+/**
+ * Get signal color class
+ * 
+ * @param signal - Trading signal
+ * @returns Tailwind CSS color class
+ */
+export function getSignalColor(signal: string): string {
+  switch (signal) {
+    case 'bullish': return 'text-green-600';
+    case 'bearish': return 'text-red-600';
+    case 'neutral': return 'text-yellow-600';
+    default: return 'text-gray-600';
+  }
+}
+
+/**
+ * Get market display name
+ * 
+ * @param market - Market code
+ * @returns Display name in Chinese
+ */
+export function getMarketName(market: string): string {
+  switch (market) {
+    case 'A': return 'A股';
+    case 'HK': return '港股';
+    case 'US': return '美股';
+    default: return market;
+  }
 }

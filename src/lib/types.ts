@@ -464,3 +464,132 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// TradingAgents Types - 多智能体交易分析
+// Based on TradingAgents-CN framework: https://github.com/hsliuping/TradingAgents-CN
+// ============================================================================
+
+/** Types of trading analyst agents */
+export type TradingAgentType = 
+  | 'market_analyst'      // 市场分析师 - 技术指标和图表分析
+  | 'fundamental_analyst' // 基本面分析师 - PE、PB、财务数据
+  | 'news_analyst'        // 新闻分析师 - 新闻和舆情分析
+  | 'risk_analyst'        // 风险分析师 - 风险评估
+  | 'strategy_analyst';   // 策略分析师 - 综合策略建议
+
+/** Market supported by TradingAgents */
+export type TradingMarket = 'A' | 'HK' | 'US';
+
+/** Trading recommendation action */
+export type TradingRecommendation = 'strong_buy' | 'buy' | 'hold' | 'sell' | 'strong_sell';
+
+/** Individual trading agent configuration */
+export interface TradingAgent {
+  /** Unique identifier */
+  id: string;
+  /** Agent type */
+  type: TradingAgentType;
+  /** Display name */
+  name: string;
+  /** Description */
+  description: string;
+  /** Icon name (Phosphor icon) */
+  icon: string;
+  /** Whether agent is enabled */
+  enabled: boolean;
+  /** Agent's LLM model ID */
+  modelId?: string;
+}
+
+/** Stock analysis request */
+export interface StockAnalysisRequest {
+  /** Stock symbol (e.g., '600519', 'AAPL', '00700') */
+  symbol: string;
+  /** Stock name */
+  name?: string;
+  /** Market */
+  market: TradingMarket;
+  /** Analysis depth: 'quick' for fast analysis, 'deep' for comprehensive */
+  depth: 'quick' | 'deep';
+}
+
+/** Individual agent's analysis result */
+export interface AgentAnalysisResult {
+  /** Agent type that produced this analysis */
+  agentType: TradingAgentType;
+  /** Agent name */
+  agentName: string;
+  /** Analysis summary */
+  summary: string;
+  /** Detailed analysis points */
+  details: string[];
+  /** Key indicators or metrics */
+  indicators: TradingIndicator[];
+  /** Agent's individual recommendation */
+  recommendation: TradingRecommendation;
+  /** Confidence score (0-100) */
+  confidence: number;
+  /** Analysis timestamp */
+  timestamp: number;
+}
+
+/** Trading indicator metric */
+export interface TradingIndicator {
+  /** Indicator name (e.g., 'RSI', 'MACD', 'PE Ratio') */
+  name: string;
+  /** Current value */
+  value: string;
+  /** Interpretation (e.g., 'bullish', 'bearish', 'neutral') */
+  signal: 'bullish' | 'bearish' | 'neutral';
+  /** Description */
+  description?: string;
+}
+
+/** Complete stock analysis report */
+export interface StockAnalysisReport {
+  /** Unique report ID */
+  id: string;
+  /** Stock symbol */
+  symbol: string;
+  /** Stock name */
+  name: string;
+  /** Market */
+  market: TradingMarket;
+  /** Analysis status */
+  status: 'pending' | 'analyzing' | 'completed' | 'failed';
+  /** Individual agent results */
+  agentResults: AgentAnalysisResult[];
+  /** Final consolidated recommendation */
+  finalRecommendation: TradingRecommendation;
+  /** Overall confidence score (0-100) */
+  overallConfidence: number;
+  /** Executive summary */
+  executiveSummary: string;
+  /** Risk factors identified */
+  riskFactors: string[];
+  /** Potential opportunities */
+  opportunities: string[];
+  /** Target price (if available) */
+  targetPrice?: string;
+  /** Stop loss price (if available) */
+  stopLoss?: string;
+  /** Analysis request timestamp */
+  requestedAt: number;
+  /** Analysis completion timestamp */
+  completedAt?: number;
+}
+
+/** TradingAgents configuration settings */
+export interface TradingAgentsConfig {
+  /** Available agents */
+  agents: TradingAgent[];
+  /** Default market */
+  defaultMarket: TradingMarket;
+  /** Auto-refresh interval in minutes (0 for disabled) */
+  autoRefreshInterval: number;
+  /** Enable real-time news analysis */
+  enableNewsAnalysis: boolean;
+  /** Enable AI-powered insights */
+  enableAIInsights: boolean;
+}
