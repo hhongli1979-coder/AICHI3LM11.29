@@ -8,9 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Users, Plus, Trash, Shield, EnvelopeSimple, Crown, Eye, PencilSimple } from '@phosphor-icons/react';
+import { Users, Plus, Trash, Shield, EnvelopeSimple, Crown, Eye, PencilSimple, Handshake } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { formatTimeAgo } from '@/lib/mock-data';
+import { Fiat24PartnershipTerms } from './Fiat24PartnershipTerms';
 
 interface TeamMember {
   id: string;
@@ -127,10 +128,14 @@ export function OrganizationSettings() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="team" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="team">Team Members</TabsTrigger>
               <TabsTrigger value="general">General</TabsTrigger>
               <TabsTrigger value="billing">Billing</TabsTrigger>
+              <TabsTrigger value="partnership" className="gap-2">
+                <Handshake size={16} weight="duotone" />
+                <span className="hidden sm:inline">Partnership</span>
+              </TabsTrigger>
             </TabsList>
 
             {/* Team Members Tab */}
@@ -349,6 +354,11 @@ export function OrganizationSettings() {
                   <Button variant="outline" className="w-full">Upgrade to Enterprise</Button>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* Partnership Tab */}
+            <TabsContent value="partnership" className="space-y-4">
+              <Fiat24PartnershipTerms />
             </TabsContent>
           </Tabs>
         </CardContent>
