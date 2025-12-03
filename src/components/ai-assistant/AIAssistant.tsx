@@ -354,7 +354,7 @@ export function AIAssistant() {
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2 mt-3">
-                {['查看钱包余额', '创建新交易', '分析风险', 'DeFi策略推荐'].map((suggestion) => (
+                {['查看钱包余额', '创建新交易', '设置收款', '分析风险', 'DeFi策略推荐', '二次开发帮助'].map((suggestion) => (
                   <Button
                     key={suggestion}
                     variant="outline"
@@ -515,8 +515,23 @@ function generateAIResponse(input: string): string {
   if (lowerInput.includes('defi') || lowerInput.includes('策略') || lowerInput.includes('收益')) {
     return '📊 **DeFi 策略建议**\n\n基于您的风险偏好，推荐:\n\n1. **稳定币借贷** (Aave V3)\n   - APY: 5.2%\n   - 风险: 低\n\n2. **ETH 质押** (Lido)\n   - APY: 3.8%\n   - 风险: 低\n\n3. **流动性挖矿** (Uniswap V3)\n   - APY: 12.5%\n   - 风险: 中\n\n需要我帮您配置自动投资策略吗？';
   }
+
+  // 收款/支付系统相关
+  if (lowerInput.includes('收款') || lowerInput.includes('支付') || lowerInput.includes('payment') || lowerInput.includes('收钱')) {
+    return '💳 **收款系统**\n\n我可以帮您设置收款功能：\n\n1. **创建收款链接**\n   - 支持加密货币 (USDC, USDT, ETH)\n   - 支持法币 (支付宝, 微信, 银联)\n\n2. **生成收款二维码**\n   - 选择收款钱包\n   - 设置收款金额\n\n3. **查看收款记录**\n   - 今日收款: $2,450.00\n   - 待确认: 3笔\n\n请告诉我您需要哪种收款方式？';
+  }
+
+  // 二次开发/源码相关
+  if (lowerInput.includes('二次开发') || lowerInput.includes('源码') || lowerInput.includes('代码') || lowerInput.includes('开发') || lowerInput.includes('2开')) {
+    return '🔧 **二次开发支持**\n\n我理解您对二次开发的需求。OmniCore 平台支持：\n\n1. **API接口开放**\n   - RESTful API 文档\n   - WebSocket 实时推送\n\n2. **本地模型配置**\n   - 支持自定义AI模型\n   - 本地处理敏感数据\n\n3. **插件扩展**\n   - 支持自定义组件\n   - 模块化架构\n\n请在"模型"标签页配置您的开发环境，或告诉我具体需要什么帮助？';
+  }
+
+  // 帮助/不理解时的响应
+  if (lowerInput.includes('帮助') || lowerInput.includes('help') || lowerInput.includes('不懂') || lowerInput.includes('怎么')) {
+    return '🤝 **我来帮您**\n\n我会仔细倾听您的需求。请告诉我：\n\n• 您想完成什么操作？\n• 遇到了什么问题？\n• 需要什么具体功能？\n\n您可以用自然语言描述，比如：\n- "帮我创建一个收款链接"\n- "查看我的钱包余额"\n- "设置自动投资策略"\n\n我会尽力理解并协助您完成任务！';
+  }
   
-  return '感谢您的提问！我是 OmniCore 智能助手，可以帮助您:\n\n• 📊 查询和管理钱包\n• 💸 创建和签署交易\n• 🔍 分析交易风险\n• 📈 管理 DeFi 策略\n• ⚙️ 配置平台设置\n\n请告诉我您需要什么帮助？';
+  return '感谢您的提问！我是 OmniCore 智能助手，我会认真听取您的需求并协助完成任务。\n\n我可以帮助您:\n\n• 📊 查询和管理钱包\n• 💸 创建和签署交易\n• 💳 设置收款系统\n• 🔍 分析交易风险\n• 📈 管理 DeFi 策略\n• 🔧 二次开发支持\n• ⚙️ 配置平台设置\n\n请告诉我您具体需要什么帮助，我会尽力满足您的要求！';
 }
 
 function detectAction(input: string): AIMessage['action'] | undefined {
@@ -533,6 +548,12 @@ function detectAction(input: string): AIMessage['action'] | undefined {
   }
   if (lowerInput.includes('defi') || lowerInput.includes('策略')) {
     return { type: 'defi_manage', status: 'completed' };
+  }
+  if (lowerInput.includes('收款') || lowerInput.includes('支付') || lowerInput.includes('收钱')) {
+    return { type: 'payment_process', status: 'pending' };
+  }
+  if (lowerInput.includes('二次开发') || lowerInput.includes('源码') || lowerInput.includes('开发') || lowerInput.includes('2开')) {
+    return { type: 'settings_update', status: 'pending' };
   }
   
   return undefined;
