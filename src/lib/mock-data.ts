@@ -853,7 +853,7 @@ export function generateMockTradingAgents(): TradingAgent[] {
       type: 'strategy_analyst',
       name: '策略分析师',
       description: '综合多智能体分析结果，给出最终投资建议',
-      icon: 'Strategy',
+      icon: 'Lightbulb',
       enabled: true,
       modelId: 'model-1',
     },
