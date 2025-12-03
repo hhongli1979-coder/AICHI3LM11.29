@@ -239,3 +239,128 @@ export interface CustomEndpoint {
   headers: Record<string, string>;
   enabled: boolean;
 }
+
+// Super Agent Scenario Types - 超级智能体场景类型
+
+export type SuperAgentUserRole = 'investor' | 'enterprise' | 'high_net_worth';
+
+export type SuperAgentScenarioType = 'defi_autopilot' | 'cross_border_payment' | 'cross_chain_asset';
+
+export type SuperAgentTaskStatus = 'pending' | 'planning' | 'executing' | 'monitoring' | 'completed' | 'paused' | 'failed';
+
+export interface SuperAgentScenario {
+  id: string;
+  type: SuperAgentScenarioType;
+  name: string;
+  description: string;
+  userRole: SuperAgentUserRole;
+  painPoints: string[];
+  solutions: string[];
+  benefits: string[];
+  icon: string;
+}
+
+export interface SuperAgentTask {
+  id: string;
+  scenarioId: string;
+  type: SuperAgentScenarioType;
+  title: string;
+  description: string;
+  status: SuperAgentTaskStatus;
+  progress: number;
+  steps: SuperAgentTaskStep[];
+  createdAt: number;
+  updatedAt: number;
+  estimatedCompletion?: number;
+  result?: string;
+}
+
+export interface SuperAgentTaskStep {
+  id: string;
+  name: string;
+  description: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  agent: string;
+  startedAt?: number;
+  completedAt?: number;
+  output?: string;
+}
+
+export interface DeFiAutopilotStrategy {
+  id: string;
+  name: string;
+  userIntent: string;
+  targetAsset: string;
+  amount: string;
+  duration: number;
+  riskLevel: 'low' | 'medium' | 'high';
+  targetProtocols: string[];
+  minApy: number;
+  maxApy: number;
+  autoRebalance: boolean;
+  alertThreshold: number;
+  status: 'active' | 'paused' | 'completed';
+  currentApy: number;
+  totalEarned: string;
+  createdAt: number;
+}
+
+export interface CrossBorderPaymentFlow {
+  id: string;
+  name: string;
+  fromWallet: string;
+  toAddress: string;
+  amount: string;
+  currency: string;
+  targetCurrency: string;
+  complianceStatus: 'pending' | 'passed' | 'flagged' | 'rejected';
+  approvalStatus: 'pending' | 'partial' | 'approved' | 'rejected';
+  requiredApprovals: number;
+  currentApprovals: number;
+  approvers: string[];
+  gasOptimization: 'economy' | 'standard' | 'fast';
+  estimatedFee: string;
+  estimatedTime: string;
+  auditTrail: AuditEntry[];
+  createdAt: number;
+  completedAt?: number;
+}
+
+export interface AuditEntry {
+  id: string;
+  action: string;
+  actor: string;
+  timestamp: number;
+  details: string;
+}
+
+export interface CrossChainAssetView {
+  id: string;
+  totalValueUsd: string;
+  chains: ChainAssetSummary[];
+  defiPositions: DeFiPosition[];
+  riskAlerts: RiskAlert[];
+  lastUpdated: number;
+}
+
+export interface ChainAssetSummary {
+  chain: BlockchainNetwork;
+  walletCount: number;
+  totalValueUsd: string;
+  percentageOfTotal: number;
+  assets: TokenBalance[];
+}
+
+export interface RiskAlert {
+  id: string;
+  type: 'liquidation_warning' | 'price_drop' | 'protocol_risk' | 'gas_spike' | 'security_threat';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  message: string;
+  affectedAsset?: string;
+  affectedProtocol?: string;
+  suggestedAction: string;
+  actionable: boolean;
+  createdAt: number;
+  acknowledged: boolean;
+}
