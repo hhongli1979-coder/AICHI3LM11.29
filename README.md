@@ -176,6 +176,20 @@ import { Wallet, ChartLine } from '@phosphor-icons/react';
 
 ---
 
+## Related Projects
+
+### likeadmin SaaS Framework
+
+[likeadmin SaaS](https://gitee.com/likeadmin/likeadmin_php_saas) is an open-source framework designed for rapid SaaS business project development, featuring:
+
+- **Multi-Platform Support**: Platform backend, admin backend, WeChat mini-program, mobile H5, and PC
+- **Multi-Tenant Architecture**: Built-in multi-tenant support for efficient SaaS product development
+- **Tech Stack**: PHP8, TypeScript, ThinkPHP6, Vue3, Vite5, Element Plus 2.8
+
+If you are building SaaS business projects, you can reference its design concepts and implementation approaches.
+
+---
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

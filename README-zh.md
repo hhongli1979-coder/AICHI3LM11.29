@@ -253,6 +253,20 @@ npm install --legacy-peer-deps
 
 ---
 
+## 相关项目
+
+### likeadmin SaaS 框架
+
+[likeadmin SaaS](https://gitee.com/likeadmin/likeadmin_php_saas) 是一套专为快速开发 SaaS 业务项目而设计的开源框架，包含：
+
+- **多端支持**：平台后台、管理后台、微信小程序、手机 H5、PC 端
+- **多租户架构**：内置多租户支持，助力高效打造 SaaS 产品
+- **技术栈**：PHP8、TypeScript、ThinkPHP6、Vue3、Vite5、Element Plus 2.8
+
+如果您正在构建 SaaS 业务项目，可以参考该框架的设计理念和实现方式。
+
+---
+
 ## 许可证
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
