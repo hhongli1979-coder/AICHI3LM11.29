@@ -137,6 +137,7 @@ src/
 - [中文文档](./README-zh.md) - Chinese documentation
 - [PRD.md](./PRD.md) - Product Requirements Document
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution Guidelines
+- [Fiat24 集成指南](./FIAT24-INTEGRATION-GUIDE.md) - Fiat24 Integration Guide (Chinese)
 
 ---
 

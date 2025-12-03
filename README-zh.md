@@ -262,3 +262,9 @@ npm install --legacy-peer-deps
 ## 贡献
 
 欢迎提交 Issues 和 Pull Requests。详细贡献指南请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+---
+
+## 集成文档
+
+- [Fiat24 集成指南](./FIAT24-INTEGRATION-GUIDE.md) - 完整的 Fiat24 平台集成文档，包含智能合约、RESTful API、客户注册流程等
