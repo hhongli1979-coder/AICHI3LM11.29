@@ -259,6 +259,14 @@ npm install --legacy-peer-deps
 
 ---
 
+## 相关文档
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - 技术架构文档
+- [PRD.md](./PRD.md) - 产品需求文档
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - 贡献指南
+
+---
+
 ## 贡献
 
 欢迎提交 Issues 和 Pull Requests。详细贡献指南请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。

@@ -135,6 +135,7 @@ src/
 ## Documentation
 
 - [中文文档](./README-zh.md) - Chinese documentation
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Technical Architecture Guide (技术架构文档)
 - [PRD.md](./PRD.md) - Product Requirements Document
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution Guidelines
 
