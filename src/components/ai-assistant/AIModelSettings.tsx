@@ -39,6 +39,7 @@ import {
   Lightning,
   Database,
   Link,
+  Cube,
 } from '@phosphor-icons/react';
 import { generateMockAIModelSettings } from '@/lib/mock-data';
 import type { AIModelConfig, AIModelSettings, AIModelProvider, CustomEndpoint } from '@/lib/types';
@@ -55,7 +56,7 @@ function getProviderIcon(provider: AIModelProvider) {
     case 'anthropic':
       return <Lightning size={18} weight="duotone" className="text-amber-500" />;
     case 'meta':
-      return <Robot size={18} weight="duotone" className="text-indigo-500" />;
+      return <Cube size={18} weight="duotone" className="text-indigo-500" />;
     case 'custom':
       return <Code size={18} weight="duotone" className="text-pink-500" />;
     default:
@@ -294,7 +295,7 @@ function AddModelDialog({ open, onOpenChange, onAdd, editingModel }: AddModelDia
                     </SelectItem>
                     <SelectItem value="meta">
                       <div className="flex items-center gap-2">
-                        <Robot size={16} />
+                        <Cube size={16} />
                         Meta Llama
                       </div>
                     </SelectItem>
