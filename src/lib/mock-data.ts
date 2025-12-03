@@ -815,7 +815,7 @@ function iso7064Mod97_10(iban: string): number {
  */
 function iso13616Prepare(iban: string): string {
   iban = iban.toUpperCase();
-  iban = iban.substr(4) + iban.substr(0, 4);
+  iban = iban.substring(4) + iban.substring(0, 4);
   const A = 'A'.charCodeAt(0);
   const Z = 'Z'.charCodeAt(0);
   return iban.split('').map(function(n) {
