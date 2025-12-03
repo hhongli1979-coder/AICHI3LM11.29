@@ -521,8 +521,9 @@ function generateAIResponse(input: string): string {
     return '💳 **收款系统**\n\n我可以帮您设置收款功能：\n\n1. **创建收款链接**\n   - 支持加密货币 (USDC, USDT, ETH)\n   - 支持法币 (支付宝, 微信, 银联)\n\n2. **生成收款二维码**\n   - 选择收款钱包\n   - 设置收款金额\n\n3. **查看收款记录**\n   - 今日收款: $2,450.00\n   - 待确认: 3笔\n\n请告诉我您需要哪种收款方式？';
   }
 
-  // 二次开发/源码相关
-  if (lowerInput.includes('二次开发') || lowerInput.includes('源码') || lowerInput.includes('代码') || lowerInput.includes('开发') || lowerInput.includes('2开')) {
+  // 二次开发/源码相关 - 使用更具体的关键词避免误匹配
+  if (lowerInput.includes('二次开发') || lowerInput.includes('源码') || lowerInput.includes('2开') || 
+      lowerInput.includes('api接口') || lowerInput.includes('插件开发') || lowerInput.includes('定制开发')) {
     return '🔧 **二次开发支持**\n\n我理解您对二次开发的需求。OmniCore 平台支持：\n\n1. **API接口开放**\n   - RESTful API 文档\n   - WebSocket 实时推送\n\n2. **本地模型配置**\n   - 支持自定义AI模型\n   - 本地处理敏感数据\n\n3. **插件扩展**\n   - 支持自定义组件\n   - 模块化架构\n\n请在"模型"标签页配置您的开发环境，或告诉我具体需要什么帮助？';
   }
 
@@ -552,7 +553,7 @@ function detectAction(input: string): AIMessage['action'] | undefined {
   if (lowerInput.includes('收款') || lowerInput.includes('支付') || lowerInput.includes('收钱')) {
     return { type: 'payment_process', status: 'pending' };
   }
-  if (lowerInput.includes('二次开发') || lowerInput.includes('源码') || lowerInput.includes('开发') || lowerInput.includes('2开')) {
+  if (lowerInput.includes('二次开发') || lowerInput.includes('源码') || lowerInput.includes('2开') || lowerInput.includes('api接口')) {
     return { type: 'settings_update', status: 'pending' };
   }
   
