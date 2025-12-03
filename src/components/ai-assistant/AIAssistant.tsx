@@ -249,11 +249,15 @@ export function AIAssistant() {
       if (status.connected) {
         const models = await client.listModels();
         setAvailableModels(models);
-        if (models.length > 0 && !models.find(m => m.name === selectedModel)) {
-          const newModel = models[0].name;
-          setSelectedModel(newModel);
-          toast.info(`模型 "${selectedModel}" 不可用，已切换到 "${newModel}"`);
-        }
+        // Check if we need to auto-select a new model (current one not available)
+        setSelectedModel(currentModel => {
+          if (models.length > 0 && !models.find(m => m.name === currentModel)) {
+            const newModel = models[0].name;
+            toast.info(`已自动切换到模型 "${newModel}"`);
+            return newModel;
+          }
+          return currentModel;
+        });
         toast.success(`已连接到 Ollama 服务器 (v${status.version})`);
       }
     } catch (error) {
@@ -261,7 +265,7 @@ export function AIAssistant() {
     } finally {
       setIsCheckingConnection(false);
     }
-  }, [selectedModel]);
+  }, []);
 
   useEffect(() => {
     if (useOllama) {
@@ -460,11 +464,13 @@ export function AIAssistant() {
                   
                   {useOllama && availableModels.length > 0 && (
                     <div className="flex items-center gap-2">
-                      <label className="text-sm text-muted-foreground">模型:</label>
+                      <label htmlFor="ollama-model-select" className="text-sm text-muted-foreground">模型:</label>
                       <select
+                        id="ollama-model-select"
                         value={selectedModel}
                         onChange={(e) => setSelectedModel(e.target.value)}
                         className="h-8 px-2 text-sm border rounded-md bg-background"
+                        aria-label="选择 Ollama 模型"
                       >
                         {availableModels.map((model) => (
                           <option key={model.name} value={model.name}>

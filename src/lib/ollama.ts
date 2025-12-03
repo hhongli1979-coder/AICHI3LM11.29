@@ -133,8 +133,17 @@ export class OllamaClient {
   private temperature: number;
   private maxTokens: number;
 
+  /**
+   * Clean API endpoint URL by removing trailing /api/generate or /api/chat
+   */
+  private static cleanApiEndpoint(endpoint: string): string {
+    return endpoint.replace(/\/api\/(generate|chat)$/, '');
+  }
+
   constructor(config?: Partial<AIModelConfig>) {
-    this.baseUrl = config?.apiEndpoint?.replace(/\/api\/(generate|chat)$/, '') || DEFAULT_OLLAMA_ENDPOINT;
+    this.baseUrl = config?.apiEndpoint 
+      ? OllamaClient.cleanApiEndpoint(config.apiEndpoint) 
+      : DEFAULT_OLLAMA_ENDPOINT;
     this.model = config?.modelName || DEFAULT_OLLAMA_MODEL;
     this.systemPrompt = config?.systemPrompt || DEFAULT_SYSTEM_PROMPT;
     this.temperature = config?.temperature ?? 0.7;
@@ -146,7 +155,7 @@ export class OllamaClient {
    */
   updateConfig(config: Partial<AIModelConfig>): void {
     if (config.apiEndpoint) {
-      this.baseUrl = config.apiEndpoint.replace(/\/api\/(generate|chat)$/, '');
+      this.baseUrl = OllamaClient.cleanApiEndpoint(config.apiEndpoint);
     }
     if (config.modelName) this.model = config.modelName;
     if (config.systemPrompt) this.systemPrompt = config.systemPrompt;
@@ -323,46 +332,55 @@ export class OllamaClient {
       },
     };
 
-    const response = await fetch(`${this.baseUrl}/api/generate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Ollama API error: ${response.status}`);
-    }
-
-    if (!response.body) {
-      throw new Error('Response body is null');
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 second timeout for streaming
 
     try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      const response = await fetch(`${this.baseUrl}/api/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+        signal: controller.signal,
+      });
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n').filter(line => line.trim());
+      if (!response.ok) {
+        throw new Error(`Ollama API error: ${response.status}`);
+      }
 
-        for (const line of lines) {
-          try {
-            const data: OllamaGenerateResponse = JSON.parse(line);
-            if (data.response) {
-              yield data.response;
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n').filter(line => line.trim());
+
+          for (const line of lines) {
+            try {
+              const data: OllamaGenerateResponse = JSON.parse(line);
+              if (data.response) {
+                yield data.response;
+              }
+            } catch (parseError) {
+              // Log parse errors for debugging but continue processing
+              console.debug('Failed to parse streaming response line:', line, parseError);
             }
-          } catch {
-            // Skip invalid JSON lines
           }
         }
+      } finally {
+        reader.releaseLock();
       }
     } finally {
-      reader.releaseLock();
+      clearTimeout(timeoutId);
     }
   }
 
