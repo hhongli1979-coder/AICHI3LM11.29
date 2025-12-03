@@ -4,14 +4,14 @@ param(
 )
 
 # Check if we are in a detached HEAD state
-$currentBranch = & git symbolic-ref --short HEAD 2>$null
+& git symbolic-ref --short HEAD 2>$null | Out-Null
 $isDetached = $LASTEXITCODE -ne 0
 
 if ($isDetached) {
   Write-Host "Detected detached HEAD state." -ForegroundColor Yellow
   
   # If no branch name provided, generate one based on timestamp
-  if (-not $branch -or $branch -eq "") {
+  if (-not $branch) {
     $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
     $branch = "feature/changes-$timestamp"
     Write-Host "No branch name provided. Using: $branch" -ForegroundColor Cyan
@@ -27,7 +27,7 @@ if ($isDetached) {
 }
 
 # Default commit message
-if (-not $msg -or $msg -eq "") {
+if (-not $msg) {
   $msg = "chore: quick push $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 }
 
