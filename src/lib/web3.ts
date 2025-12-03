@@ -47,7 +47,7 @@ export async function connectMetaMask(): Promise<WalletState> {
   }
 
   try {
-    const provider = new BrowserProvider(window.ethereum);
+    const provider = new BrowserProvider(window.ethereum!);
     const accounts = await provider.send('eth_requestAccounts', []);
     
     if (accounts.length === 0) {
@@ -187,7 +187,7 @@ export async function switchNetwork(chainId: number): Promise<void> {
   }
 
   try {
-    await window.ethereum.request({
+    await window.ethereum!.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: `0x${chainId.toString(16)}` }],
     });

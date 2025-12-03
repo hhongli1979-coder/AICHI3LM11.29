@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Car, ShoppingCart, HardDrives } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Car, ShoppingCart, HardDrives, CurrencyBtc, Users } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -14,6 +14,7 @@ import { OrganizationSettings } from '@/components/organization/OrganizationSett
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
 import { VoiceAssistant } from '@/components/ai-assistant/VoiceAssistant';
+import { SmartVoiceAssistant } from '@/components/ai-assistant/SmartVoiceAssistant';
 import { CryptoExchange, FiatExchange } from '@/components/payment/CryptoExchange';
 import { ThirdPartyPayment } from '@/components/payment/ThirdPartyPayment';
 import { DriverApp } from '@/components/taxi/DriverApp';
@@ -21,6 +22,8 @@ import { PassengerApp } from '@/components/taxi/PassengerApp';
 import { ProxyPurchase } from '@/components/taxi/ProxyPurchase';
 import { DefiLlamaDashboard } from '@/components/admin/DefiLlamaDashboard';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
+import { BinanceExchange, P2PTrading, FuturesTrading } from '@/components/exchange/BinanceExchange';
+import { JeePayDashboard } from '@/components/payment/JeePayDashboard';
 import {
   generateMockWallets,
   generateMockTransactions,
@@ -150,6 +153,18 @@ function App() {
             <TabsTrigger value="defillama" className="gap-2">
               <HardDrives size={18} weight="duotone" />
               <span className="hidden sm:inline">DefiLlama</span>
+            </TabsTrigger>
+            <TabsTrigger value="binance" className="gap-2">
+              <CurrencyBtc size={18} weight="duotone" />
+              <span className="hidden sm:inline">币安交易</span>
+            </TabsTrigger>
+            <TabsTrigger value="p2p" className="gap-2">
+              <Users size={18} weight="duotone" />
+              <span className="hidden sm:inline">C2C交易</span>
+            </TabsTrigger>
+            <TabsTrigger value="jeepay" className="gap-2">
+              <CreditCard size={18} weight="duotone" />
+              <span className="hidden sm:inline">JeePay</span>
             </TabsTrigger>
             <TabsTrigger value="admin" className="gap-2">
               <Gear size={18} weight="duotone" />
@@ -287,6 +302,30 @@ function App() {
             <DefiLlamaDashboard />
           </TabsContent>
           
+          {/* Binance Exchange */}
+          <TabsContent value="binance" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">币安交易</h2>
+            </div>
+            <BinanceExchange />
+            <div className="mt-8">
+              <FuturesTrading />
+            </div>
+          </TabsContent>
+          
+          {/* P2P Trading */}
+          <TabsContent value="p2p" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">C2C/P2P 交易</h2>
+            </div>
+            <P2PTrading />
+          </TabsContent>
+          
+          {/* JeePay Payment System */}
+          <TabsContent value="jeepay" className="space-y-6">
+            <JeePayDashboard />
+          </TabsContent>
+          
           {/* Admin Dashboard */}
           <TabsContent value="admin" className="space-y-6">
             <AdminDashboard />
@@ -298,8 +337,11 @@ function App() {
           
           <TabsContent value="ai-assistant" className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-2">
-              <VoiceAssistant />
+              <SmartVoiceAssistant />
               <AIAssistant />
+            </div>
+            <div className="mt-6">
+              <VoiceAssistant />
             </div>
           </TabsContent>
           
@@ -315,8 +357,8 @@ function App() {
       
       <footer className="border-t mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          <p>OmniCore 智能支付平台 - 加密支付 · 出租车 · 代购 · AI智能体 · DefiLlama</p>
-          <p className="mt-2">多链支持 • 语音助手 • 加密收款 • 全球代购 • DeFi后台管理</p>
+          <p>OmniCore 智能支付平台 - 加密支付 · 出租车 · 代购 · AI智能体 · DefiLlama · 币安交易 · JeePay</p>
+          <p className="mt-2">多链支持 • 语音助手 • 加密收款 • 全球代购 • DeFi后台管理 • 现货/合约/C2C交易 • 聚合支付</p>
         </div>
       </footer>
 
