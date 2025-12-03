@@ -7,7 +7,7 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, DuneAnalyticsStats, DuneNFTMintDaily, DuneNFTVerifiedDaily, DuneTokenBalance, DuneCustomerBalance, DuneTransactionVolume, DuneCustomerVolume } from './types';
 
 // ============================================================================
 // Network Configuration
@@ -783,5 +783,147 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableLocalProcessing: true,
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
+  };
+}
+
+// ============================================================================
+// Dune Analytics Mock Data
+// ============================================================================
+
+/**
+ * Generate mock NFT mint data for past 7 days
+ * 
+ * @returns Array of daily NFT mint data
+ */
+export function generateMockNFTMints7Days(): DuneNFTMintDaily[] {
+  const data: DuneNFTMintDaily[] = [];
+  const now = new Date();
+  
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(now);
+    date.setDate(date.getDate() - i);
+    data.push({
+      date: date.toISOString().split('T')[0],
+      totalNFTMint: Math.floor(Math.random() * 50) + 10,
+    });
+  }
+  
+  return data;
+}
+
+/**
+ * Generate mock verified NFT data for past 30 days
+ * 
+ * @returns Array of daily verified NFT data
+ */
+export function generateMockNFTVerified30Days(): DuneNFTVerifiedDaily[] {
+  const data: DuneNFTVerifiedDaily[] = [];
+  const now = new Date();
+  
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(now);
+    date.setDate(date.getDate() - i);
+    data.push({
+      date: date.toISOString().split('T')[0],
+      totalVerified: Math.floor(Math.random() * 30) + 5,
+    });
+  }
+  
+  return data;
+}
+
+/**
+ * Generate mock token balance data
+ * 
+ * @returns Array of token balances
+ */
+export function generateMockTokenBalances(): DuneTokenBalance[] {
+  return [
+    { symbol: 'EUR24', totalBalances: 125432.18, tokenPrice: 1.08 },
+    { symbol: 'USD24', totalBalances: 89234.56, tokenPrice: 1.00 },
+    { symbol: 'CHF24', totalBalances: 45678.90, tokenPrice: 1.12 },
+    { symbol: 'GBP24', totalBalances: 23456.78, tokenPrice: 1.27 },
+  ];
+}
+
+/**
+ * Generate mock top customers by balance
+ * 
+ * @returns Array of customer balances ranked by amount
+ */
+export function generateMockTopCustomersByBalance(): DuneCustomerBalance[] {
+  const customers: DuneCustomerBalance[] = [];
+  const symbols = ['EUR24', 'USD24', 'CHF24', 'GBP24'];
+  
+  symbols.forEach(symbol => {
+    for (let i = 1; i <= 10; i++) {
+      customers.push({
+        symbol,
+        address: `0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 6)}`,
+        totalBalance: Math.floor(Math.random() * 50000) + 1000 - (i * 100),
+      });
+    }
+  });
+  
+  return customers;
+}
+
+/**
+ * Generate mock 24-hour transaction volume
+ * 
+ * @returns Array of transaction volumes by token
+ */
+export function generateMockTransactionVolume24h(): DuneTransactionVolume[] {
+  return [
+    { symbol: 'EUR24', contractAddress: '0xbE00f3db78688d9704BCb4e0a827aea3a9Cc0D62', totalVolume: 45678.90 },
+    { symbol: 'USD24', contractAddress: '0x2c5d06f591D0d8cd43Ac232c2B654475a142c7DA', totalVolume: 34567.89 },
+    { symbol: 'CHF24', contractAddress: '0xd41F1f0cf89fD239ca4c1F8E8ADA46345c86b0a4', totalVolume: 12345.67 },
+    { symbol: 'GBP24', contractAddress: '0x5fc17218196581864974574d715cFC7334794cBE', totalVolume: 8901.23 },
+  ];
+}
+
+/**
+ * Generate mock top customers by 24-hour volume
+ * 
+ * @returns Array of customer volumes ranked by amount
+ */
+export function generateMockTopCustomersByVolume(): DuneCustomerVolume[] {
+  const customers: DuneCustomerVolume[] = [];
+  const symbols = ['EUR24', 'USD24', 'CHF24', 'GBP24'];
+  
+  symbols.forEach(symbol => {
+    for (let i = 1; i <= 10; i++) {
+      customers.push({
+        symbol,
+        address: `0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 6)}`,
+        totalVolume: Math.floor(Math.random() * 10000) + 500 - (i * 50),
+      });
+    }
+  });
+  
+  return customers;
+}
+
+/**
+ * Generate complete mock Dune Analytics stats
+ * 
+ * @returns Complete DuneAnalyticsStats object
+ * 
+ * @example
+ * ```typescript
+ * const duneStats = generateMockDuneAnalyticsStats();
+ * console.log(duneStats.nftMints7Days); // Array of 7 daily mint records
+ * ```
+ */
+export function generateMockDuneAnalyticsStats(): DuneAnalyticsStats {
+  return {
+    nftMints7Days: generateMockNFTMints7Days(),
+    nftVerified30Days: generateMockNFTVerified30Days(),
+    tokenBalances: generateMockTokenBalances(),
+    topCustomersByBalance: generateMockTopCustomersByBalance(),
+    transactionVolume24h: generateMockTransactionVolume24h(),
+    topCustomersByVolume: generateMockTopCustomersByVolume(),
+    walletProvider: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
+    lastUpdatedAt: Date.now(),
   };
 }

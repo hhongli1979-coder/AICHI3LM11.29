@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, ChartBar } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -12,12 +12,14 @@ import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
 import { OrganizationSettings } from '@/components/organization/OrganizationSettings';
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
+import { DuneAnalytics } from '@/components/dune-analytics/DuneAnalytics';
 import {
   generateMockWallets,
   generateMockTransactions,
   generateMockDeFiPositions,
   generateMockOmniStats,
   generateMockNotifications,
+  generateMockDuneAnalyticsStats,
 } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -31,6 +33,7 @@ function App() {
   const defiPositions = generateMockDeFiPositions();
   const omniStats = generateMockOmniStats();
   const notifications = generateMockNotifications();
+  const duneStats = generateMockDuneAnalyticsStats();
   const unreadCount = notifications.filter(n => !n.read).length;
   
   const totalAssets = wallets.reduce((sum, wallet) => {
@@ -109,7 +112,7 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-10">
             <TabsTrigger value="overview" className="gap-2">
               <ChartLine size={18} weight="duotone" />
               <span className="hidden sm:inline">Overview</span>
@@ -129,6 +132,10 @@ function App() {
             <TabsTrigger value="payments" className="gap-2">
               <CreditCard size={18} weight="duotone" />
               <span className="hidden sm:inline">Payments</span>
+            </TabsTrigger>
+            <TabsTrigger value="dune" className="gap-2">
+              <ChartBar size={18} weight="duotone" />
+              <span className="hidden sm:inline">Dune</span>
             </TabsTrigger>
             <TabsTrigger value="omni" className="gap-2">
               <Coins size={18} weight="duotone" />
@@ -237,6 +244,10 @@ function App() {
                 <Button variant="outline" className="mt-4">View Documentation</Button>
               </div>
             </div>
+          </TabsContent>
+          
+          <TabsContent value="dune" className="space-y-6">
+            <DuneAnalytics stats={duneStats} />
           </TabsContent>
           
           <TabsContent value="omni" className="space-y-6">

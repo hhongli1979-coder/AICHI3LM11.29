@@ -464,3 +464,83 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Dune Analytics Types
+// ============================================================================
+
+/** Daily NFT mint data point */
+export interface DuneNFTMintDaily {
+  /** Date of the mint data */
+  date: string;
+  /** Total NFTs minted on this date */
+  totalNFTMint: number;
+}
+
+/** Daily verified NFT data point */
+export interface DuneNFTVerifiedDaily {
+  /** Date of the verification data */
+  date: string;
+  /** Total NFTs verified on this date */
+  totalVerified: number;
+}
+
+/** Token balance data */
+export interface DuneTokenBalance {
+  /** Token symbol */
+  symbol: string;
+  /** Total balances */
+  totalBalances: number;
+  /** Token price in USD */
+  tokenPrice: number;
+}
+
+/** Customer balance ranking */
+export interface DuneCustomerBalance {
+  /** Token symbol */
+  symbol: string;
+  /** Customer wallet address */
+  address: string;
+  /** Total balance */
+  totalBalance: number;
+}
+
+/** Token transaction volume */
+export interface DuneTransactionVolume {
+  /** Token symbol */
+  symbol: string;
+  /** Contract address */
+  contractAddress: string;
+  /** Total transaction volume */
+  totalVolume: number;
+}
+
+/** Customer transaction volume ranking */
+export interface DuneCustomerVolume {
+  /** Token symbol */
+  symbol: string;
+  /** Customer wallet address */
+  address: string;
+  /** Total transaction volume */
+  totalVolume: number;
+}
+
+/** Overall Dune Analytics stats */
+export interface DuneAnalyticsStats {
+  /** NFT mints in the past 7 days */
+  nftMints7Days: DuneNFTMintDaily[];
+  /** Verified NFTs in the past 30 days */
+  nftVerified30Days: DuneNFTVerifiedDaily[];
+  /** Total token balances */
+  tokenBalances: DuneTokenBalance[];
+  /** Top 10 customers by balance */
+  topCustomersByBalance: DuneCustomerBalance[];
+  /** 24-hour transaction volume */
+  transactionVolume24h: DuneTransactionVolume[];
+  /** Top 10 customers by 24-hour volume */
+  topCustomersByVolume: DuneCustomerVolume[];
+  /** Wallet provider address */
+  walletProvider: string;
+  /** Last updated timestamp */
+  lastUpdatedAt: number;
+}
