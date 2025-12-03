@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,7 +31,7 @@ import {
 } from '@/lib/mock-data';
 import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
 import { AIModelSettingsPanel } from './AIModelSettings';
-import { OllamaClient, type OllamaConnectionStatus, type OllamaChatMessage } from '@/lib/ollama-client';
+import { OllamaClient, createOllamaClientFromConfig, type OllamaConnectionStatus, type OllamaChatMessage } from '@/lib/ollama-client';
 import { toast } from 'sonner';
 
 function getCapabilityIcon(iconName: string) {
@@ -224,17 +224,17 @@ export function AIAssistant() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const ollamaClientRef = useRef<OllamaClient | null>(null);
 
+  // Memoize model settings to avoid repeated calls
+  const modelSettings = useMemo(() => generateMockAIModelSettings(), []);
+  const defaultModel = useMemo(() => 
+    modelSettings.models.find(m => m.isDefault) || modelSettings.models[0],
+    [modelSettings]
+  );
+
   // Initialize Ollama client and check connection
   useEffect(() => {
-    const modelSettings = generateMockAIModelSettings();
-    const defaultModel = modelSettings.models.find(m => m.isDefault) || modelSettings.models[0];
-    
     if (defaultModel) {
-      const baseUrl = defaultModel.apiEndpoint
-        .replace(/\/api\/(generate|chat)$/, '')
-        .replace(/\/$/, '') || 'http://localhost:11434';
-      
-      ollamaClientRef.current = new OllamaClient(baseUrl);
+      ollamaClientRef.current = createOllamaClientFromConfig(defaultModel);
       
       // Check connection status
       ollamaClientRef.current.checkConnection().then((status) => {
@@ -244,7 +244,7 @@ export function AIAssistant() {
         }
       });
     }
-  }, []);
+  }, [defaultModel]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -253,14 +253,7 @@ export function AIAssistant() {
   }, [state.currentConversation, streamingContent]);
 
   const handleOllamaChat = useCallback(async (userInput: string) => {
-    if (!ollamaClientRef.current || !ollamaStatus.connected) {
-      return null;
-    }
-
-    const modelSettings = generateMockAIModelSettings();
-    const defaultModel = modelSettings.models.find(m => m.isDefault) || modelSettings.models[0];
-    
-    if (!defaultModel) {
+    if (!ollamaClientRef.current || !ollamaStatus.connected || !defaultModel) {
       return null;
     }
 
@@ -299,7 +292,7 @@ export function AIAssistant() {
       toast.error('Ollama 连接失败，使用本地模拟响应');
       return null;
     }
-  }, [ollamaStatus.connected, state.currentConversation]);
+  }, [ollamaStatus.connected, state.currentConversation, defaultModel]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
