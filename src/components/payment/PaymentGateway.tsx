@@ -27,11 +27,22 @@ import { toast } from 'sonner';
 import { formatCurrency, formatTimeAgo, generateMockPayments } from '@/lib/mock-data';
 import type { PaymentRequest, PaymentChannel } from '@/lib/types';
 
+// Configuration - In production, these would come from environment variables or API
+const PAYMENT_BASE_URL = 'https://payment.omnicore.io';
+
 interface PaymentGatewayProps {
   payments?: PaymentRequest[];
+  merchantId?: string;
 }
 
-export function PaymentGateway({ payments: initialPayments }: PaymentGatewayProps) {
+/**
+ * Generate a unique payment ID using crypto.randomUUID
+ */
+function generatePaymentId(): string {
+  return `pay-${crypto.randomUUID()}`;
+}
+
+export function PaymentGateway({ payments: initialPayments, merchantId = 'merchant-default' }: PaymentGatewayProps) {
   const [payments, setPayments] = useState<PaymentRequest[]>(initialPayments || generateMockPayments());
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
@@ -107,16 +118,20 @@ export function PaymentGateway({ payments: initialPayments }: PaymentGatewayProp
       return;
     }
 
+    const paymentId = generatePaymentId();
+    const paymentUrl = `${PAYMENT_BASE_URL}/${paymentId}`;
+    
     const newPayment: PaymentRequest = {
-      id: `pay-${Date.now()}`,
-      merchantId: 'merchant-1',
+      id: paymentId,
+      merchantId,
       amount,
       currency: formCurrency,
       channel: formChannel,
       status: 'pending',
       description: formDescription,
-      paymentUrl: `https://payment.omnicore.io/pay-${Date.now()}`,
-      qrCode: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23000"/></svg>`,
+      paymentUrl,
+      // QR code placeholder - in production, use a QR code library to generate actual QR codes
+      qrCode: `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/><text x="50" y="50" text-anchor="middle" font-size="8" fill="#000">QR: ${paymentId.slice(-8)}</text></svg>`)}`,
       createdAt: Date.now(),
       expiresAt: Date.now() + 30 * 60 * 1000, // 30 minutes
     };
