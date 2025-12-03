@@ -114,6 +114,34 @@ npm run preview
 
 项目使用 GitHub Spark 框架，需要在 `vite.config.ts` 中保持 `sparkPlugin()` 和 `createIconImportProxy()` 配置。
 
+### 支持的 AI 模型提供商
+
+| 提供商 | 描述 | 用途 |
+|--------|------|------|
+| OpenAI | GPT 系列模型 | 通用对话和代码生成 |
+| Anthropic | Claude 系列模型 | 安全对话和分析 |
+| Ollama | 本地 LLM 部署 | 隐私保护的本地推理 |
+| PaddlePaddle | 百度飞桨深度学习框架 | 金融风控、智能投顾 |
+| Custom | 自定义 API 端点 | 企业内部模型 |
+| Local | 本地模型 | 离线推理 |
+
+#### PaddlePaddle 集成
+
+飞桨（PaddlePaddle）是百度开源的深度学习框架，支持 ERNIE 系列大语言模型。可通过以下方式集成：
+
+```typescript
+const paddleConfig: AIModelConfig = {
+  provider: 'paddle',
+  modelName: 'ernie-4.0-8k',
+  apiEndpoint: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-4.0-8k',
+  apiKey: 'your-api-key',
+  maxTokens: 8192,
+  temperature: 0.7,
+};
+```
+
+更多信息请参考：[PaddlePaddle 官方仓库](https://gitee.com/paddlepaddle/Paddle)
+
 ---
 
 ## 项目结构

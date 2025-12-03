@@ -750,6 +750,21 @@ export function generateMockAIModelConfigs(): AIModelConfig[] {
       createdAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
       updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
     },
+    {
+      id: 'model-4',
+      name: 'PaddlePaddle ERNIE',
+      provider: 'paddle',
+      modelName: 'ernie-4.0-8k',
+      apiEndpoint: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-4.0-8k',
+      apiKey: 'sk-***',
+      enabled: true,
+      isDefault: false,
+      maxTokens: 8192,
+      temperature: 0.7,
+      systemPrompt: '你是基于飞桨(PaddlePaddle)深度学习框架的智能助手，专注于金融风控、智能投顾和区块链资产分析。请用专业且友好的方式回答用户问题。',
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+    },
   ];
 }
 

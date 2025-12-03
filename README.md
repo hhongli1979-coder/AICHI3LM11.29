@@ -91,6 +91,34 @@ npm run preview
 | Sonner | 2.x | Toast Notifications |
 | GitHub Spark | 0.42 | Platform Framework |
 
+### Supported AI Model Providers
+
+| Provider | Description | Use Case |
+|----------|-------------|----------|
+| OpenAI | GPT series models | General chat and code generation |
+| Anthropic | Claude series models | Safe conversation and analysis |
+| Ollama | Local LLM deployment | Privacy-preserving local inference |
+| PaddlePaddle | Baidu's deep learning framework | Financial risk control, intelligent investment advisory |
+| Custom | Custom API endpoints | Enterprise internal models |
+| Local | Local models | Offline inference |
+
+#### PaddlePaddle Integration
+
+PaddlePaddle is Baidu's open-source deep learning framework, supporting ERNIE series large language models. Integration example:
+
+```typescript
+const paddleConfig: AIModelConfig = {
+  provider: 'paddle',
+  modelName: 'ernie-4.0-8k',
+  apiEndpoint: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-4.0-8k',
+  apiKey: 'your-api-key',
+  maxTokens: 8192,
+  temperature: 0.7,
+};
+```
+
+For more information, visit: [PaddlePaddle Official Repository](https://gitee.com/paddlepaddle/Paddle)
+
 ---
 
 ## Project Structure
