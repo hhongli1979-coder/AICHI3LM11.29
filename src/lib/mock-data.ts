@@ -7,7 +7,7 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, JiaguConfig, JiaguAnalysisResult, IntegratedAIEngine } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, JiaguConfig, JiaguCapability, JiaguAnalysisResult, IntegratedAIEngine } from './types';
 
 // ============================================================================
 // Network Configuration
@@ -911,8 +911,8 @@ export function generateMockIntegratedAIEngine(): IntegratedAIEngine {
  * @param capability - Jiagu capability type
  * @returns Display name and description in Chinese
  */
-export function getJiaguCapabilityInfo(capability: string): { name: string; description: string; icon: string } {
-  const info: Record<string, { name: string; description: string; icon: string }> = {
+export function getJiaguCapabilityInfo(capability: JiaguCapability): { name: string; description: string; icon: string } {
+  const info: Record<JiaguCapability, { name: string; description: string; icon: string }> = {
     segmentation: { name: '分词', description: '支持MSR/PKU/CNC多种分词模式', icon: 'TextAa' },
     pos_tagging: { name: '词性标注', description: '识别每个词的语法属性', icon: 'Tag' },
     ner: { name: '命名实体识别', description: '识别人名、地名、机构名', icon: 'UserCircle' },
@@ -923,5 +923,5 @@ export function getJiaguCapabilityInfo(capability: string): { name: string; desc
     new_word: { name: '新词发现', description: '检测未知词汇', icon: 'Sparkle' },
   };
   
-  return info[capability] || { name: capability, description: '', icon: 'Question' };
+  return info[capability];
 }
