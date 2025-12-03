@@ -91,6 +91,27 @@ npm run preview
 | Sonner | 2.x | Toast Notifications |
 | GitHub Spark | 0.42 | Platform Framework |
 
+### AI Deep Learning Engines
+
+The platform supports multiple AI model providers:
+
+| Engine | Description |
+|--------|-------------|
+| OmniCore Local | Built-in local AI model |
+| Ollama | Open source local LLM runtime |
+| Omega-AI | Java-based deep learning framework with auto-differentiation, multi-GPU training, CUDA/CUDNN support |
+| Custom Models | Support for OpenAI-compatible APIs |
+
+#### Omega-AI Deep Learning Engine
+
+[Omega-AI](https://gitee.com/dromara/omega-ai) is a Java-based deep learning framework that helps you quickly build neural networks for model inference and training.
+
+**Key Features:**
+- 🧠 Neural Network Building - Quickly build various deep learning models
+- 🔄 Automatic Differentiation - Built-in autodiff engine
+- 🚀 Multi-GPU Training - Distributed training acceleration
+- ⚡ CUDA/CUDNN Support - GPU-accelerated inference and training
+
 ---
 
 ## Project Structure

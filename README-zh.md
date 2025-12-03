@@ -114,6 +114,27 @@ npm run preview
 
 项目使用 GitHub Spark 框架，需要在 `vite.config.ts` 中保持 `sparkPlugin()` 和 `createIconImportProxy()` 配置。
 
+### AI 深度学习引擎
+
+平台支持多种 AI 模型提供商，包括：
+
+| 引擎 | 说明 |
+|------|------|
+| OmniCore 本地模型 | 平台内置的本地 AI 模型 |
+| Ollama | 开源本地大模型运行时 |
+| Omega-AI | 基于 Java 的深度学习框架，支持自动求导、多 GPU 训练、CUDA/CUDNN 加速 |
+| 自定义模型 | 支持接入 OpenAI 兼容 API |
+
+#### Omega-AI 深度学习引擎
+
+[Omega-AI](https://gitee.com/dromara/omega-ai) 是一个基于 Java 打造的深度学习框架，帮助快速搭建神经网络，实现模型推理与训练。
+
+**主要特性：**
+- 🧠 神经网络构建 - 快速搭建各类深度学习模型
+- 🔄 自动求导 - 内置自动微分引擎
+- 🚀 多 GPU 训练 - 支持分布式训练加速
+- ⚡ CUDA/CUDNN 支持 - GPU 加速推理和训练
+
 ---
 
 ## 项目结构

@@ -750,6 +750,20 @@ export function generateMockAIModelConfigs(): AIModelConfig[] {
       createdAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
       updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
     },
+    {
+      id: 'model-4',
+      name: 'Omega-AI 深度学习引擎',
+      provider: 'omega-ai',
+      modelName: 'omega-ai-transformer',
+      apiEndpoint: 'http://localhost:8080/api/inference',
+      enabled: true,
+      isDefault: false,
+      maxTokens: 4096,
+      temperature: 0.6,
+      systemPrompt: '你是基于Omega-AI深度学习框架的智能助手，专注于金融风险分析和智能决策。支持自动求导、多GPU训练和CUDA/CUDNN加速。',
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now(),
+    },
   ];
 }
 
