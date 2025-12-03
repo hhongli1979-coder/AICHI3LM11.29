@@ -6,6 +6,7 @@
 
 <p align="center">
   <a href="#features">Features</a> •
+  <a href="#omega-ai-deep-learning-engine">Omega-AI</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#project-structure">Project Structure</a> •
@@ -36,6 +37,42 @@ OmniCore Wallet is an enterprise-grade SaaS platform for managing crypto assets,
 - 🤖 **AI Risk Intelligence** - Real-time transaction risk analysis using machine learning
 - 👥 **Organization Management** - Multi-tenant SaaS with role-based permissions and team invitations
 - 📊 **Real-Time Dashboard** - Unified view of all assets, transactions, and DeFi positions across chains
+
+---
+
+## Omega-AI Deep Learning Engine
+
+OmniCore integrates the Omega-AI deep learning engine, a Java-based framework that powers our AI Risk Intelligence and intelligent assistant features with robust machine learning capabilities.
+
+### Core Features
+
+- **Neural Network Building** - Quickly build various neural network architectures including CNN, RNN, Transformer and more
+- **Model Inference & Training** - Support end-to-end model training and efficient inference for risk prediction and transaction pattern recognition
+- **Automatic Differentiation** - Built-in auto-diff system simplifies gradient computation during model training
+- **Multi-GPU Training** - Distributed multi-GPU training support for accelerating large-scale model training
+- **GPU Acceleration** - CUDA and CUDNN support for high-performance computing with GPU acceleration
+
+### Use Cases
+
+| Module | Description |
+|--------|-------------|
+| Transaction Risk Analysis | Deep learning models identify suspicious transaction patterns and anomalous behavior |
+| Address Risk Assessment | Graph neural networks analyze on-chain address relationships and risk propagation |
+| Market Prediction | Time-series models predict market trends and volatility risks |
+| AI Assistant | LLM-powered natural language interaction capabilities |
+| Fraud Detection | Real-time detection of phishing addresses and malicious contracts |
+
+### Technical Specifications
+
+```
+Deep Learning
+├── Framework Base ────── Native Java implementation, cross-platform compatible
+├── Neural Networks ───── Feedforward, CNN, RNN, Transformer architectures
+├── Auto-Differentiation ─ Dynamic computation graph with higher-order derivatives
+├── GPU Support ────────── CUDA 11.x+ / CUDNN 8.x+
+├── Distributed Training ─ Multi-GPU data parallel and model parallel
+└── Model Deployment ───── ONNX export, edge device inference support
+```
 
 ---
 
