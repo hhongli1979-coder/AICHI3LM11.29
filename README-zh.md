@@ -257,6 +257,7 @@ OmniCore 钱包的 AI 风险智能模块采用 [OpenMLDB](https://openmldb.ai/) 
 
 ```typescript
 // 交易风险分析的特征计算
+// 注意：查询前请验证 senderAddress 格式（如：0x 前缀的十六进制字符串）
 const riskFeatures = await openmldb.computeFeatures(`
   SELECT 
     COUNT(*) OVER (PARTITION BY sender ORDER BY timestamp 
@@ -270,7 +271,7 @@ const riskFeatures = await openmldb.computeFeatures(`
 `, [senderAddress]);
 ```
 
-> 📚 **参考资料**：[OpenMLDB 仓库](https://gitee.com/paradigm4/OpenMLDB) | [官方文档](https://openmldb.ai/docs/)
+> 📚 **参考资料**：[OpenMLDB 仓库](https://gitee.com/paradigm4/OpenMLDB) | [官方文档](https://openmldb.ai/docs/) | 已测试版本 OpenMLDB v0.9+
 
 ---
 

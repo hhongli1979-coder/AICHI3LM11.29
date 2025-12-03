@@ -156,6 +156,7 @@ OmniCore Wallet's AI Risk Intelligence leverages [OpenMLDB](https://openmldb.ai/
 
 ```typescript
 // Feature computation for transaction risk analysis
+// Note: Validate senderAddress format before querying (e.g., 0x-prefixed hex string)
 const riskFeatures = await openmldb.computeFeatures(`
   SELECT 
     COUNT(*) OVER (PARTITION BY sender ORDER BY timestamp 
@@ -169,7 +170,7 @@ const riskFeatures = await openmldb.computeFeatures(`
 `, [senderAddress]);
 ```
 
-> 📚 **Reference**: [OpenMLDB Repository](https://gitee.com/paradigm4/OpenMLDB) | [Documentation](https://openmldb.ai/docs/)
+> 📚 **Reference**: [OpenMLDB Repository](https://gitee.com/paradigm4/OpenMLDB) | [Documentation](https://openmldb.ai/docs/) | Tested with OpenMLDB v0.9+
 
 ---
 
