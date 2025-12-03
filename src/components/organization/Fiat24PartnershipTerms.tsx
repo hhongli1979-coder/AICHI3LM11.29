@@ -36,7 +36,7 @@ export function Fiat24PartnershipTerms() {
               <p>
                 <strong>钱包提供商</strong>或合作伙伴钱包或简称合作伙伴是指提供数字钱包的法人实体（公司），用户可以使用这些数字钱包创建他们的 Fiat24 账户。
               </p>
-              <p>以上每一方都是一个政党，它们共同组成各方。</p>
+              <p>以上每一方都是一个当事方，它们共同组成各方。</p>
               <p>
                 <strong>Fiat24 NFT</strong>是由 Saphirstein 独家发行的非同质化 ERC-721 数字代币。每个 NFT 都有一个唯一的 ID 号，并发送给 Fiat24 服务的一位最终用户。NFT ID（编号）用于识别最终用户在 Fiat24 的账户，并代表最终用户与 Saphirstein 之间的合约。
               </p>
