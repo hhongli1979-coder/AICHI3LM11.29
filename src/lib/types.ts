@@ -239,3 +239,100 @@ export interface CustomEndpoint {
   headers: Record<string, string>;
   enabled: boolean;
 }
+
+// Super Agent System Types - 超级智能体系统类型
+
+export type AgentRole = 'orchestrator' | 'executor' | 'analyzer' | 'specialist' | 'monitor';
+
+export type AgentStatus = 'idle' | 'processing' | 'waiting' | 'error' | 'learning';
+
+export type TaskPriority = 'low' | 'medium' | 'high' | 'critical';
+
+export type TaskComplexity = 'simple' | 'moderate' | 'complex' | 'expert';
+
+export interface SuperAgent {
+  id: string;
+  name: string;
+  role: AgentRole;
+  status: AgentStatus;
+  capabilities: string[];
+  currentTask?: string;
+  performanceScore: number;
+  tasksCompleted: number;
+  successRate: number;
+  avgResponseTime: number;
+  lastActiveAt: number;
+  createdAt: number;
+}
+
+export interface AgentTask {
+  id: string;
+  name: string;
+  description: string;
+  priority: TaskPriority;
+  complexity: TaskComplexity;
+  assignedAgents: string[];
+  requiredCapabilities: string[];
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  progress: number;
+  estimatedTime: number;
+  actualTime?: number;
+  result?: string;
+  createdAt: number;
+  startedAt?: number;
+  completedAt?: number;
+}
+
+export interface AgentCollaborationSession {
+  id: string;
+  name: string;
+  participants: string[];
+  orchestratorId: string;
+  currentPhase: 'planning' | 'execution' | 'validation' | 'complete';
+  tasks: AgentTask[];
+  messages: CollaborationMessage[];
+  startedAt: number;
+  completedAt?: number;
+}
+
+export interface CollaborationMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  content: string;
+  type: 'instruction' | 'status' | 'result' | 'error' | 'suggestion';
+  timestamp: number;
+}
+
+export interface AgentEvolutionMetrics {
+  id: string;
+  agentId: string;
+  period: 'daily' | 'weekly' | 'monthly';
+  successRate: number;
+  responseTimeImprovement: number;
+  newCapabilitiesLearned: number;
+  collaborationScore: number;
+  userSatisfaction: number;
+  costEfficiency: number;
+  timestamp: number;
+}
+
+export interface SuperAgentSystemState {
+  agents: SuperAgent[];
+  activeTasks: AgentTask[];
+  collaborationSessions: AgentCollaborationSession[];
+  evolutionMetrics: AgentEvolutionMetrics[];
+  systemHealth: {
+    cpuUsage: number;
+    memoryUsage: number;
+    activeConnections: number;
+    queuedTasks: number;
+  };
+  settings: {
+    enableDynamicScheduling: boolean;
+    enableAutoEvolution: boolean;
+    enableFaultTolerance: boolean;
+    maxConcurrentTasks: number;
+    batchProcessingEnabled: boolean;
+  };
+}
