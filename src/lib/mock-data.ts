@@ -1,4 +1,4 @@
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, SuperAgent, AgentTask, AgentCollaborationSession, AgentEvolutionMetrics, SuperAgentSystemState } from './types';
 
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
@@ -638,5 +638,268 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableLocalProcessing: true,
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
+  };
+}
+
+// Super Agent System Mock Data - 超级智能体系统
+
+export function generateMockSuperAgents(): SuperAgent[] {
+  return [
+    {
+      id: 'agent-orchestrator',
+      name: '主控智能体',
+      role: 'orchestrator',
+      status: 'processing',
+      capabilities: ['任务分解', '资源调度', '协同协调', '全局监控'],
+      currentTask: '协调DeFi策略优化任务',
+      performanceScore: 95,
+      tasksCompleted: 1250,
+      successRate: 98.5,
+      avgResponseTime: 120,
+      lastActiveAt: Date.now() - 30 * 1000,
+      createdAt: Date.now() - 90 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'agent-wallet',
+      name: '钱包管理专家',
+      role: 'specialist',
+      status: 'idle',
+      capabilities: ['钱包创建', '余额查询', '多签管理', 'Gas优化'],
+      performanceScore: 92,
+      tasksCompleted: 3420,
+      successRate: 99.2,
+      avgResponseTime: 85,
+      lastActiveAt: Date.now() - 5 * 60 * 1000,
+      createdAt: Date.now() - 60 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'agent-defi',
+      name: 'DeFi策略专家',
+      role: 'specialist',
+      status: 'processing',
+      capabilities: ['收益分析', '风险评估', '策略执行', 'APY优化'],
+      currentTask: '分析Aave V3最优借贷策略',
+      performanceScore: 88,
+      tasksCompleted: 890,
+      successRate: 94.5,
+      avgResponseTime: 250,
+      lastActiveAt: Date.now() - 2 * 60 * 1000,
+      createdAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'agent-risk',
+      name: '风险分析专家',
+      role: 'analyzer',
+      status: 'processing',
+      capabilities: ['地址风险评估', '交易模式识别', '欺诈检测', '合规检查'],
+      currentTask: '评估待处理交易风险',
+      performanceScore: 96,
+      tasksCompleted: 5680,
+      successRate: 99.8,
+      avgResponseTime: 150,
+      lastActiveAt: Date.now() - 1 * 60 * 1000,
+      createdAt: Date.now() - 75 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'agent-executor',
+      name: '交易执行器',
+      role: 'executor',
+      status: 'waiting',
+      capabilities: ['交易签名', '广播执行', '状态监控', '重试机制'],
+      performanceScore: 94,
+      tasksCompleted: 2340,
+      successRate: 99.5,
+      avgResponseTime: 200,
+      lastActiveAt: Date.now() - 10 * 60 * 1000,
+      createdAt: Date.now() - 50 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'agent-monitor',
+      name: '系统监控器',
+      role: 'monitor',
+      status: 'processing',
+      capabilities: ['性能监控', '异常检测', '告警触发', '日志分析'],
+      currentTask: '持续监控系统健康状态',
+      performanceScore: 98,
+      tasksCompleted: 12500,
+      successRate: 99.9,
+      avgResponseTime: 50,
+      lastActiveAt: Date.now() - 10 * 1000,
+      createdAt: Date.now() - 90 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockAgentTasks(): AgentTask[] {
+  return [
+    {
+      id: 'task-1',
+      name: 'DeFi收益优化',
+      description: '分析当前DeFi头寸并提出优化建议',
+      priority: 'high',
+      complexity: 'complex',
+      assignedAgents: ['agent-defi', 'agent-risk'],
+      requiredCapabilities: ['收益分析', '风险评估'],
+      status: 'in_progress',
+      progress: 65,
+      estimatedTime: 300,
+      createdAt: Date.now() - 10 * 60 * 1000,
+      startedAt: Date.now() - 8 * 60 * 1000,
+    },
+    {
+      id: 'task-2',
+      name: '交易风险评估',
+      description: '评估待处理的大额交易风险',
+      priority: 'critical',
+      complexity: 'moderate',
+      assignedAgents: ['agent-risk'],
+      requiredCapabilities: ['地址风险评估', '交易模式识别'],
+      status: 'in_progress',
+      progress: 85,
+      estimatedTime: 120,
+      createdAt: Date.now() - 5 * 60 * 1000,
+      startedAt: Date.now() - 4 * 60 * 1000,
+    },
+    {
+      id: 'task-3',
+      name: 'Gas费用优化',
+      description: '分析最佳交易时机以降低Gas费用',
+      priority: 'medium',
+      complexity: 'simple',
+      assignedAgents: ['agent-wallet'],
+      requiredCapabilities: ['Gas优化'],
+      status: 'completed',
+      progress: 100,
+      estimatedTime: 60,
+      actualTime: 45,
+      result: '建议在UTC 4:00-6:00执行交易，预计节省35% Gas费用',
+      createdAt: Date.now() - 30 * 60 * 1000,
+      startedAt: Date.now() - 28 * 60 * 1000,
+      completedAt: Date.now() - 20 * 60 * 1000,
+    },
+    {
+      id: 'task-4',
+      name: '多签钱包创建',
+      description: '创建新的3/5多签钱包',
+      priority: 'low',
+      complexity: 'moderate',
+      assignedAgents: ['agent-wallet', 'agent-executor'],
+      requiredCapabilities: ['钱包创建', '多签管理'],
+      status: 'pending',
+      progress: 0,
+      estimatedTime: 180,
+      createdAt: Date.now() - 2 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockCollaborationSessions(): AgentCollaborationSession[] {
+  return [
+    {
+      id: 'session-1',
+      name: '复杂DeFi策略执行',
+      participants: ['agent-orchestrator', 'agent-defi', 'agent-risk', 'agent-executor'],
+      orchestratorId: 'agent-orchestrator',
+      currentPhase: 'execution',
+      tasks: generateMockAgentTasks().slice(0, 2),
+      messages: [
+        {
+          id: 'msg-1',
+          senderId: 'agent-orchestrator',
+          senderName: '主控智能体',
+          content: '启动DeFi策略优化协作会话，分配任务给各专家智能体',
+          type: 'instruction',
+          timestamp: Date.now() - 10 * 60 * 1000,
+        },
+        {
+          id: 'msg-2',
+          senderId: 'agent-risk',
+          senderName: '风险分析专家',
+          content: '已完成初步风险评估，当前策略整体风险等级：中低',
+          type: 'result',
+          timestamp: Date.now() - 8 * 60 * 1000,
+        },
+        {
+          id: 'msg-3',
+          senderId: 'agent-defi',
+          senderName: 'DeFi策略专家',
+          content: '正在分析Aave V3与Compound对比数据，预计3分钟完成',
+          type: 'status',
+          timestamp: Date.now() - 5 * 60 * 1000,
+        },
+        {
+          id: 'msg-4',
+          senderId: 'agent-defi',
+          senderName: 'DeFi策略专家',
+          content: '建议将30%资金从Compound迁移至Aave V3，可提升APY 1.2%',
+          type: 'suggestion',
+          timestamp: Date.now() - 2 * 60 * 1000,
+        },
+      ],
+      startedAt: Date.now() - 10 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockEvolutionMetrics(): AgentEvolutionMetrics[] {
+  return [
+    {
+      id: 'evo-1',
+      agentId: 'agent-orchestrator',
+      period: 'weekly',
+      successRate: 98.5,
+      responseTimeImprovement: 12,
+      newCapabilitiesLearned: 2,
+      collaborationScore: 96,
+      userSatisfaction: 94,
+      costEfficiency: 88,
+      timestamp: Date.now() - 1 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'evo-2',
+      agentId: 'agent-defi',
+      period: 'weekly',
+      successRate: 94.5,
+      responseTimeImprovement: 18,
+      newCapabilitiesLearned: 3,
+      collaborationScore: 92,
+      userSatisfaction: 91,
+      costEfficiency: 85,
+      timestamp: Date.now() - 1 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'evo-3',
+      agentId: 'agent-risk',
+      period: 'weekly',
+      successRate: 99.8,
+      responseTimeImprovement: 8,
+      newCapabilitiesLearned: 1,
+      collaborationScore: 95,
+      userSatisfaction: 97,
+      costEfficiency: 92,
+      timestamp: Date.now() - 1 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockSuperAgentSystemState(): SuperAgentSystemState {
+  return {
+    agents: generateMockSuperAgents(),
+    activeTasks: generateMockAgentTasks(),
+    collaborationSessions: generateMockCollaborationSessions(),
+    evolutionMetrics: generateMockEvolutionMetrics(),
+    systemHealth: {
+      cpuUsage: 42,
+      memoryUsage: 68,
+      activeConnections: 156,
+      queuedTasks: 8,
+    },
+    settings: {
+      enableDynamicScheduling: true,
+      enableAutoEvolution: true,
+      enableFaultTolerance: true,
+      maxConcurrentTasks: 10,
+      batchProcessingEnabled: true,
+    },
   };
 }

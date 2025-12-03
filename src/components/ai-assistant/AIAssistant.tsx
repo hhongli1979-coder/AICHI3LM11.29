@@ -21,6 +21,7 @@ import {
   Memory,
   Gear,
   Database,
+  Users,
 } from '@phosphor-icons/react';
 import {
   generateMockAIAssistantState,
@@ -28,6 +29,7 @@ import {
 } from '@/lib/mock-data';
 import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
 import { AIModelSettingsPanel } from './AIModelSettings';
+import { SuperAgentDashboard } from './SuperAgentDashboard';
 
 function getCapabilityIcon(iconName: string) {
   const icons: Record<string, React.ReactNode> = {
@@ -293,8 +295,8 @@ export function AIAssistant() {
       </div>
 
       <Tabs defaultValue="chat" className="space-y-4">
-        {/* TabsList with 4 tabs: 对话, 记忆, 能力, 模型 */}
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+        {/* TabsList with 5 tabs: 对话, 记忆, 能力, 模型, 超级智能体 */}
+        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
           <TabsTrigger value="chat" className="gap-2">
             <ChatCircle size={18} weight="duotone" />
             <span className="hidden sm:inline">对话</span>
@@ -310,6 +312,10 @@ export function AIAssistant() {
           <TabsTrigger value="models" className="gap-2">
             <Database size={18} weight="duotone" />
             <span className="hidden sm:inline">模型</span>
+          </TabsTrigger>
+          <TabsTrigger value="super-agent" className="gap-2">
+            <Users size={18} weight="duotone" />
+            <span className="hidden sm:inline">超级智能体</span>
           </TabsTrigger>
         </TabsList>
 
@@ -490,6 +496,10 @@ export function AIAssistant() {
 
         <TabsContent value="models" className="space-y-4">
           <AIModelSettingsPanel />
+        </TabsContent>
+
+        <TabsContent value="super-agent" className="space-y-4">
+          <SuperAgentDashboard />
         </TabsContent>
       </Tabs>
     </div>
