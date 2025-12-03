@@ -1,26 +1,62 @@
 {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
+  "name": "aichi3lm-integrated",
+  "description": "Integrated project with OmniCore Wallet frontend and Firebase Cloud Functions backend",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
+    "dev": "vite --port 5000",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
     "lint": "eslint .",
-    "serve": "firebase emulators:start --only functions",
-    "shell": "firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "functions:serve": "firebase emulators:start --only functions",
+    "functions:shell": "firebase functions:shell",
+    "functions:deploy": "firebase deploy --only functions",
+    "functions:logs": "firebase functions:log"
   },
   "engines": {
-    "node": "22"
+    "node": ">=18"
   },
   "main": "index.js",
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.7",
+    "@radix-ui/colors": "^3.0.0",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-popover": "^1.1.14",
+    "@radix-ui/react-progress": "^1.1.7",
+    "@radix-ui/react-radio-group": "^1.3.8",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slider": "^1.3.6",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.2.5",
+    "@radix-ui/react-tabs": "^1.1.12",
+    "@radix-ui/react-tooltip": "^1.2.7",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.4.0"
+    "firebase-functions": "^6.4.0",
+    "lucide-react": "^0.511.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-error-boundary": "^6.0.0",
+    "sonner": "^2.0.3",
+    "tailwind-merge": "^3.3.0",
+    "tw-animate-css": "^1.4.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.7",
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react-swc": "^3.10.0",
     "eslint": "^8.57.1",
     "eslint-config-google": "^0.14.0",
-    "firebase-functions-test": "^3.1.0"
+    "firebase-functions-test": "^3.1.0",
+    "tailwindcss": "^4.1.7",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   },
   "private": true
 }
