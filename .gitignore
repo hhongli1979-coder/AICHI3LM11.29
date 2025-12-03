@@ -9,12 +9,15 @@ firebase-debug.*.log*
 pglite-debug.log
 
 # IDE / Editor directories
+## Visual Studio
 .vs/
-.vscode/
-.idea/
 *.suo
 *.user
 *.sln.docstates
+## VS Code
+.vscode/
+## JetBrains IDEs
+.idea/
 
 # Firebase cache
 .firebase/
