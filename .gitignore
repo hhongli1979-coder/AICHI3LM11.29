@@ -6,6 +6,15 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 firebase-debug.*.log*
+pglite-debug.log
+
+# IDE / Editor directories
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln.docstates
 
 # Firebase cache
 .firebase/
