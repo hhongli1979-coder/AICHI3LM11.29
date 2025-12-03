@@ -9,6 +9,7 @@
   <a href="#quick-start">Quick Start</a> •
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#project-structure">Project Structure</a> •
+  <a href="#ai-application-building-tools">AI Tools</a> •
   <a href="#documentation">Documentation</a>
 </p>
 
@@ -173,6 +174,32 @@ import { Wallet, ChartLine } from '@phosphor-icons/react';
 - Use Tailwind CSS classes and CSS variables
 - Use semantic tokens like `bg-accent-9`, `text-muted-foreground`
 - Dark mode via `[data-appearance="dark"]` selector
+
+---
+
+## AI Application Building Tools
+
+### BuildingAI
+
+[BuildingAI](https://gitee.com/BidingCC/BuildingAI) is an enterprise-grade open-source AI application building platform with visual frontend UI capabilities.
+
+| Feature | Description |
+|---------|-------------|
+| Visual Frontend UI | Drag-and-drop interface for zero-code AI application composition |
+| Intelligent Agents | Create and manage autonomous AI agents |
+| Workflow Automation | Automate AI tasks with flexible workflow system |
+| Model Management | Deploy and manage AI models including LLMs |
+| Knowledge Base | Centralized management of knowledge resources |
+| Business Integration | Native support for billing, payment, and membership |
+| Plugin System | Extend platform functionality with custom plugins |
+
+**Use Cases in OmniCore Wallet:**
+- Visual configuration of AI Risk Intelligence workflows
+- Zero-code creation of custom AI agents for transaction analysis
+- Integration of knowledge bases for compliance and regulatory information
+- Building customer-facing AI chatbots for wallet support
+
+**Repository:** [gitee.com/BidingCC/BuildingAI](https://gitee.com/BidingCC/BuildingAI)
 
 ---
 

@@ -9,6 +9,7 @@
   <a href="#快速开始">快速开始</a> •
   <a href="#技术架构">技术架构</a> •
   <a href="#项目结构">项目结构</a> •
+  <a href="#ai-应用构建工具">AI 工具</a> •
   <a href="#开发指南">开发指南</a>
 </p>
 
@@ -250,6 +251,32 @@ npm run kill
 ```bash
 npm install --legacy-peer-deps
 ```
+
+---
+
+## AI 应用构建工具
+
+### BuildingAI
+
+[BuildingAI](https://gitee.com/BidingCC/BuildingAI) 是一个企业级开源 AI 应用构建平台，提供可视化前端 UI 能力。
+
+| 功能 | 描述 |
+|------|------|
+| 可视化前端 UI | 拖拽式界面，无需代码即可构建 AI 应用 |
+| 智能体 | 创建和管理自主 AI 智能体 |
+| 工作流自动化 | 通过灵活的工作流系统自动化 AI 任务 |
+| 模型管理 | 部署和管理 AI 模型，包括大语言模型 |
+| 知识库 | 集中管理知识资源 |
+| 业务集成 | 原生支持计费、支付和会员系统 |
+| 插件系统 | 通过自定义插件扩展平台功能 |
+
+**在 OmniCore 钱包中的应用场景：**
+- 可视化配置 AI 风险智能工作流
+- 零代码创建用于交易分析的自定义 AI 智能体
+- 集成合规和监管信息的知识库
+- 构建面向客户的钱包支持 AI 聊天机器人
+
+**仓库地址：** [gitee.com/BidingCC/BuildingAI](https://gitee.com/BidingCC/BuildingAI)
 
 ---
 
