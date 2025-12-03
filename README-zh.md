@@ -91,6 +91,23 @@ npm run preview
 | `npm run lint` | 运行 ESLint 代码检查 |
 | `npm run kill` | 释放 5000 端口（如被占用） |
 
+### Docker 部署
+
+使用 Docker 构建和运行应用：
+
+```bash
+# 构建 Docker 镜像
+docker build -t omnicore-wallet .
+
+# 运行容器
+docker run -p 80:80 omnicore-wallet
+
+# 或者使用 docker-compose
+docker compose up --build
+```
+
+应用将在 `http://localhost` 上可用。
+
 ---
 
 ## 技术架构

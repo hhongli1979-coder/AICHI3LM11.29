@@ -76,6 +76,23 @@ npm run preview
 | `npm run lint` | Run ESLint code linting |
 | `npm run kill` | Free port 5000 if stuck |
 
+### Docker Deployment
+
+Build and run the application using Docker:
+
+```bash
+# Build the Docker image
+docker build -t omnicore-wallet .
+
+# Run the container
+docker run -p 80:80 omnicore-wallet
+
+# Or use docker-compose
+docker compose up --build
+```
+
+The application will be available at `http://localhost`.
+
 ---
 
 ## Tech Stack
