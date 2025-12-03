@@ -9,6 +9,7 @@
   <a href="#quick-start">Quick Start</a> •
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#project-structure">Project Structure</a> •
+  <a href="#low-code-development-tools">Low-Code Tools</a> •
   <a href="#documentation">Documentation</a>
 </p>
 
@@ -179,6 +180,23 @@ import { Wallet, ChartLine } from '@phosphor-icons/react';
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Low-Code Development Tools
+
+For rapid UI prototyping and development, consider using VTJ - an AI-driven Vue3 low-code platform:
+
+| Tool | Description | Repository |
+|------|-------------|------------|
+| VTJ | AI-powered Vue3 low-code development platform with visual designer, bi-directional code generation, and multi-platform output | [gitee.com/newgateway/vtj](https://gitee.com/newgateway/vtj) |
+
+### VTJ Features
+
+- **Visual Designer**: Drag-and-drop interface builder with real-time preview
+- **Bi-Directional Code**: Convert between Vue SFC and visual design without lock-in
+- **AI Code Generation**: Generate Vue components from text prompts or design files
+- **Multi-Platform Output**: Deploy to Web, H5 mobile, and UniApp cross-platform
 
 ---
 
