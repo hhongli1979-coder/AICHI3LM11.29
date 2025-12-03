@@ -241,7 +241,7 @@ export function Fiat24SendDialog({ open, onOpenChange, balances, contacts }: Fia
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">To</span>
                 <span className="font-mono text-xs">
-                  {sendType === 'address' && recipient.slice(0, 10) + '...'}
+                  {sendType === 'address' && (recipient.length > 10 ? recipient.slice(0, 10) + '...' : recipient)}
                   {sendType === 'accountId' && `Account #${accountId}`}
                   {sendType === 'contact' && contacts.find((c) => c.contactId === selectedContact)?.platform}
                 </span>
