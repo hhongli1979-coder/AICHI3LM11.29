@@ -7,7 +7,7 @@
  * @module mock-data
  */
 
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, Fiat24Account, Fiat24CashBalance, Fiat24Limits, Fiat24Transaction, Fiat24CardApproval, Fiat24Contact, Fiat24State, Fiat24ExchangeQuote } from './types';
 
 // ============================================================================
 // Network Configuration
@@ -784,4 +784,353 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
   };
+}
+
+// ============================================================================
+// Fiat24 Banking Integration Mock Data
+// ============================================================================
+
+/**
+ * Fiat24 contract addresses on Arbitrum
+ * These are the official contract addresses from the Fiat24 documentation
+ */
+export const FIAT24_CONTRACTS = {
+  arbitrum: {
+    // ERC-721 NFT Account Contract
+    account: '0x133CAEecA096cA54889db71956c7f75862Ead7A0',
+    // ERC-20 Cash Token Contracts
+    USD24: '0xbE00f3db78688d9704BCb4e0a827aea3a9Cc0D62',
+    CHF24: '0xd41F1f0cf89fD239ca4c1F8E8ADA46345c86b0a4',
+    EUR24: '0x2c5d06f591D0d8cd43Ac232c2B654475a142c7DA',
+    CNH24: '0x7288Ac74d211735374A23707D1518DCbbc0144fd',
+    // F24 Utility Token
+    F24: '0x22043fDdF353308B4F2e7dA2e5284E4D087449e1',
+    // Crypto Deposit/FX Contract
+    cryptoDeposit: '0x4582f67698843Dfb6A9F195C0dDee05B0A8C973F',
+    // Card Authorization Contract
+    cardAuthorizer: '0xe2e3B88B9893e18D0867c08f9cA93f8aB5935b14',
+    // Official USDC on Arbitrum
+    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+    // WETH on Arbitrum
+    WETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+  },
+  mantle: {
+    // Mantle network contracts (to be filled when available)
+    account: '',
+    USD24: '',
+    CHF24: '',
+    EUR24: '',
+    CNH24: '',
+  },
+};
+
+/**
+ * Fiat24 currency metadata
+ */
+export const FIAT24_CURRENCIES = {
+  USD24: { name: 'US Dollar', symbol: '$', decimals: 2, icon: '🇺🇸', color: '#22C55E' },
+  EUR24: { name: 'Euro', symbol: '€', decimals: 2, icon: '🇪🇺', color: '#3B82F6' },
+  CHF24: { name: 'Swiss Franc', symbol: 'CHF', decimals: 2, icon: '🇨🇭', color: '#EF4444' },
+  CNH24: { name: 'Chinese Yuan (Offshore)', symbol: '¥', decimals: 2, icon: '🇨🇳', color: '#F59E0B' },
+};
+
+/**
+ * Generate mock Fiat24 account data
+ */
+export function generateMockFiat24Account(): Fiat24Account {
+  return {
+    tokenId: 102365,
+    ownerAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
+    status: 'live',
+    iban: 'CH93 0024 1102 3650 0001 E',
+    isWalletProvider: false,
+    createdAt: Date.now() - 90 * 24 * 60 * 60 * 1000,
+    isPremium: false,
+    network: 'arbitrum',
+  };
+}
+
+/**
+ * Generate mock Fiat24 cash balances
+ */
+export function generateMockFiat24Balances(): Fiat24CashBalance[] {
+  return [
+    {
+      currency: 'USD24',
+      contractAddress: FIAT24_CONTRACTS.arbitrum.USD24,
+      balance: '15234.56',
+      balanceUsd: '15234.56',
+      exchangeRateUsd: 1.0,
+    },
+    {
+      currency: 'EUR24',
+      contractAddress: FIAT24_CONTRACTS.arbitrum.EUR24,
+      balance: '8750.00',
+      balanceUsd: '9537.50',
+      exchangeRateUsd: 1.09,
+    },
+    {
+      currency: 'CHF24',
+      contractAddress: FIAT24_CONTRACTS.arbitrum.CHF24,
+      balance: '5000.00',
+      balanceUsd: '5650.00',
+      exchangeRateUsd: 1.13,
+    },
+    {
+      currency: 'CNH24',
+      contractAddress: FIAT24_CONTRACTS.arbitrum.CNH24,
+      balance: '25000.00',
+      balanceUsd: '3472.22',
+      exchangeRateUsd: 0.139,
+    },
+  ];
+}
+
+/**
+ * Generate mock Fiat24 account limits
+ */
+export function generateMockFiat24Limits(): Fiat24Limits {
+  const now = Date.now();
+  const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+  return {
+    clientLimit: 10000000, // 100,000 CHF in cents
+    usedLimit: 2500000,    // 25,000 CHF used
+    startLimitDate: now - 15 * 24 * 60 * 60 * 1000,
+    restartLimitDate: now + 15 * 24 * 60 * 60 * 1000,
+  };
+}
+
+/**
+ * Generate mock Fiat24 transactions
+ */
+export function generateMockFiat24Transactions(): Fiat24Transaction[] {
+  return [
+    {
+      id: 'f24-tx-1',
+      type: 'crypto_deposit',
+      from: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+      to: '102365',
+      amount: 52345,
+      currency: 'USD24',
+      status: 'confirmed',
+      hash: '0xabc123...def456',
+      description: '0.5 ETH converted to USD24',
+      createdAt: Date.now() - 2 * 60 * 60 * 1000,
+      network: 'arbitrum',
+    },
+    {
+      id: 'f24-tx-2',
+      type: 'p2p_transfer',
+      from: '102365',
+      to: '89012',
+      amount: 100000,
+      currency: 'EUR24',
+      status: 'confirmed',
+      hash: '0x789abc...123def',
+      description: 'Payment to supplier',
+      createdAt: Date.now() - 24 * 60 * 60 * 1000,
+      network: 'arbitrum',
+    },
+    {
+      id: 'f24-tx-3',
+      type: 'card_payment',
+      from: '102365',
+      to: 'Card Payment',
+      amount: 4599,
+      currency: 'EUR24',
+      status: 'confirmed',
+      description: 'Online purchase',
+      createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+      network: 'arbitrum',
+    },
+    {
+      id: 'f24-tx-4',
+      type: 'exchange',
+      from: 'USD24',
+      to: 'EUR24',
+      amount: 50000,
+      currency: 'USD24',
+      status: 'confirmed',
+      hash: '0xdef789...abc123',
+      description: 'Currency exchange',
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      network: 'arbitrum',
+    },
+    {
+      id: 'f24-tx-5',
+      type: 'cash_payout',
+      from: '102365',
+      to: '9102',
+      amount: 200000,
+      currency: 'CHF24',
+      status: 'pending',
+      description: 'Bank transfer to external account',
+      createdAt: Date.now() - 1 * 60 * 60 * 1000,
+      network: 'arbitrum',
+    },
+  ];
+}
+
+/**
+ * Generate mock Fiat24 card approvals
+ */
+export function generateMockFiat24CardApprovals(): Fiat24CardApproval[] {
+  return [
+    {
+      authorizerAddress: FIAT24_CONTRACTS.arbitrum.cardAuthorizer,
+      currency: 'EUR24',
+      approvedAmount: 500000,
+      remainingAmount: 345600,
+      approvedAt: Date.now() - 7 * 24 * 60 * 60 * 1000,
+    },
+    {
+      authorizerAddress: FIAT24_CONTRACTS.arbitrum.cardAuthorizer,
+      currency: 'USD24',
+      approvedAmount: 1000000,
+      remainingAmount: 750000,
+      approvedAt: Date.now() - 14 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+/**
+ * Generate mock Fiat24 whitelisted contacts
+ */
+export function generateMockFiat24Contacts(): Fiat24Contact[] {
+  return [
+    {
+      contactId: 'EA-00000739',
+      name: 'Payward Ltd.',
+      platform: 'Kraken',
+      currencies: ['EUR24'],
+      enabled: true,
+    },
+    {
+      contactId: 'EA-00000740',
+      name: 'UAB Bifinity',
+      platform: 'Binance',
+      currencies: ['EUR24'],
+      enabled: true,
+    },
+    {
+      contactId: 'EA-00000741',
+      name: 'CB Payments Ltd.',
+      platform: 'Coinbase',
+      currencies: ['EUR24'],
+      enabled: true,
+    },
+    {
+      contactId: 'EA-00000742',
+      name: 'Bitstamp Europe SA',
+      platform: 'Bitstamp',
+      currencies: ['EUR24'],
+      enabled: true,
+    },
+    {
+      contactId: 'EA-00000738',
+      name: 'Payward Trading Ltd.',
+      platform: 'Kraken',
+      currencies: ['CHF24'],
+      enabled: true,
+    },
+  ];
+}
+
+/**
+ * Generate mock Fiat24 exchange rate quote
+ */
+export function generateMockFiat24ExchangeQuote(
+  inputCurrency: 'USD24' | 'EUR24' | 'CHF24' | 'CNH24',
+  outputCurrency: 'USD24' | 'EUR24' | 'CHF24' | 'CNH24'
+): Fiat24ExchangeQuote {
+  // Mock exchange rates (relative to USD)
+  const rates: Record<string, number> = {
+    'USD24': 1.0,
+    'EUR24': 0.92,
+    'CHF24': 0.88,
+    'CNH24': 7.2,
+  };
+  
+  const inputRate = rates[inputCurrency];
+  const outputRate = rates[outputCurrency];
+  const rate = Math.round((inputRate / outputRate) * 10000);
+  
+  return {
+    inputCurrency,
+    outputCurrency,
+    rate,
+    spread: 9950, // 0.5% spread (10000 - 50)
+    reverseSpread: 10050, // 0.5% reverse spread
+    timestamp: Date.now(),
+  };
+}
+
+/**
+ * Generate complete Fiat24 state
+ */
+export function generateMockFiat24State(): Fiat24State {
+  return {
+    account: generateMockFiat24Account(),
+    balances: generateMockFiat24Balances(),
+    limits: generateMockFiat24Limits(),
+    transactions: generateMockFiat24Transactions(),
+    cardApprovals: generateMockFiat24CardApprovals(),
+    contacts: generateMockFiat24Contacts(),
+    isConnected: true,
+    network: 'arbitrum',
+  };
+}
+
+/**
+ * Format Fiat24 amount (cents to display value)
+ * @param amount Amount in cents (integer)
+ * @param currency Currency code
+ * @returns Formatted string with currency symbol
+ */
+export function formatFiat24Amount(amount: number, currency: 'USD24' | 'EUR24' | 'CHF24' | 'CNH24'): string {
+  const currencyInfo = FIAT24_CURRENCIES[currency];
+  const value = amount / 100;
+  return `${currencyInfo.symbol}${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+/**
+ * Get Fiat24 account status display info
+ */
+export function getFiat24StatusInfo(status: string): { label: string; color: string; description: string } {
+  switch (status) {
+    case 'live':
+      return { label: 'Live', color: 'text-green-600', description: 'Verified user with full access' };
+    case 'tourist':
+      return { label: 'Tourist', color: 'text-yellow-600', description: 'Unverified user with limited access' };
+    case 'softBlocked':
+      return { label: 'Soft Blocked', color: 'text-orange-600', description: 'Can receive only, cannot send' };
+    case 'blocked':
+      return { label: 'Blocked', color: 'text-red-600', description: 'Account frozen' };
+    case 'closed':
+      return { label: 'Closed', color: 'text-gray-600', description: 'Account closed' };
+    default:
+      return { label: 'Unknown', color: 'text-gray-600', description: 'Unknown status' };
+  }
+}
+
+/**
+ * Get Fiat24 transaction type display info
+ */
+export function getFiat24TransactionTypeInfo(type: string): { label: string; icon: string; color: string } {
+  switch (type) {
+    case 'p2p_transfer':
+      return { label: 'P2P Transfer', icon: 'ArrowsLeftRight', color: 'text-blue-600' };
+    case 'crypto_deposit':
+      return { label: 'Crypto Deposit', icon: 'CurrencyBtc', color: 'text-green-600' };
+    case 'cash_deposit':
+      return { label: 'Cash Deposit', icon: 'Bank', color: 'text-green-600' };
+    case 'cash_payout':
+      return { label: 'Cash Payout', icon: 'Wallet', color: 'text-orange-600' };
+    case 'card_payment':
+      return { label: 'Card Payment', icon: 'CreditCard', color: 'text-purple-600' };
+    case 'exchange':
+      return { label: 'Exchange', icon: 'ArrowsClockwise', color: 'text-indigo-600' };
+    default:
+      return { label: 'Transaction', icon: 'Receipt', color: 'text-gray-600' };
+  }
 }

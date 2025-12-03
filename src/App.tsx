@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Bank } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -12,12 +12,14 @@ import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
 import { OrganizationSettings } from '@/components/organization/OrganizationSettings';
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
+import { Fiat24Dashboard } from '@/components/fiat24/Fiat24Dashboard';
 import {
   generateMockWallets,
   generateMockTransactions,
   generateMockDeFiPositions,
   generateMockOmniStats,
   generateMockNotifications,
+  generateMockFiat24State,
 } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -31,6 +33,7 @@ function App() {
   const defiPositions = generateMockDeFiPositions();
   const omniStats = generateMockOmniStats();
   const notifications = generateMockNotifications();
+  const fiat24State = generateMockFiat24State();
   const unreadCount = notifications.filter(n => !n.read).length;
   
   const totalAssets = wallets.reduce((sum, wallet) => {
@@ -109,7 +112,7 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-10">
             <TabsTrigger value="overview" className="gap-2">
               <ChartLine size={18} weight="duotone" />
               <span className="hidden sm:inline">Overview</span>
@@ -117,6 +120,10 @@ function App() {
             <TabsTrigger value="wallets" className="gap-2">
               <Wallet size={18} weight="duotone" />
               <span className="hidden sm:inline">Wallets</span>
+            </TabsTrigger>
+            <TabsTrigger value="fiat24" className="gap-2">
+              <Bank size={18} weight="duotone" />
+              <span className="hidden sm:inline">Fiat24</span>
             </TabsTrigger>
             <TabsTrigger value="transactions" className="gap-2">
               <ArrowsLeftRight size={18} weight="duotone" />
@@ -190,6 +197,10 @@ function App() {
                 <WalletCard key={wallet.id} wallet={wallet} />
               ))}
             </div>
+          </TabsContent>
+          
+          <TabsContent value="fiat24" className="space-y-6">
+            <Fiat24Dashboard state={fiat24State} />
           </TabsContent>
           
           <TabsContent value="transactions" className="space-y-6">

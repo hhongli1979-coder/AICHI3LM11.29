@@ -464,3 +464,177 @@ export interface CustomEndpoint {
   /** Whether endpoint is enabled */
   enabled: boolean;
 }
+
+// ============================================================================
+// Fiat24 Banking Integration Types
+// ============================================================================
+
+/** Supported Fiat24 blockchain networks */
+export type Fiat24Network = 'arbitrum' | 'mantle';
+
+/** Fiat24 account status as defined by Fiat24Account smart contract */
+export type Fiat24AccountStatus = 
+  | 'softBlocked'    // 1: User can only receive, but cannot send/spend
+  | 'tourist'        // 2: Unverified user
+  | 'blocked'        // 3: Account frozen, cannot send or receive
+  | 'closed'         // 4: Account closed
+  | 'live';          // 5: Verified user, full access
+
+/** Fiat24 supported currencies for cash tokens */
+export type Fiat24Currency = 'USD24' | 'EUR24' | 'CHF24' | 'CNH24';
+
+/** Fiat24 NFT-based bank account */
+export interface Fiat24Account {
+  /** NFT token ID representing the bank account */
+  tokenId: number;
+  /** Wallet address holding the NFT */
+  ownerAddress: string;
+  /** Account status */
+  status: Fiat24AccountStatus;
+  /** IBAN associated with the account */
+  iban?: string;
+  /** Whether the account is a wallet provider account (8000-8999 range) */
+  isWalletProvider: boolean;
+  /** Wallet provider ID if minted by wallet provider */
+  walletProviderId?: number;
+  /** Unix timestamp of creation */
+  createdAt: number;
+  /** Whether the NFT is a premium account (1-4 digit) */
+  isPremium: boolean;
+  /** Network where the NFT is minted */
+  network: Fiat24Network;
+}
+
+/** Fiat24 cash token balance for a specific currency */
+export interface Fiat24CashBalance {
+  /** Currency code */
+  currency: Fiat24Currency;
+  /** Token contract address */
+  contractAddress: string;
+  /** Balance (divided by 100 for actual amount, 2 decimals) */
+  balance: string;
+  /** Balance in USD for display */
+  balanceUsd: string;
+  /** Exchange rate to USD */
+  exchangeRateUsd: number;
+}
+
+/** Fiat24 account limits (30-day rolling) */
+export interface Fiat24Limits {
+  /** Total 30-day client limit in cents */
+  clientLimit: number;
+  /** Used limit within 30 days in cents */
+  usedLimit: number;
+  /** Unix timestamp when limit period started */
+  startLimitDate: number;
+  /** Unix timestamp when limit resets */
+  restartLimitDate: number;
+}
+
+/** Fiat24 transaction record */
+export interface Fiat24Transaction {
+  /** Unique identifier */
+  id: string;
+  /** Transaction type */
+  type: 'p2p_transfer' | 'crypto_deposit' | 'cash_deposit' | 'cash_payout' | 'card_payment' | 'exchange';
+  /** Source account token ID or address */
+  from: string;
+  /** Destination account token ID or address */
+  to: string;
+  /** Amount in cents (divide by 100 for display) */
+  amount: number;
+  /** Currency */
+  currency: Fiat24Currency;
+  /** Transaction status */
+  status: 'pending' | 'confirmed' | 'failed';
+  /** On-chain transaction hash */
+  hash?: string;
+  /** Description or reference */
+  description?: string;
+  /** Unix timestamp */
+  createdAt: number;
+  /** Network */
+  network: Fiat24Network;
+}
+
+/** Fiat24 crypto deposit parameters */
+export interface Fiat24CryptoDeposit {
+  /** Input token address (crypto) */
+  inputToken: string;
+  /** Output token address (Fiat24 cash token) */
+  outputToken: Fiat24Currency;
+  /** Input amount in wei/smallest unit */
+  inputAmount: string;
+  /** Expected output amount (after fees and exchange) */
+  expectedOutputAmount: string;
+  /** Fee in USDC */
+  fee: string;
+  /** Exchange rate applied */
+  exchangeRate: number;
+  /** Spread applied */
+  spread: number;
+}
+
+/** Fiat24 card authorization approval */
+export interface Fiat24CardApproval {
+  /** Card authorization contract address */
+  authorizerAddress: string;
+  /** Currency approved for spending */
+  currency: Fiat24Currency;
+  /** Approved amount in cents */
+  approvedAmount: number;
+  /** Remaining approved amount */
+  remainingAmount: number;
+  /** Unix timestamp of approval */
+  approvedAt: number;
+}
+
+/** Fiat24 exchange rate quote */
+export interface Fiat24ExchangeQuote {
+  /** Input currency */
+  inputCurrency: Fiat24Currency;
+  /** Output currency */
+  outputCurrency: Fiat24Currency;
+  /** Exchange rate (multiply by input for output, divided by 10000) */
+  rate: number;
+  /** Spread for exact in (divided by 10000) */
+  spread: number;
+  /** Reverse spread for exact out (divided by 10000) */
+  reverseSpread: number;
+  /** Timestamp when quote was fetched */
+  timestamp: number;
+}
+
+/** Fiat24 whitelisted contact for special payments */
+export interface Fiat24Contact {
+  /** Contact ID (e.g., EA-00000739) */
+  contactId: string;
+  /** Recipient name */
+  name: string;
+  /** Platform name (e.g., Kraken, Binance) */
+  platform: string;
+  /** Supported currencies */
+  currencies: Fiat24Currency[];
+  /** Whether contact is enabled */
+  enabled: boolean;
+}
+
+/** Fiat24 integration state for the wallet */
+export interface Fiat24State {
+  /** Connected Fiat24 account */
+  account: Fiat24Account | null;
+  /** Cash token balances */
+  balances: Fiat24CashBalance[];
+  /** Account limits */
+  limits: Fiat24Limits | null;
+  /** Recent transactions */
+  transactions: Fiat24Transaction[];
+  /** Card approvals */
+  cardApprovals: Fiat24CardApproval[];
+  /** Whitelisted contacts */
+  contacts: Fiat24Contact[];
+  /** Whether connected to Fiat24 */
+  isConnected: boolean;
+  /** Current network */
+  network: Fiat24Network;
+}
