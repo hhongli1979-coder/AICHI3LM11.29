@@ -12,6 +12,7 @@ import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
 import { OrganizationSettings } from '@/components/organization/OrganizationSettings';
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
+import { PaymentGateway } from '@/components/payment/PaymentGateway';
 import {
   generateMockWallets,
   generateMockTransactions,
@@ -217,26 +218,7 @@ function App() {
           </TabsContent>
           
           <TabsContent value="payments" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold">Payment Gateway</h2>
-              <Button className="gap-2">
-                <CreditCard size={18} weight="bold" />
-                Create Payment Link
-              </Button>
-            </div>
-            
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="border rounded-lg p-8 text-center text-muted-foreground">
-                <CreditCard size={48} weight="duotone" className="mx-auto mb-4 text-primary" />
-                <p>Accept payments via crypto, credit cards, Alipay, WeChat Pay, and UnionPay</p>
-                <Button className="mt-4">Set Up Payment Gateway</Button>
-              </div>
-              <div className="border rounded-lg p-8 text-center text-muted-foreground">
-                <Coins size={48} weight="duotone" className="mx-auto mb-4 text-accent" />
-                <p>Create payment links and QR codes for instant settlements</p>
-                <Button variant="outline" className="mt-4">View Documentation</Button>
-              </div>
-            </div>
+            <PaymentGateway />
           </TabsContent>
           
           <TabsContent value="omni" className="space-y-6">
