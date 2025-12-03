@@ -233,6 +233,47 @@ import { Wallet, ChartLine, ShieldCheck } from '@phosphor-icons/react';
 
 ---
 
+## OpenMLDB 实时特征平台
+
+OmniCore 钱包的 AI 风险智能模块采用 [OpenMLDB](https://openmldb.ai/) 进行实时特征工程。OpenMLDB 是一个开源的机器学习数据库，为模型训练和推理提供一致、快速、生产就绪的特征计算能力。
+
+### 核心特性
+
+| 特性 | 描述 |
+|------|------|
+| **SQL 驱动的特征工程** | 使用 SQL 开发特征脚本，无需切换编程语言 |
+| **实时计算** | 毫秒级超低延迟，支持时间序列和窗口操作 |
+| **线上线下一致性** | 统一执行引擎确保训练和推理阶段特征一致 |
+| **企业级可靠性** | 自动故障恢复、无缝扩展、全面监控 |
+
+### 在 OmniCore 钱包中的应用场景
+
+- **交易风险分析**：实时特征计算用于欺诈检测和风险评分
+- **地址风险评估**：对区块链地址行为进行模式识别
+- **市场预测**：DeFi 资金自动化的时间序列分析
+- **AML/KYC 合规**：监管合规检查的特征工程
+
+### 集成示例
+
+```typescript
+// 交易风险分析的特征计算
+const riskFeatures = await openmldb.computeFeatures(`
+  SELECT 
+    COUNT(*) OVER (PARTITION BY sender ORDER BY timestamp 
+      RANGE BETWEEN 3600 PRECEDING AND CURRENT ROW) AS tx_count_1h,
+    SUM(amount) OVER (PARTITION BY sender ORDER BY timestamp 
+      RANGE BETWEEN 86400 PRECEDING AND CURRENT ROW) AS total_amount_24h,
+    AVG(amount) OVER (PARTITION BY sender ORDER BY timestamp 
+      RANGE BETWEEN 604800 PRECEDING AND CURRENT ROW) AS avg_amount_7d
+  FROM transactions
+  WHERE sender = ?
+`, [senderAddress]);
+```
+
+> 📚 **参考资料**：[OpenMLDB 仓库](https://gitee.com/paradigm4/OpenMLDB) | [官方文档](https://openmldb.ai/docs/)
+
+---
+
 ## 常见问题
 
 ### 端口被占用

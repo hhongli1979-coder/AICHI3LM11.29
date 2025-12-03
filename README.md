@@ -132,6 +132,47 @@ src/
 
 ---
 
+## OpenMLDB Real-Time Feature Platform
+
+OmniCore Wallet's AI Risk Intelligence leverages [OpenMLDB](https://openmldb.ai/) for real-time feature engineering. OpenMLDB is an open-source machine learning database that provides consistent, fast, and production-ready feature computation for both model training and inference.
+
+### Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **SQL-Centric Feature Engineering** | Develop feature scripts in SQL without switching between languages |
+| **Real-Time Computation** | Ultra-low latency (milliseconds) for time-series and windowed operations |
+| **Online-Offline Consistency** | Unified execution ensures consistent features across training and inference |
+| **Enterprise-Grade Reliability** | Automatic fault recovery, seamless scale-out, and comprehensive monitoring |
+
+### Use Cases in OmniCore Wallet
+
+- **Transaction Risk Analysis**: Real-time feature computation for fraud detection and risk scoring
+- **Address Risk Assessment**: Pattern recognition on blockchain address behaviors
+- **Market Prediction**: Time-series analysis for DeFi treasury automation
+- **AML/KYC Compliance**: Feature engineering for regulatory compliance checks
+
+### Integration Example
+
+```typescript
+// Feature computation for transaction risk analysis
+const riskFeatures = await openmldb.computeFeatures(`
+  SELECT 
+    COUNT(*) OVER (PARTITION BY sender ORDER BY timestamp 
+      RANGE BETWEEN 3600 PRECEDING AND CURRENT ROW) AS tx_count_1h,
+    SUM(amount) OVER (PARTITION BY sender ORDER BY timestamp 
+      RANGE BETWEEN 86400 PRECEDING AND CURRENT ROW) AS total_amount_24h,
+    AVG(amount) OVER (PARTITION BY sender ORDER BY timestamp 
+      RANGE BETWEEN 604800 PRECEDING AND CURRENT ROW) AS avg_amount_7d
+  FROM transactions
+  WHERE sender = ?
+`, [senderAddress]);
+```
+
+> 📚 **Reference**: [OpenMLDB Repository](https://gitee.com/paradigm4/OpenMLDB) | [Documentation](https://openmldb.ai/docs/)
+
+---
+
 ## Documentation
 
 - [中文文档](./README-zh.md) - Chinese documentation
