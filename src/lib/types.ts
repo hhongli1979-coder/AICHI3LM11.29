@@ -239,3 +239,164 @@ export interface CustomEndpoint {
   headers: Record<string, string>;
   enabled: boolean;
 }
+
+// Multi-Agent Global Payment Platform Types - 多智能体全球收款平台
+
+export type AgentType = 'routing' | 'compliance' | 'risk' | 'settlement' | 'reconciliation' | 'analytics';
+
+export type AgentStatus = 'active' | 'idle' | 'processing' | 'error';
+
+export type PaymentCurrency =
+  | 'USD' | 'EUR' | 'GBP' | 'CNY' | 'JPY' | 'KRW' | 'SGD' | 'HKD'
+  | 'AUD' | 'CAD' | 'CHF' | 'INR' | 'BRL' | 'MXN' | 'RUB' | 'ZAR'
+  | 'AED' | 'THB' | 'VND' | 'PHP' | 'IDR' | 'MYR' | 'TWD' | 'NZD'
+  | 'SEK' | 'NOK' | 'DKK' | 'PLN' | 'CZK' | 'HUF' | 'TRY' | 'ILS'
+  | 'SAR' | 'QAR' | 'KWD' | 'BHD' | 'OMR' | 'EGP' | 'PKR' | 'BDT' | 'NGN';
+
+export type LocalPaymentMethod =
+  | 'alipay' | 'wechat_pay' | 'paynow' | 'promptpay' | 'grabpay'
+  | 'dana' | 'ovo' | 'gopay' | 'kakaopay' | 'linepay'
+  | 'pix' | 'boleto' | 'upi' | 'paytm'
+  | 'bnpl_klarna' | 'bnpl_afterpay' | 'bnpl_affirm'
+  | 'ideal' | 'bancontact' | 'giropay' | 'sofort' | 'eps' | 'przelewy24';
+
+export interface IntelligentAgent {
+  id: string;
+  type: AgentType;
+  name: string;
+  description: string;
+  status: AgentStatus;
+  lastActiveAt: number;
+  processedCount: number;
+  successRate: number;
+  avgProcessingTime: number;
+  isEnabled: boolean;
+}
+
+export interface AgentCollaboration {
+  id: string;
+  triggerAgent: AgentType;
+  collaboratingAgents: AgentType[];
+  decision: string;
+  timestamp: number;
+  processingTime: number;
+  outcome: 'success' | 'pending' | 'failed';
+}
+
+export interface GlobalPaymentRoute {
+  id: string;
+  sourceCurrency: PaymentCurrency;
+  targetCurrency: PaymentCurrency;
+  paymentMethod: LocalPaymentMethod | 'crypto' | 'wire' | 'card';
+  exchangeRate: number;
+  fee: number;
+  estimatedTime: string;
+  isOptimal: boolean;
+  riskScore: number;
+  complianceStatus: 'approved' | 'pending' | 'flagged';
+}
+
+export interface GlobalPaymentAccount {
+  id: string;
+  currency: PaymentCurrency;
+  balance: string;
+  availableBalance: string;
+  accountNumber: string;
+  bankName: string;
+  country: string;
+  status: 'active' | 'pending' | 'suspended';
+  createdAt: number;
+}
+
+export interface GlobalPaymentTransaction {
+  id: string;
+  fromAccount: string;
+  toAccount: string;
+  amount: string;
+  sourceCurrency: PaymentCurrency;
+  targetCurrency: PaymentCurrency;
+  exchangeRate: number;
+  fee: string;
+  paymentMethod: LocalPaymentMethod | 'crypto' | 'wire' | 'card';
+  status: 'initiated' | 'processing' | 'compliance_review' | 'settled' | 'failed';
+  routeId: string;
+  agentDecisions: AgentDecision[];
+  createdAt: number;
+  settledAt?: number;
+  estimatedSettlement: string;
+}
+
+export interface AgentDecision {
+  agentType: AgentType;
+  decision: string;
+  confidence: number;
+  timestamp: number;
+  details?: string;
+}
+
+export interface ComplianceLicense {
+  id: string;
+  country: string;
+  licenseType: string;
+  licenseName: string;
+  issueDate: number;
+  expiryDate: number;
+  status: 'active' | 'pending' | 'expired' | 'renewal';
+}
+
+export interface RiskMetrics {
+  fraudRate: number;
+  blockedTransactions: number;
+  flaggedTransactions: number;
+  avgRiskScore: number;
+  realTimeMonitoring: boolean;
+  lastScanAt: number;
+}
+
+export interface ReconciliationReport {
+  id: string;
+  period: string;
+  totalTransactions: number;
+  matchedTransactions: number;
+  discrepancies: number;
+  autoReconciled: number;
+  manualReview: number;
+  status: 'completed' | 'in_progress' | 'pending';
+  generatedAt: number;
+}
+
+export interface A2APaymentProtocol {
+  id: string;
+  name: string;
+  version: string;
+  description: string;
+  isEnabled: boolean;
+  supportedAgents: string[];
+  transactionCount: number;
+}
+
+export interface DAOGovernance {
+  id: string;
+  proposalTitle: string;
+  description: string;
+  proposer: string;
+  status: 'active' | 'passed' | 'rejected' | 'pending';
+  votesFor: number;
+  votesAgainst: number;
+  quorum: number;
+  endDate: number;
+  createdAt: number;
+}
+
+export interface MultiAgentPlatformStats {
+  totalAgents: number;
+  activeAgents: number;
+  totalTransactionsToday: number;
+  totalVolumeToday: string;
+  avgSettlementTime: string;
+  supportedCurrencies: number;
+  supportedPaymentMethods: number;
+  complianceLicenses: number;
+  fraudRatePercent: string;
+  efficiencyImprovement: string;
+}
