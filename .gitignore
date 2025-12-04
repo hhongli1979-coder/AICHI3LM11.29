@@ -67,3 +67,12 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Build output
+dist/
+
+# Lock files (optional - keeping for reproducible builds)
+# package-lock.json
+
+# Vite temp files
+*.timestamp-*
