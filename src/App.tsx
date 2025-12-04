@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
+import { TimeDisplay } from '@/components/dashboard/TimeDisplay';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
 import { TransactionList } from '@/components/transaction/TransactionList';
@@ -62,6 +63,8 @@ function App() {
           </div>
           
           <div className="flex items-center gap-3">
+            <TimeDisplay />
+            
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="relative">
