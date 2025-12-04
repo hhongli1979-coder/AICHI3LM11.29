@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, Warning, Clock, PaperPlaneTilt, User } from '@phosphor-icons/react';
+import { CheckCircle, Warning, Clock, PaperPlaneTilt } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import type { Transaction } from '@/lib/types';
 import { formatAddress, formatCurrency, formatTimeAgo, getRiskColor, NETWORKS } from '@/lib/mock-data';
