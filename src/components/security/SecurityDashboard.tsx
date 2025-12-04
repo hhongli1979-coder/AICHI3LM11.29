@@ -20,6 +20,7 @@ import {
   ListChecks,
   ArrowRight,
   X,
+  Gear,
 } from '@phosphor-icons/react';
 import { formatTimeAgo } from '@/lib/mock-data';
 import { toast } from 'sonner';
@@ -567,6 +568,3 @@ export function SecurityDashboard() {
     </div>
   );
 }
-
-// Import Gear icon for settings tab
-import { Gear } from '@phosphor-icons/react';

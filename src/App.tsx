@@ -2,7 +2,20 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, ShieldCheck, ClockCounterClockwise, Strategy } from '@phosphor-icons/react';
+import {
+  Bell,
+  Wallet,
+  ChartLine,
+  CreditCard,
+  ArrowsLeftRight,
+  Coins,
+  Gear,
+  AddressBook as AddressBookIcon,
+  Robot,
+  ShieldCheck,
+  ClockCounterClockwise,
+  Strategy,
+} from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
