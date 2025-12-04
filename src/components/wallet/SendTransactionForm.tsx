@@ -6,10 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { PaperPlaneTilt, Warning, CheckCircle, XCircle } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Warning, CheckCircle } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import type { Wallet, TokenBalance } from '@/lib/types';
-import { formatAddress, formatCurrency, getRiskColor } from '@/lib/mock-data';
+import { formatAddress, formatCurrency } from '@/lib/mock-data';
 
 interface SendTransactionFormProps {
   wallet: Wallet;
