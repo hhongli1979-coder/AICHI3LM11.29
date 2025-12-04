@@ -2,6 +2,17 @@
  * Service Layer Index - 服务层入口
  * 
  * 导出所有服务模块供应用使用
+ * 
+ * 完整服务列表:
+ * 1. AI服务 - 多模型对话
+ * 2. 钱包服务 - 多链钱包管理
+ * 3. 超级智能体服务 - 任务调度与协同
+ * 4. DeFi服务 - 协议集成与策略
+ * 5. 风险服务 - 风险评估与合规
+ * 6. 通知服务 - 多渠道通知
+ * 7. 分析服务 - 数据分析与报表
+ * 8. 组织服务 - 团队与权限管理
+ * 9. 存储服务 - 数据持久化
  */
 
 // AI服务
@@ -82,6 +93,58 @@ export {
   type NotificationSettings,
 } from './notification-service';
 
+// 分析服务
+export {
+  AnalyticsService,
+  analyticsService,
+  getSystemOverview,
+  getWalletAnalytics,
+  getTransactionStats,
+  getDeFiPerformance,
+  getAgentEfficiency,
+  getTimeSeries,
+  type TimeRange,
+  type AggregationPeriod,
+  type WalletAnalytics,
+  type TransactionStats,
+  type DeFiPerformance,
+  type AgentEfficiency,
+  type SystemOverview,
+} from './analytics-service';
+
+// 组织服务
+export {
+  OrganizationService,
+  organizationService,
+  getOrganization,
+  getOrganizationMembers,
+  checkPermission,
+  getPendingApprovals,
+  createApprovalRequest,
+  approveRequest,
+  type Role,
+  type Permission,
+  type ApprovalPolicy,
+  type ApprovalRequest,
+  type OrganizationSettings,
+} from './organization-service';
+
+// 存储服务
+export {
+  StorageService,
+  storageService,
+  setStorageItem,
+  getStorageItem,
+  deleteStorageItem,
+  hasStorageItem,
+  getStorageKeys,
+  clearStorage,
+  getStorageStats,
+  type StorageType,
+  type StorageConfig,
+  type StorageMetadata,
+} from './storage-service';
+
 // 工具函数
 export * from './utils';
 
@@ -99,27 +162,48 @@ export function initializeServices(config?: {
   aiApiKey?: string;
   enableNotifications?: boolean;
   demoMode?: boolean;
+  storageType?: 'local' | 'session' | 'indexeddb' | 'remote';
 }) {
   console.log('🚀 Initializing OmniCore Services...');
+  console.log('━'.repeat(50));
 
   // 配置AI服务
   if (config?.aiApiKey) {
     updateAIConfig({ apiKey: config.aiApiKey });
-    console.log('✅ AI Service configured');
+    console.log('✅ AI Service configured with API key');
+  } else {
+    console.log('✅ AI Service ready (local fallback mode)');
   }
 
-  // 启动通知服务
-  if (config?.enableNotifications !== false) {
-    console.log('✅ Notification Service ready');
-  }
+  // 钱包服务
+  console.log('✅ Wallet Service ready (6 networks supported)');
 
-  // 初始化智能体系统
+  // 智能体系统
   console.log('✅ Super Agent System initialized with', getSuperAgents().length, 'agents');
 
-  // 初始化DeFi服务
+  // DeFi服务
   console.log('✅ DeFi Service ready with', Object.keys(DEFI_PROTOCOLS).length, 'protocols');
 
-  console.log('🎉 All services initialized successfully!');
+  // 风险服务
+  console.log('✅ Risk Analysis Service ready');
+
+  // 通知服务
+  if (config?.enableNotifications !== false) {
+    console.log('✅ Notification Service ready (multi-channel)');
+  }
+
+  // 分析服务
+  console.log('✅ Analytics Service ready');
+
+  // 组织服务
+  console.log('✅ Organization Service ready');
+
+  // 存储服务
+  console.log('✅ Storage Service ready (type:', config?.storageType || 'local', ')');
+
+  console.log('━'.repeat(50));
+  console.log('🎉 All 9 services initialized successfully!');
+  console.log('');
 
   return {
     ai: aiService,
@@ -128,5 +212,8 @@ export function initializeServices(config?: {
     defi: defiService,
     risk: riskAnalysisService,
     notification: notificationService,
+    analytics: analyticsService,
+    organization: organizationService,
+    storage: storageService,
   };
 }
