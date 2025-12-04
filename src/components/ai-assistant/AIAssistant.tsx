@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,13 +21,19 @@ import {
   Memory,
   Gear,
   Database,
+  Warning,
+  PlugsConnected,
+  Plug,
 } from '@phosphor-icons/react';
 import {
   generateMockAIAssistantState,
+  generateMockAIModelSettings,
   formatTimeAgo,
 } from '@/lib/mock-data';
-import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
+import type { AIMessage, AIMemoryItem, AICapability, AIModelSettings } from '@/lib/types';
 import { AIModelSettingsPanel } from './AIModelSettings';
+import { sendMessage, checkModelAvailability } from '@/lib/ai-service';
+import { toast } from 'sonner';
 
 function getCapabilityIcon(iconName: string) {
   const icons: Record<string, React.ReactNode> = {
@@ -118,6 +124,16 @@ function MessageBubble({ message }: MessageBubbleProps) {
           <div className="flex items-center gap-2 mb-2">
             <Robot size={16} weight="duotone" className="text-primary" />
             <span className="text-xs font-medium text-primary">OmniCore AI</span>
+            {message.isSimulated && (
+              <Badge variant="outline" className="text-xs py-0 bg-amber-50 text-amber-700 border-amber-300">
+                模拟回复
+              </Badge>
+            )}
+            {!message.isSimulated && message.modelName && (
+              <Badge variant="outline" className="text-xs py-0 bg-green-50 text-green-700 border-green-300">
+                {message.modelName}
+              </Badge>
+            )}
           </div>
         )}
         <div className="text-sm whitespace-pre-wrap">{message.content}</div>
@@ -211,9 +227,31 @@ function CapabilityCard({ capability, onToggle }: CapabilityCardProps) {
 
 export function AIAssistant() {
   const [state, setState] = useState(generateMockAIAssistantState);
+  const [modelSettings, setModelSettings] = useState<AIModelSettings>(() => generateMockAIModelSettings());
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionChecked, setConnectionChecked] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Check AI model connection on mount
+  useEffect(() => {
+    const checkConnection = async () => {
+      const activeModel = modelSettings.models.find(
+        (m) => m.id === modelSettings.defaultModelId && m.enabled
+      ) || modelSettings.models.find((m) => m.enabled);
+
+      if (activeModel) {
+        const available = await checkModelAvailability(activeModel);
+        setIsConnected(available);
+        if (available) {
+          toast.success(`已连接到 ${activeModel.name}`);
+        }
+      }
+      setConnectionChecked(true);
+    };
+    checkConnection();
+  }, [modelSettings]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -221,7 +259,7 @@ export function AIAssistant() {
     }
   }, [state.currentConversation]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = useCallback(async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: AIMessage = {
@@ -237,27 +275,40 @@ export function AIAssistant() {
       lastActiveAt: Date.now(),
     }));
 
+    const messageToSend = inputValue;
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Call the AI service
+      const response = await sendMessage(messageToSend, modelSettings);
+      
       const aiResponse: AIMessage = {
         id: `msg-${Date.now()}`,
         role: 'assistant',
-        content: generateAIResponse(inputValue),
+        content: response.content,
         timestamp: Date.now(),
-        action: detectAction(inputValue),
+        action: detectAction(messageToSend),
+        isSimulated: response.isSimulated,
+        modelName: response.modelName,
       };
+
+      if (response.error) {
+        toast.error(`AI模型连接失败: ${response.error}，使用模拟回复`);
+      }
 
       setState((prev) => ({
         ...prev,
         currentConversation: [...prev.currentConversation, aiResponse],
         lastActiveAt: Date.now(),
       }));
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast.error('消息发送失败');
+    } finally {
       setIsTyping(false);
-    }, 1500);
-  };
+    }
+  }, [inputValue, modelSettings]);
 
   const handleToggleCapability = (id: string) => {
     setState((prev) => ({
@@ -286,11 +337,49 @@ export function AIAssistant() {
             </p>
           </div>
         </div>
-        <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
-          <Sparkle size={14} weight="fill" />
-          {state.isActive ? '活跃中' : '休眠'}
-        </Badge>
+        <div className="flex items-center gap-2">
+          {connectionChecked && (
+            <Badge 
+              className="gap-1" 
+              variant={isConnected ? 'default' : 'outline'}
+            >
+              {isConnected ? (
+                <>
+                  <PlugsConnected size={14} weight="fill" />
+                  已连接模型
+                </>
+              ) : (
+                <>
+                  <Plug size={14} weight="duotone" />
+                  模拟模式
+                </>
+              )}
+            </Badge>
+          )}
+          <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
+            <Sparkle size={14} weight="fill" />
+            {state.isActive ? '活跃中' : '休眠'}
+          </Badge>
+        </div>
       </div>
+
+      {/* Demo mode notice */}
+      {!isConnected && connectionChecked && (
+        <Card className="border-amber-200 bg-amber-50">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <Warning size={24} weight="duotone" className="text-amber-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="font-medium text-amber-800">演示模式</div>
+                <p className="text-sm text-amber-700 mt-1">
+                  当前使用模拟回复。如需使用真实AI模型，请在"模型"选项卡中配置本地模型（如 Ollama）或 API 端点。
+                  支持 Ollama、OpenAI 兼容 API 等多种接入方式。
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Tabs defaultValue="chat" className="space-y-4">
         {/* TabsList with 4 tabs: 对话, 记忆, 能力, 模型 */}
@@ -496,29 +585,7 @@ export function AIAssistant() {
   );
 }
 
-// Helper functions for AI responses
-function generateAIResponse(input: string): string {
-  const lowerInput = input.toLowerCase();
-  
-  if (lowerInput.includes('钱包') || lowerInput.includes('余额') || lowerInput.includes('wallet') || lowerInput.includes('balance')) {
-    return '我已经检查了您的钱包状态。您目前有:\n\n💰 **总资产**: $231,690.75\n\n主要钱包:\n- Treasury Vault: $125,432 (Ethereum)\n- Operating Account: $23,234 (Polygon)\n- DeFi Strategy: $8,024 (Arbitrum)\n\n需要我执行什么操作吗？';
-  }
-  
-  if (lowerInput.includes('交易') || lowerInput.includes('转账') || lowerInput.includes('transaction') || lowerInput.includes('transfer')) {
-    return '我可以帮您创建新交易。请提供以下信息:\n\n1. 发送方钱包\n2. 接收地址\n3. 金额和代币\n4. 交易描述\n\n或者您可以说 "从Treasury Vault转账5000 USDC到供应商"，我会自动解析。';
-  }
-  
-  if (lowerInput.includes('风险') || lowerInput.includes('分析') || lowerInput.includes('risk') || lowerInput.includes('analysis')) {
-    return '🔍 **风险分析报告**\n\n当前待处理交易风险:\n\n⚠️ **高风险** - tx-3 (Operating Account)\n- 大额转账: 25,000 USDT\n- 首次收款地址\n- 建议: 验证收款方身份\n\n✅ **低风险** - tx-1 (Treasury Vault)\n- 已知收款方\n- 常规交易模式\n\n需要我提供更详细的分析吗？';
-  }
-  
-  if (lowerInput.includes('defi') || lowerInput.includes('策略') || lowerInput.includes('收益')) {
-    return '📊 **DeFi 策略建议**\n\n基于您的风险偏好，推荐:\n\n1. **稳定币借贷** (Aave V3)\n   - APY: 5.2%\n   - 风险: 低\n\n2. **ETH 质押** (Lido)\n   - APY: 3.8%\n   - 风险: 低\n\n3. **流动性挖矿** (Uniswap V3)\n   - APY: 12.5%\n   - 风险: 中\n\n需要我帮您配置自动投资策略吗？';
-  }
-  
-  return '感谢您的提问！我是 OmniCore 智能助手，可以帮助您:\n\n• 📊 查询和管理钱包\n• 💸 创建和签署交易\n• 🔍 分析交易风险\n• 📈 管理 DeFi 策略\n• ⚙️ 配置平台设置\n\n请告诉我您需要什么帮助？';
-}
-
+// Helper function to detect action from input
 function detectAction(input: string): AIMessage['action'] | undefined {
   const lowerInput = input.toLowerCase();
   
