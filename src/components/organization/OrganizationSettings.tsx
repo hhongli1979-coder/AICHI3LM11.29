@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Users, Plus, Trash, Shield, EnvelopeSimple, Crown, Eye, PencilSimple } from '@phosphor-icons/react';
+import { Plus, Trash, Shield, EnvelopeSimple, Crown, Eye, PencilSimple } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { formatTimeAgo } from '@/lib/mock-data';
 
@@ -106,7 +106,7 @@ export function OrganizationSettings() {
 
   const handleChangeRole = (memberId: string, newRole: string) => {
     setMembers(members.map(m => 
-      m.id === memberId ? { ...m, role: newRole as any } : m
+      m.id === memberId ? { ...m, role: newRole as 'owner' | 'admin' | 'signer' | 'viewer' } : m
     ));
     toast.success('Member role updated successfully');
   };
