@@ -1,4 +1,4 @@
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, StopOrder, MultiStopStrategy } from './types';
 
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
@@ -268,6 +268,114 @@ export function generateMockDCAStrategies(): DCAStrategy[] {
       totalInvested: '25000.00',
       totalReceived: '0.285',
       enabled: true,
+    },
+  ];
+}
+
+// Multi-Stop Order Mock Data - 多停功能模拟数据
+export function generateMockStopOrders(): StopOrder[] {
+  return [
+    {
+      id: 'stop-1',
+      walletId: 'wallet-1',
+      token: 'ETH',
+      network: 'ethereum',
+      type: 'stop-loss',
+      triggerPrice: '2500.00',
+      currentPrice: '2773.54',
+      amount: '5.0',
+      percentage: 25,
+      status: 'active',
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      expiresAt: Date.now() + 25 * 24 * 60 * 60 * 1000,
+      description: '止损单：ETH价格跌破$2500时卖出25%',
+    },
+    {
+      id: 'stop-2',
+      walletId: 'wallet-1',
+      token: 'ETH',
+      network: 'ethereum',
+      type: 'stop-loss',
+      triggerPrice: '2200.00',
+      currentPrice: '2773.54',
+      amount: '10.0',
+      percentage: 50,
+      status: 'active',
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      expiresAt: Date.now() + 25 * 24 * 60 * 60 * 1000,
+      description: '止损单：ETH价格跌破$2200时卖出50%',
+    },
+    {
+      id: 'stop-3',
+      walletId: 'wallet-1',
+      token: 'ETH',
+      network: 'ethereum',
+      type: 'take-profit',
+      triggerPrice: '3500.00',
+      currentPrice: '2773.54',
+      amount: '8.0',
+      percentage: 40,
+      status: 'active',
+      createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+      expiresAt: Date.now() + 27 * 24 * 60 * 60 * 1000,
+      description: '止盈单：ETH价格突破$3500时卖出40%',
+    },
+    {
+      id: 'stop-4',
+      walletId: 'wallet-2',
+      token: 'MATIC',
+      network: 'polygon',
+      type: 'trailing-stop',
+      triggerPrice: '0.85',
+      currentPrice: '0.92',
+      amount: '5000.0',
+      percentage: 30,
+      status: 'active',
+      createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
+      description: '追踪止损：MATIC价格回撤10%时卖出30%',
+    },
+    {
+      id: 'stop-5',
+      walletId: 'wallet-1',
+      token: 'USDC',
+      network: 'ethereum',
+      type: 'stop-loss',
+      triggerPrice: '0.98',
+      currentPrice: '1.00',
+      amount: '10000.0',
+      percentage: 100,
+      status: 'triggered',
+      createdAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
+      triggeredAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+      description: '稳定币脱锚保护已触发',
+    },
+  ];
+}
+
+export function generateMockMultiStopStrategies(): MultiStopStrategy[] {
+  const stopOrders = generateMockStopOrders();
+  return [
+    {
+      id: 'strategy-1',
+      name: 'ETH 阶梯止损策略',
+      walletId: 'wallet-1',
+      token: 'ETH',
+      network: 'ethereum',
+      stopOrders: stopOrders.filter(s => s.token === 'ETH' && s.walletId === 'wallet-1'),
+      enabled: true,
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'strategy-2',
+      name: 'MATIC 追踪止损',
+      walletId: 'wallet-2',
+      token: 'MATIC',
+      network: 'polygon',
+      stopOrders: stopOrders.filter(s => s.token === 'MATIC'),
+      enabled: true,
+      createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
+      updatedAt: Date.now() - 12 * 60 * 60 * 1000,
     },
   ];
 }
