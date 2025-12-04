@@ -215,7 +215,6 @@ export interface AIModelConfig {
   modelName: string;
   apiEndpoint: string;
   apiKey?: string;
-  apiVersion?: string; // Optional API version (e.g., for Anthropic)
   enabled: boolean;
   isDefault: boolean;
   maxTokens: number;
