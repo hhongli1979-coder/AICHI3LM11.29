@@ -37,7 +37,6 @@ coverage/
 
 # Documentation (not needed in container)
 *.md
-!README.md
 
 # Firebase
 .firebase/
