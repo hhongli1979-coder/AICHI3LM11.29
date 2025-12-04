@@ -32,8 +32,8 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction || true
+# Install PHP dependencies (skip if no composer.json exists)
+RUN if [ -f composer.json ]; then composer install --no-dev --optimize-autoloader --no-interaction; fi
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
