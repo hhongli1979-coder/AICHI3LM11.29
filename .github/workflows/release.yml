@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Build
+        run: npm run build
+
+      - name: Create source archive
+        run: |
+          zip -r omnicore-source-${{ github.ref_name }}.zip . \
+            -x "node_modules/*" \
+            -x "dist/*" \
+            -x ".git/*" \
+            -x "*.log" \
+            -x "*.zip"
+
+      - name: Create build archive
+        run: |
+          cd dist
+          zip -r ../omnicore-build-${{ github.ref_name }}.zip .
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: OmniCore Wallet ${{ github.ref_name }}
+          body: |
+            ## OmniCore Wallet Release ${{ github.ref_name }}
+
+            ### What's Included
+            - **omnicore-source-${{ github.ref_name }}.zip**: Full source code archive
+            - **omnicore-build-${{ github.ref_name }}.zip**: Production-ready build artifacts
+
+            ### Installation
+            1. Download the build archive
+            2. Extract to your web server
+            3. Configure your environment
+
+            ### Documentation
+            See [README.md](https://github.com/${{ github.repository }}/blob/main/README.md) for detailed instructions.
+
+            ---
+            *Built from commit ${{ github.sha }}*
+          files: |
+            omnicore-source-${{ github.ref_name }}.zip
+            omnicore-build-${{ github.ref_name }}.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
