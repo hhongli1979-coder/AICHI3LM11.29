@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -331,25 +331,34 @@ export function AgentCoordinator() {
   const pendingMessages = state.messages.filter(m => m.status === 'pending').length;
   const inProgressTasks = state.tasks.filter(t => t.status === 'in_progress').length;
 
+  // Memoize sorted messages to avoid re-sorting on every render
+  const sortedMessages = useMemo(() => 
+    [...state.messages].sort((a, b) => b.createdAt - a.createdAt),
+    [state.messages]
+  );
+
+  // Memoized state update callback for real-time simulation
+  const updateAgentStats = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      totalMessagesProcessed: prev.totalMessagesProcessed + Math.floor(Math.random() * 5),
+      averageResponseTimeMs: Math.max(100, prev.averageResponseTimeMs + (Math.random() - 0.5) * 20),
+      agents: prev.agents.map(agent => ({
+        ...agent,
+        load: Math.max(0, Math.min(100, agent.load + (Math.random() - 0.5) * 10)),
+        lastActiveAt: agent.status === 'active' || agent.status === 'busy' ? Date.now() : agent.lastActiveAt,
+      })),
+    }));
+  }, []);
+
   // Simulate real-time updates
   useEffect(() => {
     if (!state.isRunning) return;
 
-    const interval = setInterval(() => {
-      setState(prev => ({
-        ...prev,
-        totalMessagesProcessed: prev.totalMessagesProcessed + Math.floor(Math.random() * 5),
-        averageResponseTimeMs: Math.max(100, prev.averageResponseTimeMs + (Math.random() - 0.5) * 20),
-        agents: prev.agents.map(agent => ({
-          ...agent,
-          load: Math.max(0, Math.min(100, agent.load + (Math.random() - 0.5) * 10)),
-          lastActiveAt: agent.status === 'active' || agent.status === 'busy' ? Date.now() : agent.lastActiveAt,
-        })),
-      }));
-    }, 3000);
+    const interval = setInterval(updateAgentStats, 3000);
 
     return () => clearInterval(interval);
-  }, [state.isRunning]);
+  }, [state.isRunning, updateAgentStats]);
 
   return (
     <div className="space-y-6">
@@ -579,9 +588,7 @@ export function AgentCoordinator() {
             <CardContent>
               <ScrollArea className="h-[500px] pr-4">
                 <div className="space-y-3">
-                  {state.messages
-                    .sort((a, b) => b.createdAt - a.createdAt)
-                    .map((message) => (
+                  {sortedMessages.map((message) => (
                       <MessageItem 
                         key={message.id} 
                         message={message} 

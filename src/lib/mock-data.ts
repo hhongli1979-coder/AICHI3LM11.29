@@ -1,4 +1,26 @@
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, Agent, AgentMessage, AgentTask, AgentCollaboration, A2AProtocolConfig, MultiAgentSystemState } from './types';
+import type { 
+  Wallet, 
+  Transaction, 
+  DeFiPosition, 
+  PaymentRequest, 
+  DCAStrategy, 
+  OmniTokenStats, 
+  NotificationItem, 
+  TokenBalance, 
+  AIMessage, 
+  AIMemoryItem, 
+  AICapability, 
+  AIAssistantState, 
+  AIModelConfig, 
+  AIModelSettings, 
+  CustomEndpoint, 
+  Agent, 
+  AgentMessage, 
+  AgentTask, 
+  AgentCollaboration, 
+  A2AProtocolConfig, 
+  MultiAgentSystemState 
+} from './types';
 
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
