@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendUp, TrendDown, Wallet, ArrowsLeftRight, ChartLine } from '@phosphor-icons/react';
-import { formatCurrency, formatLargeNumber } from '@/lib/mock-data';
+import { formatCurrency } from '@/lib/mock-data';
 
 interface StatsCardProps {
   title: string;

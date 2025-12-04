@@ -1,6 +1,6 @@
 "use client"
 
-import { CSSProperties, ComponentProps, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { CSSProperties, ComponentProps, createContext, useCallback, useContext, useEffect, useState } from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import PanelLeftIcon from "lucide-react/dist/esm/icons/panel-left"
@@ -606,10 +606,8 @@ function SidebarMenuSkeleton({
 }: ComponentProps<"div"> & {
   showIcon?: boolean
 }) {
-  // Random width between 50 to 90%.
-  const width = useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`
-  }, [])
+  // Use a stable width value instead of random
+  const width = "70%"
 
   return (
     <div
