@@ -239,3 +239,105 @@ export interface CustomEndpoint {
   headers: Record<string, string>;
   enabled: boolean;
 }
+
+// Agent-to-Agent (A2A) Communication Types - 智能体间通信协议
+
+export type AgentRole = 
+  | 'asset_manager'      // 资产画像智能体
+  | 'risk_monitor'       // 风险监控智能体
+  | 'yield_optimizer'    // 收益优化智能体
+  | 'compliance_guard'   // 合规与风控智能体
+  | 'payment_router'     // 支付路由智能体
+  | 'audit_reporter'     // 报告与审计智能体
+  | 'customer_service'   // 客户服务智能体
+  | 'market_analyst'     // 市场洞察智能体
+  | 'data_fusion'        // 数据融合智能体
+  | 'orchestrator';      // 中枢调度智能体
+
+export type AgentStatus = 'idle' | 'active' | 'busy' | 'error' | 'offline';
+
+export type MessagePriority = 'low' | 'normal' | 'high' | 'critical';
+
+export type MessageType = 
+  | 'request'            // 请求消息
+  | 'response'           // 响应消息
+  | 'broadcast'          // 广播消息
+  | 'handoff'            // 任务交接
+  | 'sync'               // 状态同步
+  | 'alert';             // 警报消息
+
+export interface Agent {
+  id: string;
+  name: string;
+  role: AgentRole;
+  status: AgentStatus;
+  description: string;
+  capabilities: string[];
+  currentTask?: string;
+  load: number;          // 0-100 工作负载
+  lastActiveAt: number;
+  messageCount: number;
+  successRate: number;   // 0-1 成功率
+}
+
+export interface AgentMessage {
+  id: string;
+  fromAgentId: string;
+  toAgentId: string | 'broadcast';
+  type: MessageType;
+  priority: MessagePriority;
+  subject: string;
+  content: string;
+  payload?: Record<string, unknown>;
+  status: 'pending' | 'delivered' | 'processed' | 'failed';
+  createdAt: number;
+  processedAt?: number;
+  parentMessageId?: string;  // 用于消息链追踪
+}
+
+export interface AgentTask {
+  id: string;
+  name: string;
+  description: string;
+  assignedAgents: string[];
+  status: 'queued' | 'in_progress' | 'completed' | 'failed';
+  priority: MessagePriority;
+  progress: number;      // 0-100
+  result?: string;
+  createdAt: number;
+  startedAt?: number;
+  completedAt?: number;
+  messages: string[];    // 相关消息ID列表
+}
+
+export interface AgentCollaboration {
+  id: string;
+  name: string;
+  description: string;
+  participatingAgents: string[];
+  coordinatorAgentId: string;
+  tasks: AgentTask[];
+  status: 'planning' | 'executing' | 'reviewing' | 'completed';
+  startedAt: number;
+  completedAt?: number;
+}
+
+export interface A2AProtocolConfig {
+  maxRetries: number;
+  timeoutMs: number;
+  enableEncryption: boolean;
+  enableLogging: boolean;
+  broadcastThrottleMs: number;
+  priorityQueueEnabled: boolean;
+}
+
+export interface MultiAgentSystemState {
+  agents: Agent[];
+  messages: AgentMessage[];
+  tasks: AgentTask[];
+  collaborations: AgentCollaboration[];
+  protocolConfig: A2AProtocolConfig;
+  isRunning: boolean;
+  totalMessagesProcessed: number;
+  averageResponseTimeMs: number;
+}
