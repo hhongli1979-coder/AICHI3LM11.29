@@ -2,6 +2,10 @@
 
 Concise playbook for contributing with React 19 + Vite + TypeScript + GitHub Spark. This repo is a frontend prototype using mock data (no backend).
 
+## Repository Purpose
+
+OmniCore is an enterprise-grade SaaS platform for managing crypto assets, multi-signature wallets, global payments, and DeFi integrations with native OMNI token economy. This is a React frontend prototype that demonstrates the UI/UX with mock data.
+
 ## Architecture
 - Spark: Import `"@github/spark/spark"` in `src/main.tsx`; keep `sparkPlugin()` and `createIconImportProxy()` in `vite.config.ts`.
 - Path alias: Use `@/` → `src/` (see `vite.config.ts`).
@@ -9,7 +13,7 @@ Concise playbook for contributing with React 19 + Vite + TypeScript + GitHub Spa
 - Components: Headless shadcn in `src/components/ui/`; business UI under `dashboard/`, `wallet/`, `defi/`, `transaction/`, `token/`, `organization/`, `ai-assistant/`.
 
 ## Data & Types
-- Types: Single source in `src/lib/types.ts` (e.g., `Wallet`, `Transaction`, `DeFiPosition`). Always import types—don’t redefine.
+- Types: Single source in `src/lib/types.ts` (e.g., `Wallet`, `Transaction`, `DeFiPosition`). Always import types—don't redefine.
 - Mock generators: `src/lib/mock-data.ts` provides `generateMockWallets/Transactions/DeFi…` and helpers `formatCurrency`, `formatAddress`, `getRiskColor`, `getStatusColor`, `formatTimeAgo`.
 - Networks: `NETWORKS` defines chain name/color/icon; wallets use `wallet.network` to match these keys.
 - Pattern for new mocks:
@@ -20,9 +24,9 @@ Concise playbook for contributing with React 19 + Vite + TypeScript + GitHub Spa
   ```
 
 ## UI & Styling
-- Tailwind v4 + CSS variables; don’t hardcode colors. Use tokens like `bg-accent-9`, `text-neutral-11`, semantic `text-muted-foreground`.
+- Tailwind v4 + CSS variables; don't hardcode colors. Use tokens like `bg-accent-9`, `text-neutral-11`, semantic `text-muted-foreground`.
 - Radix color imports live in `src/styles/theme.css`; dark mode via `[data-appearance="dark"]` (not class-based).
-- Phosphor icons (`@phosphor-icons/react`) only; prefer `weight="duotone"|"bold"`. Note: `ErrorFallback.tsx` uses Lucide—don’t add new Lucide usage elsewhere.
+- Phosphor icons (`@phosphor-icons/react`) only; prefer `weight="duotone"|"bold"`. Note: `ErrorFallback.tsx` uses Lucide—don't add new Lucide usage elsewhere.
 - Cards: `hover:shadow-lg transition-shadow`; Buttons: hover scale 102%, active 98%.
 - Mobile: `<768px` stacks grids; tab labels hide via `<span className="hidden sm:inline">`.
 
@@ -42,11 +46,30 @@ npm run kill      # Free port 5000 if stuck
 - Multi-sig: `Transaction` carries `signatures[]` and `requiredSignatures`; show progress with `Progress`/`Badge` from `ui/`.
 
 ## Pitfalls
-- Don’t reinstall shadcn CLI; customize existing `src/components/ui/*` only.
-- Don’t use Lucide (except in `ErrorFallback.tsx`).
-- Don’t duplicate types—import from `@/lib/types`.
-- Don’t hardcode colors; stick to CSS vars/Tailwind tokens.
+- Don't reinstall shadcn CLI; customize existing `src/components/ui/*` only.
+- Don't use Lucide (except in `ErrorFallback.tsx`).
+- Don't duplicate types—import from `@/lib/types`.
+- Don't hardcode colors; stick to CSS vars/Tailwind tokens.
 - Keep mock data realistic with timestamps and USD formatting via helpers.
+- Don't modify Spark plugins in `vite.config.ts`.
+- Never commit `node_modules/`, `dist/`, or build artifacts.
+
+## Contribution Guidelines
+- Before submitting a PR, ensure `npm run lint` passes with no errors.
+- Before submitting a PR, ensure `npm run build` completes successfully.
+- Keep changes focused and minimal—one feature or fix per PR.
+- Follow the existing code style and patterns in the repository.
+- Write descriptive commit messages that explain the "what" and "why".
+
+## Testing Approach
+- This is a frontend prototype—no formal test suite is required.
+- Manually verify UI changes by running `npm run dev` and testing in browser.
+- Check responsive behavior at `<768px` for mobile layouts.
+
+## Security Considerations
+- Never commit secrets, API keys, or credentials.
+- All wallet addresses and transaction data are mock—no real blockchain interactions.
+- Follow OWASP best practices for any user input handling.
 
 ## Key Files
 - `src/App.tsx` – App shell and tabs.
