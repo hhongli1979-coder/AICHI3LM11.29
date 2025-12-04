@@ -55,6 +55,54 @@ npm run build
 npm run preview
 ```
 
+## Docker
+
+### Using Docker Hub / GitHub Container Registry
+
+Pull and run the pre-built image:
+
+```bash
+# Pull the latest image from GitHub Container Registry
+docker pull ghcr.io/hhongli1979-coder/aichi3lm11.29:latest
+
+# Run the container
+docker run -d -p 8080:80 --name omnicore-wallet ghcr.io/hhongli1979-coder/aichi3lm11.29:latest
+```
+
+### Building Locally
+
+Build and run the Docker image locally:
+
+```bash
+# Build the image
+docker build -t omnicore-wallet .
+
+# Run the container
+docker run -d -p 8080:80 --name omnicore-wallet omnicore-wallet
+```
+
+Access the application at `http://localhost:8080`
+
+### Docker Compose (optional)
+
+Create a `docker-compose.yml` file:
+
+```yaml
+version: '3.8'
+services:
+  omnicore-wallet:
+    build: .
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+```
+
+Then run:
+
+```bash
+docker compose up -d
+```
+
 ## Project Structure
 
 ```
