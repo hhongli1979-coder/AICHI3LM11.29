@@ -117,7 +117,7 @@ export function SecurityPanel() {
   const unresolvedEvents = events.filter(e => !e.resolved);
 
   const handleFreeze = () => {
-    if (confirmText.toLowerCase() !== 'freeze') {
+    if (confirmText.toUpperCase() !== 'FREEZE') {
       toast.error('请输入 "FREEZE" 确认操作');
       return;
     }
@@ -437,7 +437,7 @@ export function SecurityPanel() {
             <Button 
               variant="destructive" 
               onClick={handleFreeze}
-              disabled={confirmText.toLowerCase() !== 'freeze'}
+              disabled={confirmText.toUpperCase() !== 'FREEZE'}
               className="gap-2"
             >
               <Snowflake size={16} />

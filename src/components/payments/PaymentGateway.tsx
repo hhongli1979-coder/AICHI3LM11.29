@@ -197,9 +197,9 @@ export function PaymentGateway() {
     .filter(tx => tx.status === 'pending')
     .reduce((sum, tx) => sum + tx.amount, 0);
   const totalTransactions = transactions.length;
-  const successRate = Math.round(
-    (transactions.filter(tx => tx.status === 'completed').length / totalTransactions) * 100
-  );
+  const successRate = totalTransactions > 0 
+    ? Math.round((transactions.filter(tx => tx.status === 'completed').length / totalTransactions) * 100)
+    : 0;
 
   const handleCreateLink = () => {
     if (!newLinkName || !newLinkAmount) {
