@@ -40,7 +40,6 @@ import {
   generateMockDAOProposals,
   generateMockMultiAgentPlatformStats,
   formatTimeAgo,
-  formatCurrency,
 } from '@/lib/mock-data';
 import type { 
   IntelligentAgent, 

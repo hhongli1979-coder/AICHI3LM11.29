@@ -246,9 +246,19 @@ export type AgentType = 'routing' | 'compliance' | 'risk' | 'settlement' | 'reco
 
 export type AgentStatus = 'active' | 'idle' | 'processing' | 'error';
 
-export type PaymentCurrency = 'USD' | 'EUR' | 'GBP' | 'CNY' | 'JPY' | 'KRW' | 'SGD' | 'HKD' | 'AUD' | 'CAD' | 'CHF' | 'INR' | 'BRL' | 'MXN' | 'RUB' | 'ZAR' | 'AED' | 'THB' | 'VND' | 'PHP' | 'IDR' | 'MYR' | 'TWD' | 'NZD' | 'SEK' | 'NOK' | 'DKK' | 'PLN' | 'CZK' | 'HUF' | 'TRY' | 'ILS' | 'SAR' | 'QAR' | 'KWD' | 'BHD' | 'OMR' | 'EGP' | 'PKR' | 'BDT' | 'NGN';
+export type PaymentCurrency =
+  | 'USD' | 'EUR' | 'GBP' | 'CNY' | 'JPY' | 'KRW' | 'SGD' | 'HKD'
+  | 'AUD' | 'CAD' | 'CHF' | 'INR' | 'BRL' | 'MXN' | 'RUB' | 'ZAR'
+  | 'AED' | 'THB' | 'VND' | 'PHP' | 'IDR' | 'MYR' | 'TWD' | 'NZD'
+  | 'SEK' | 'NOK' | 'DKK' | 'PLN' | 'CZK' | 'HUF' | 'TRY' | 'ILS'
+  | 'SAR' | 'QAR' | 'KWD' | 'BHD' | 'OMR' | 'EGP' | 'PKR' | 'BDT' | 'NGN';
 
-export type LocalPaymentMethod = 'alipay' | 'wechat_pay' | 'paynow' | 'promptpay' | 'grabpay' | 'dana' | 'ovo' | 'gopay' | 'kakaopay' | 'linepay' | 'pix' | 'boleto' | 'upi' | 'paytm' | 'bnpl_klarna' | 'bnpl_afterpay' | 'bnpl_affirm' | 'ideal' | 'bancontact' | 'giropay' | 'sofort' | 'eps' | 'przelewy24';
+export type LocalPaymentMethod =
+  | 'alipay' | 'wechat_pay' | 'paynow' | 'promptpay' | 'grabpay'
+  | 'dana' | 'ovo' | 'gopay' | 'kakaopay' | 'linepay'
+  | 'pix' | 'boleto' | 'upi' | 'paytm'
+  | 'bnpl_klarna' | 'bnpl_afterpay' | 'bnpl_affirm'
+  | 'ideal' | 'bancontact' | 'giropay' | 'sofort' | 'eps' | 'przelewy24';
 
 export interface IntelligentAgent {
   id: string;
