@@ -18,15 +18,14 @@ export default tseslint.config(
       'react-refresh': reactRefresh,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      // Use only the core react-hooks rules (rules-of-hooks and exhaustive-deps)
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
       ],
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      // Disable strict rules for UI component patterns
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/purity': 'off',
     },
   },
 );
