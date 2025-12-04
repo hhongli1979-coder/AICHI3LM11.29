@@ -27,6 +27,7 @@ import {
   generateMockAIAssistantState,
   formatTimeAgo,
 } from '@/lib/mock-data';
+import { sendAIMessage } from '@/lib/ai-service';
 import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
 import { AIModelSettingsPanel } from './AIModelSettings';
 import { SuperAgentDashboard } from './SuperAgentDashboard';
@@ -223,7 +224,7 @@ export function AIAssistant() {
     }
   }, [state.currentConversation]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: AIMessage = {
@@ -239,17 +240,20 @@ export function AIAssistant() {
       lastActiveAt: Date.now(),
     }));
 
+    const messageContent = inputValue;
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // 使用真实AI服务 (支持API调用和本地回退)
+      const response = await sendAIMessage(messageContent);
+      
       const aiResponse: AIMessage = {
         id: `msg-${Date.now()}`,
         role: 'assistant',
-        content: generateAIResponse(inputValue),
+        content: response.content,
         timestamp: Date.now(),
-        action: detectAction(inputValue),
+        action: response.action,
       };
 
       setState((prev) => ({
@@ -257,8 +261,23 @@ export function AIAssistant() {
         currentConversation: [...prev.currentConversation, aiResponse],
         lastActiveAt: Date.now(),
       }));
+    } catch (error) {
+      console.error('AI response error:', error);
+      // 使用本地回退响应
+      const aiResponse: AIMessage = {
+        id: `msg-${Date.now()}`,
+        role: 'assistant',
+        content: '抱歉，处理您的请求时出现问题。请稍后再试。',
+        timestamp: Date.now(),
+      };
+      setState((prev) => ({
+        ...prev,
+        currentConversation: [...prev.currentConversation, aiResponse],
+        lastActiveAt: Date.now(),
+      }));
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const handleToggleCapability = (id: string) => {
@@ -506,44 +525,5 @@ export function AIAssistant() {
   );
 }
 
-// Helper functions for AI responses
-function generateAIResponse(input: string): string {
-  const lowerInput = input.toLowerCase();
-  
-  if (lowerInput.includes('钱包') || lowerInput.includes('余额') || lowerInput.includes('wallet') || lowerInput.includes('balance')) {
-    return '我已经检查了您的钱包状态。您目前有:\n\n💰 **总资产**: $231,690.75\n\n主要钱包:\n- Treasury Vault: $125,432 (Ethereum)\n- Operating Account: $23,234 (Polygon)\n- DeFi Strategy: $8,024 (Arbitrum)\n\n需要我执行什么操作吗？';
-  }
-  
-  if (lowerInput.includes('交易') || lowerInput.includes('转账') || lowerInput.includes('transaction') || lowerInput.includes('transfer')) {
-    return '我可以帮您创建新交易。请提供以下信息:\n\n1. 发送方钱包\n2. 接收地址\n3. 金额和代币\n4. 交易描述\n\n或者您可以说 "从Treasury Vault转账5000 USDC到供应商"，我会自动解析。';
-  }
-  
-  if (lowerInput.includes('风险') || lowerInput.includes('分析') || lowerInput.includes('risk') || lowerInput.includes('analysis')) {
-    return '🔍 **风险分析报告**\n\n当前待处理交易风险:\n\n⚠️ **高风险** - tx-3 (Operating Account)\n- 大额转账: 25,000 USDT\n- 首次收款地址\n- 建议: 验证收款方身份\n\n✅ **低风险** - tx-1 (Treasury Vault)\n- 已知收款方\n- 常规交易模式\n\n需要我提供更详细的分析吗？';
-  }
-  
-  if (lowerInput.includes('defi') || lowerInput.includes('策略') || lowerInput.includes('收益')) {
-    return '📊 **DeFi 策略建议**\n\n基于您的风险偏好，推荐:\n\n1. **稳定币借贷** (Aave V3)\n   - APY: 5.2%\n   - 风险: 低\n\n2. **ETH 质押** (Lido)\n   - APY: 3.8%\n   - 风险: 低\n\n3. **流动性挖矿** (Uniswap V3)\n   - APY: 12.5%\n   - 风险: 中\n\n需要我帮您配置自动投资策略吗？';
-  }
-  
-  return '感谢您的提问！我是 OmniCore 智能助手，可以帮助您:\n\n• 📊 查询和管理钱包\n• 💸 创建和签署交易\n• 🔍 分析交易风险\n• 📈 管理 DeFi 策略\n• ⚙️ 配置平台设置\n\n请告诉我您需要什么帮助？';
-}
-
-function detectAction(input: string): AIMessage['action'] | undefined {
-  const lowerInput = input.toLowerCase();
-  
-  if (lowerInput.includes('钱包') || lowerInput.includes('余额')) {
-    return { type: 'wallet_query', status: 'completed' };
-  }
-  if (lowerInput.includes('交易') || lowerInput.includes('转账')) {
-    return { type: 'transaction_create', status: 'pending' };
-  }
-  if (lowerInput.includes('风险') || lowerInput.includes('分析')) {
-    return { type: 'risk_analyze', status: 'completed' };
-  }
-  if (lowerInput.includes('defi') || lowerInput.includes('策略')) {
-    return { type: 'defi_manage', status: 'completed' };
-  }
-  
-  return undefined;
-}
+// Note: AI response generation and action detection have been moved to src/lib/ai-service.ts
+// The AIAssistant now uses the real AI service with API support and local fallback
