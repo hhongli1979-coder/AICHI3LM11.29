@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Globe } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { TimeDisplay } from '@/components/dashboard/TimeDisplay';
 import { WalletCard } from '@/components/wallet/WalletCard';
@@ -13,6 +13,7 @@ import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
 import { OrganizationSettings } from '@/components/organization/OrganizationSettings';
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
+import { MultiAgentDashboard } from '@/components/multi-agent/MultiAgentDashboard';
 import {
   generateMockWallets,
   generateMockTransactions,
@@ -112,10 +113,14 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-10">
             <TabsTrigger value="overview" className="gap-2">
               <ChartLine size={18} weight="duotone" />
               <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="multi-agent" className="gap-2">
+              <Globe size={18} weight="duotone" />
+              <span className="hidden sm:inline">全球收款</span>
             </TabsTrigger>
             <TabsTrigger value="wallets" className="gap-2">
               <Wallet size={18} weight="duotone" />
@@ -177,6 +182,10 @@ function App() {
             </div>
             
             <DeFiPositions positions={defiPositions} />
+          </TabsContent>
+          
+          <TabsContent value="multi-agent" className="space-y-6">
+            <MultiAgentDashboard />
           </TabsContent>
           
           <TabsContent value="wallets" className="space-y-6">

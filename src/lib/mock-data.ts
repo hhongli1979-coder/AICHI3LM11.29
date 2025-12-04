@@ -1,4 +1,4 @@
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, IntelligentAgent, AgentCollaboration, GlobalPaymentRoute, GlobalPaymentAccount, GlobalPaymentTransaction, ComplianceLicense, RiskMetrics, ReconciliationReport, A2APaymentProtocol, DAOGovernance, MultiAgentPlatformStats } from './types';
 
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
@@ -638,5 +638,498 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableLocalProcessing: true,
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
+  };
+}
+
+// Multi-Agent Global Payment Platform Mock Data - 多智能体全球收款平台
+
+export function generateMockIntelligentAgents(): IntelligentAgent[] {
+  return [
+    {
+      id: 'agent-1',
+      type: 'routing',
+      name: '路由智能体',
+      description: '根据实时费率、到账速度和合规要求动态选择最优收款路径',
+      status: 'active',
+      lastActiveAt: Date.now() - 5 * 1000,
+      processedCount: 15234,
+      successRate: 99.8,
+      avgProcessingTime: 120,
+      isEnabled: true,
+    },
+    {
+      id: 'agent-2',
+      type: 'compliance',
+      name: '合规智能体',
+      description: '自动验证贸易材料真实性，实现分钟级开户审核',
+      status: 'active',
+      lastActiveAt: Date.now() - 15 * 1000,
+      processedCount: 8456,
+      successRate: 99.5,
+      avgProcessingTime: 180,
+      isEnabled: true,
+    },
+    {
+      id: 'agent-3',
+      type: 'risk',
+      name: '风控智能体',
+      description: '秒级审核支付订单，将欺诈风险率控制在万分之一以下',
+      status: 'processing',
+      lastActiveAt: Date.now() - 2 * 1000,
+      processedCount: 45678,
+      successRate: 99.99,
+      avgProcessingTime: 50,
+      isEnabled: true,
+    },
+    {
+      id: 'agent-4',
+      type: 'settlement',
+      name: '结算智能体',
+      description: '自动执行资金结算，优化跨境资金流转效率',
+      status: 'active',
+      lastActiveAt: Date.now() - 30 * 1000,
+      processedCount: 12890,
+      successRate: 99.9,
+      avgProcessingTime: 200,
+      isEnabled: true,
+    },
+    {
+      id: 'agent-5',
+      type: 'reconciliation',
+      name: '对账智能体',
+      description: '智能对账系统，自动匹配交易记录与银行流水',
+      status: 'idle',
+      lastActiveAt: Date.now() - 60 * 1000,
+      processedCount: 5678,
+      successRate: 99.7,
+      avgProcessingTime: 300,
+      isEnabled: true,
+    },
+    {
+      id: 'agent-6',
+      type: 'analytics',
+      name: '分析智能体',
+      description: '实时分析交易数据，生成多维业财报表和洞察',
+      status: 'active',
+      lastActiveAt: Date.now() - 10 * 1000,
+      processedCount: 3456,
+      successRate: 99.6,
+      avgProcessingTime: 150,
+      isEnabled: true,
+    },
+  ];
+}
+
+export function generateMockAgentCollaborations(): AgentCollaboration[] {
+  return [
+    {
+      id: 'collab-1',
+      triggerAgent: 'routing',
+      collaboratingAgents: ['compliance', 'risk'],
+      decision: '选择香港->新加坡路径，费率最优0.15%，预计2小时到账',
+      timestamp: Date.now() - 5 * 60 * 1000,
+      processingTime: 350,
+      outcome: 'success',
+    },
+    {
+      id: 'collab-2',
+      triggerAgent: 'risk',
+      collaboratingAgents: ['compliance', 'analytics'],
+      decision: '检测到异常交易模式，触发二次验证流程',
+      timestamp: Date.now() - 15 * 60 * 1000,
+      processingTime: 120,
+      outcome: 'pending',
+    },
+    {
+      id: 'collab-3',
+      triggerAgent: 'settlement',
+      collaboratingAgents: ['routing', 'reconciliation'],
+      decision: '批量结算完成，自动匹配1,234笔交易',
+      timestamp: Date.now() - 30 * 60 * 1000,
+      processingTime: 2500,
+      outcome: 'success',
+    },
+    {
+      id: 'collab-4',
+      triggerAgent: 'compliance',
+      collaboratingAgents: ['risk', 'analytics'],
+      decision: '新客户KYC审核通过，风险评级：低',
+      timestamp: Date.now() - 45 * 60 * 1000,
+      processingTime: 180,
+      outcome: 'success',
+    },
+  ];
+}
+
+export function generateMockGlobalPaymentRoutes(): GlobalPaymentRoute[] {
+  return [
+    {
+      id: 'route-1',
+      sourceCurrency: 'USD',
+      targetCurrency: 'CNY',
+      paymentMethod: 'wire',
+      exchangeRate: 7.24,
+      fee: 0.15,
+      estimatedTime: '2-4小时',
+      isOptimal: true,
+      riskScore: 12,
+      complianceStatus: 'approved',
+    },
+    {
+      id: 'route-2',
+      sourceCurrency: 'EUR',
+      targetCurrency: 'GBP',
+      paymentMethod: 'wire',
+      exchangeRate: 0.86,
+      fee: 0.10,
+      estimatedTime: '即时',
+      isOptimal: true,
+      riskScore: 5,
+      complianceStatus: 'approved',
+    },
+    {
+      id: 'route-3',
+      sourceCurrency: 'USD',
+      targetCurrency: 'JPY',
+      paymentMethod: 'wire',
+      exchangeRate: 149.50,
+      fee: 0.12,
+      estimatedTime: '1-2小时',
+      isOptimal: false,
+      riskScore: 8,
+      complianceStatus: 'approved',
+    },
+    {
+      id: 'route-4',
+      sourceCurrency: 'CNY',
+      targetCurrency: 'USD',
+      paymentMethod: 'alipay',
+      exchangeRate: 0.138,
+      fee: 0.08,
+      estimatedTime: '即时',
+      isOptimal: true,
+      riskScore: 10,
+      complianceStatus: 'approved',
+    },
+  ];
+}
+
+export function generateMockGlobalPaymentAccounts(): GlobalPaymentAccount[] {
+  return [
+    {
+      id: 'gpa-1',
+      currency: 'USD',
+      balance: '1,234,567.89',
+      availableBalance: '1,200,000.00',
+      accountNumber: '****3456',
+      bankName: 'JP Morgan Chase',
+      country: '美国',
+      status: 'active',
+      createdAt: Date.now() - 365 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'gpa-2',
+      currency: 'EUR',
+      balance: '856,234.56',
+      availableBalance: '850,000.00',
+      accountNumber: '****7890',
+      bankName: 'Deutsche Bank',
+      country: '德国',
+      status: 'active',
+      createdAt: Date.now() - 300 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'gpa-3',
+      currency: 'CNY',
+      balance: '5,678,901.23',
+      availableBalance: '5,500,000.00',
+      accountNumber: '****1234',
+      bankName: '中国银行',
+      country: '中国',
+      status: 'active',
+      createdAt: Date.now() - 200 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'gpa-4',
+      currency: 'GBP',
+      balance: '456,789.12',
+      availableBalance: '450,000.00',
+      accountNumber: '****5678',
+      bankName: 'HSBC',
+      country: '英国',
+      status: 'active',
+      createdAt: Date.now() - 150 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'gpa-5',
+      currency: 'SGD',
+      balance: '234,567.89',
+      availableBalance: '230,000.00',
+      accountNumber: '****9012',
+      bankName: 'DBS Bank',
+      country: '新加坡',
+      status: 'active',
+      createdAt: Date.now() - 100 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockGlobalPaymentTransactions(): GlobalPaymentTransaction[] {
+  return [
+    {
+      id: 'gpt-1',
+      fromAccount: 'gpa-1',
+      toAccount: 'external-supplier-1',
+      amount: '50,000.00',
+      sourceCurrency: 'USD',
+      targetCurrency: 'CNY',
+      exchangeRate: 7.24,
+      fee: '75.00',
+      paymentMethod: 'wire',
+      status: 'settled',
+      routeId: 'route-1',
+      agentDecisions: [
+        { agentType: 'routing', decision: '选择最优路径', confidence: 0.98, timestamp: Date.now() - 2 * 60 * 60 * 1000 },
+        { agentType: 'compliance', decision: '合规审核通过', confidence: 0.99, timestamp: Date.now() - 2 * 60 * 60 * 1000 + 5000 },
+        { agentType: 'risk', decision: '风险评分：低', confidence: 0.97, timestamp: Date.now() - 2 * 60 * 60 * 1000 + 8000 },
+      ],
+      createdAt: Date.now() - 3 * 60 * 60 * 1000,
+      settledAt: Date.now() - 1 * 60 * 60 * 1000,
+      estimatedSettlement: '2小时',
+    },
+    {
+      id: 'gpt-2',
+      fromAccount: 'gpa-2',
+      toAccount: 'external-client-1',
+      amount: '25,000.00',
+      sourceCurrency: 'EUR',
+      targetCurrency: 'GBP',
+      exchangeRate: 0.86,
+      fee: '25.00',
+      paymentMethod: 'wire',
+      status: 'processing',
+      routeId: 'route-2',
+      agentDecisions: [
+        { agentType: 'routing', decision: '选择SEPA即时路径', confidence: 0.99, timestamp: Date.now() - 30 * 60 * 1000 },
+        { agentType: 'compliance', decision: '验证中', confidence: 0.85, timestamp: Date.now() - 25 * 60 * 1000 },
+      ],
+      createdAt: Date.now() - 45 * 60 * 1000,
+      estimatedSettlement: '30分钟',
+    },
+    {
+      id: 'gpt-3',
+      fromAccount: 'gpa-3',
+      toAccount: 'external-supplier-2',
+      amount: '100,000.00',
+      sourceCurrency: 'CNY',
+      targetCurrency: 'USD',
+      exchangeRate: 0.138,
+      fee: '80.00',
+      paymentMethod: 'alipay',
+      status: 'compliance_review',
+      routeId: 'route-4',
+      agentDecisions: [
+        { agentType: 'routing', decision: '选择支付宝跨境支付', confidence: 0.96, timestamp: Date.now() - 20 * 60 * 1000 },
+        { agentType: 'risk', decision: '大额交易，需人工复核', confidence: 0.75, timestamp: Date.now() - 15 * 60 * 1000 },
+      ],
+      createdAt: Date.now() - 25 * 60 * 1000,
+      estimatedSettlement: '1-2小时',
+    },
+  ];
+}
+
+export function generateMockComplianceLicenses(): ComplianceLicense[] {
+  return [
+    {
+      id: 'license-1',
+      country: '美国',
+      licenseType: 'MSB',
+      licenseName: 'Money Services Business License',
+      issueDate: Date.now() - 2 * 365 * 24 * 60 * 60 * 1000,
+      expiryDate: Date.now() + 1 * 365 * 24 * 60 * 60 * 1000,
+      status: 'active',
+    },
+    {
+      id: 'license-2',
+      country: '欧盟',
+      licenseType: 'EMI',
+      licenseName: 'Electronic Money Institution License',
+      issueDate: Date.now() - 3 * 365 * 24 * 60 * 60 * 1000,
+      expiryDate: Date.now() + 2 * 365 * 24 * 60 * 60 * 1000,
+      status: 'active',
+    },
+    {
+      id: 'license-3',
+      country: '英国',
+      licenseType: 'FCA',
+      licenseName: 'FCA Authorized Payment Institution',
+      issueDate: Date.now() - 1.5 * 365 * 24 * 60 * 60 * 1000,
+      expiryDate: Date.now() + 1.5 * 365 * 24 * 60 * 60 * 1000,
+      status: 'active',
+    },
+    {
+      id: 'license-4',
+      country: '新加坡',
+      licenseType: 'MPI',
+      licenseName: 'Major Payment Institution License',
+      issueDate: Date.now() - 2.5 * 365 * 24 * 60 * 60 * 1000,
+      expiryDate: Date.now() + 0.5 * 365 * 24 * 60 * 60 * 1000,
+      status: 'renewal',
+    },
+    {
+      id: 'license-5',
+      country: '香港',
+      licenseType: 'MSO',
+      licenseName: 'Money Service Operator License',
+      issueDate: Date.now() - 1 * 365 * 24 * 60 * 60 * 1000,
+      expiryDate: Date.now() + 2 * 365 * 24 * 60 * 60 * 1000,
+      status: 'active',
+    },
+    {
+      id: 'license-6',
+      country: '日本',
+      licenseType: 'JFSA',
+      licenseName: 'Funds Transfer Service Provider',
+      issueDate: Date.now() - 2 * 365 * 24 * 60 * 60 * 1000,
+      expiryDate: Date.now() + 1 * 365 * 24 * 60 * 60 * 1000,
+      status: 'active',
+    },
+  ];
+}
+
+export function generateMockRiskMetrics(): RiskMetrics {
+  return {
+    fraudRate: 0.00008,
+    blockedTransactions: 23,
+    flaggedTransactions: 156,
+    avgRiskScore: 15.5,
+    realTimeMonitoring: true,
+    lastScanAt: Date.now() - 30 * 1000,
+  };
+}
+
+export function generateMockReconciliationReports(): ReconciliationReport[] {
+  return [
+    {
+      id: 'recon-1',
+      period: '2024年12月',
+      totalTransactions: 15678,
+      matchedTransactions: 15650,
+      discrepancies: 28,
+      autoReconciled: 15600,
+      manualReview: 78,
+      status: 'in_progress',
+      generatedAt: Date.now() - 1 * 60 * 60 * 1000,
+    },
+    {
+      id: 'recon-2',
+      period: '2024年11月',
+      totalTransactions: 14532,
+      matchedTransactions: 14532,
+      discrepancies: 0,
+      autoReconciled: 14500,
+      manualReview: 32,
+      status: 'completed',
+      generatedAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'recon-3',
+      period: '2024年10月',
+      totalTransactions: 13890,
+      matchedTransactions: 13890,
+      discrepancies: 0,
+      autoReconciled: 13850,
+      manualReview: 40,
+      status: 'completed',
+      generatedAt: Date.now() - 60 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockA2AProtocols(): A2APaymentProtocol[] {
+  return [
+    {
+      id: 'a2a-1',
+      name: 'MCP Protocol',
+      version: '2.0',
+      description: '多智能体协作协议，支持AI Agent间直接价值交换',
+      isEnabled: true,
+      supportedAgents: ['routing', 'settlement', 'risk'],
+      transactionCount: 5678,
+    },
+    {
+      id: 'a2a-2',
+      name: 'DePA Protocol',
+      version: '1.5',
+      description: '去中心化支付代理协议，一次授权多次免密',
+      isEnabled: true,
+      supportedAgents: ['settlement', 'compliance'],
+      transactionCount: 3456,
+    },
+    {
+      id: 'a2a-3',
+      name: 'Agent-to-Agent Direct',
+      version: '1.0',
+      description: 'AI Agent经济原生支付协议',
+      isEnabled: false,
+      supportedAgents: ['routing', 'settlement'],
+      transactionCount: 1234,
+    },
+  ];
+}
+
+export function generateMockDAOProposals(): DAOGovernance[] {
+  return [
+    {
+      id: 'dao-1',
+      proposalTitle: '新增巴西雷亚尔(BRL)收款通道',
+      description: '提议新增巴西本地支付方式PIX和Boleto，覆盖拉美市场',
+      proposer: '0x1234...5678',
+      status: 'active',
+      votesFor: 1250000,
+      votesAgainst: 320000,
+      quorum: 1000000,
+      endDate: Date.now() + 5 * 24 * 60 * 60 * 1000,
+      createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'dao-2',
+      proposalTitle: '降低平台手续费至0.1%',
+      description: '提议将跨境支付手续费从0.15%降至0.1%以提升竞争力',
+      proposer: '0x8765...4321',
+      status: 'passed',
+      votesFor: 2150000,
+      votesAgainst: 450000,
+      quorum: 1000000,
+      endDate: Date.now() - 3 * 24 * 60 * 60 * 1000,
+      createdAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'dao-3',
+      proposalTitle: '接入Anthropic Claude模型',
+      description: '提议将Claude模型纳入平台AI智能体底座选项',
+      proposer: '0xabcd...efgh',
+      status: 'pending',
+      votesFor: 0,
+      votesAgainst: 0,
+      quorum: 1000000,
+      endDate: Date.now() + 14 * 24 * 60 * 60 * 1000,
+      createdAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockMultiAgentPlatformStats(): MultiAgentPlatformStats {
+  return {
+    totalAgents: 6,
+    activeAgents: 5,
+    totalTransactionsToday: 2456,
+    totalVolumeToday: '$12,345,678',
+    avgSettlementTime: '2.5小时',
+    supportedCurrencies: 42,
+    supportedPaymentMethods: 23,
+    complianceLicenses: 65,
+    fraudRatePercent: '0.008%',
+    efficiencyImprovement: '+30%',
   };
 }
