@@ -167,6 +167,8 @@ export interface AIMessage {
   content: string;
   timestamp: number;
   action?: AIAction;
+  isSimulated?: boolean;
+  modelName?: string;
 }
 
 export interface AIAction {
