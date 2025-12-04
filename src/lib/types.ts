@@ -109,6 +109,40 @@ export interface DCAStrategy {
   enabled: boolean;
 }
 
+// Multi-Stop Order Types - 多停功能
+export type StopOrderType = 'stop-loss' | 'take-profit' | 'trailing-stop';
+export type StopOrderStatus = 'active' | 'triggered' | 'cancelled' | 'expired';
+
+export interface StopOrder {
+  id: string;
+  walletId: string;
+  token: string;
+  network: BlockchainNetwork;
+  type: StopOrderType;
+  triggerPrice: string;
+  currentPrice: string;
+  amount: string;
+  percentage: number; // Percentage of holdings to sell/transfer
+  targetAddress?: string;
+  status: StopOrderStatus;
+  createdAt: number;
+  triggeredAt?: number;
+  expiresAt?: number;
+  description?: string;
+}
+
+export interface MultiStopStrategy {
+  id: string;
+  name: string;
+  walletId: string;
+  token: string;
+  network: BlockchainNetwork;
+  stopOrders: StopOrder[];
+  enabled: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface Organization {
   id: string;
   name: string;

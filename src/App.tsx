@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, TrendDown } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { TimeDisplay } from '@/components/dashboard/TimeDisplay';
 import { WalletCard } from '@/components/wallet/WalletCard';
@@ -13,12 +13,15 @@ import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
 import { OrganizationSettings } from '@/components/organization/OrganizationSettings';
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
+import { StopOrderList } from '@/components/stop-orders/StopOrderList';
 import {
   generateMockWallets,
   generateMockTransactions,
   generateMockDeFiPositions,
   generateMockOmniStats,
   generateMockNotifications,
+  generateMockStopOrders,
+  generateMockMultiStopStrategies,
 } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -32,6 +35,8 @@ function App() {
   const defiPositions = generateMockDeFiPositions();
   const omniStats = generateMockOmniStats();
   const notifications = generateMockNotifications();
+  const stopOrders = generateMockStopOrders();
+  const multiStopStrategies = generateMockMultiStopStrategies();
   const unreadCount = notifications.filter(n => !n.read).length;
   
   const totalAssets = wallets.reduce((sum, wallet) => {
@@ -112,7 +117,7 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-10">
             <TabsTrigger value="overview" className="gap-2">
               <ChartLine size={18} weight="duotone" />
               <span className="hidden sm:inline">Overview</span>
@@ -124,6 +129,10 @@ function App() {
             <TabsTrigger value="transactions" className="gap-2">
               <ArrowsLeftRight size={18} weight="duotone" />
               <span className="hidden sm:inline">Transactions</span>
+            </TabsTrigger>
+            <TabsTrigger value="stop-orders" className="gap-2">
+              <TrendDown size={18} weight="duotone" />
+              <span className="hidden sm:inline">多停</span>
             </TabsTrigger>
             <TabsTrigger value="defi" className="gap-2">
               <ChartLine size={18} weight="duotone" />
@@ -205,6 +214,17 @@ function App() {
             </div>
             
             <TransactionList transactions={transactions} />
+          </TabsContent>
+          
+          <TabsContent value="stop-orders" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">多停策略 (Multi-Stop)</h2>
+            </div>
+            
+            <StopOrderList 
+              strategies={multiStopStrategies} 
+              stopOrders={stopOrders} 
+            />
           </TabsContent>
           
           <TabsContent value="defi" className="space-y-6">
