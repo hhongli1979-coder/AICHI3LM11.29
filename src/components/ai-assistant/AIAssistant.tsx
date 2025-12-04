@@ -21,13 +21,19 @@ import {
   Memory,
   Gear,
   Database,
+  Stop,
+  Warning,
+  Trash,
 } from '@phosphor-icons/react';
 import {
-  generateMockAIAssistantState,
+  generateMockAICapabilities,
+  generateMockAIMemories,
   formatTimeAgo,
 } from '@/lib/mock-data';
 import type { AIMessage, AIMemoryItem, AICapability } from '@/lib/types';
 import { AIModelSettingsPanel } from './AIModelSettings';
+import { useAIChat } from '@/hooks/useAIChat';
+import { toast } from 'sonner';
 
 function getCapabilityIcon(iconName: string) {
   const icons: Record<string, React.ReactNode> = {
@@ -210,67 +216,63 @@ function CapabilityCard({ capability, onToggle }: CapabilityCardProps) {
 }
 
 export function AIAssistant() {
-  const [state, setState] = useState(generateMockAIAssistantState);
+  const {
+    messages,
+    isLoading,
+    isStreaming,
+    currentResponse,
+    error,
+    sendMessage,
+    clearMessages,
+    abortRequest,
+    settings,
+    activeModel,
+    updateSettings,
+  } = useAIChat({
+    onError: (err) => {
+      toast.error(`AI错误: ${err.message}`);
+    },
+  });
+  
   const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [capabilities, setCapabilities] = useState(generateMockAICapabilities);
+  const [memories] = useState(generateMockAIMemories);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [state.currentConversation]);
+  }, [messages, currentResponse]);
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
-
-    const userMessage: AIMessage = {
-      id: `msg-${Date.now()}`,
-      role: 'user',
-      content: inputValue,
-      timestamp: Date.now(),
-    };
-
-    setState((prev) => ({
-      ...prev,
-      currentConversation: [...prev.currentConversation, userMessage],
-      lastActiveAt: Date.now(),
-    }));
-
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
+    const message = inputValue;
     setInputValue('');
-    setIsTyping(true);
+    await sendMessage(message);
+  };
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: AIMessage = {
-        id: `msg-${Date.now()}`,
-        role: 'assistant',
-        content: generateAIResponse(inputValue),
-        timestamp: Date.now(),
-        action: detectAction(inputValue),
-      };
-
-      setState((prev) => ({
-        ...prev,
-        currentConversation: [...prev.currentConversation, aiResponse],
-        lastActiveAt: Date.now(),
-      }));
-      setIsTyping(false);
-    }, 1500);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   const handleToggleCapability = (id: string) => {
-    setState((prev) => ({
-      ...prev,
-      capabilities: prev.capabilities.map((cap) =>
+    setCapabilities((prev) =>
+      prev.map((cap) =>
         cap.id === id ? { ...cap, enabled: !cap.enabled } : cap
-      ),
-    }));
+      )
+    );
   };
 
-  const memoryCapabilities = state.capabilities.filter((c) => c.category === 'memory');
-  const languageCapabilities = state.capabilities.filter((c) => c.category === 'language');
-  const controlCapabilities = state.capabilities.filter((c) => c.category === 'control');
+  const memoryCapabilities = capabilities.filter((c) => c.category === 'memory');
+  const languageCapabilities = capabilities.filter((c) => c.category === 'language');
+  const controlCapabilities = capabilities.filter((c) => c.category === 'control');
+  
+  const isActive = activeModel !== null && activeModel.enabled;
 
   return (
     <div className="space-y-6">
@@ -282,13 +284,15 @@ export function AIAssistant() {
           <div>
             <h2 className="text-3xl font-bold">AI 智能助手</h2>
             <p className="text-muted-foreground">
-              具备记忆、语言理解和全面控制能力的智能助手
+              {activeModel 
+                ? `当前模型: ${activeModel.name} (${activeModel.modelName})`
+                : '请在"模型"标签页中配置并启用一个AI模型'}
             </p>
           </div>
         </div>
-        <Badge className="gap-1" variant={state.isActive ? 'default' : 'secondary'}>
+        <Badge className="gap-1" variant={isActive ? 'default' : 'secondary'}>
           <Sparkle size={14} weight="fill" />
-          {state.isActive ? '活跃中' : '休眠'}
+          {isActive ? '已连接' : '未连接'}
         </Badge>
       </div>
 
@@ -316,20 +320,71 @@ export function AIAssistant() {
         <TabsContent value="chat" className="space-y-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <ChatCircle size={20} weight="duotone" />
-                智能对话
-              </CardTitle>
-              <CardDescription>
-                使用自然语言与 AI 助手交流，执行钱包操作
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ChatCircle size={20} weight="duotone" />
+                    智能对话
+                  </CardTitle>
+                  <CardDescription>
+                    使用自然语言与 AI 助手交流，执行钱包操作
+                  </CardDescription>
+                </div>
+                {messages.length > 0 && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={clearMessages}
+                    className="gap-1"
+                  >
+                    <Trash size={14} />
+                    清空对话
+                  </Button>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
+              {/* Error display */}
+              {error && (
+                <div className="mb-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive flex items-center gap-2">
+                  <Warning size={18} weight="duotone" />
+                  <span className="text-sm">{error}</span>
+                </div>
+              )}
+              
+              {/* No model warning */}
+              {!activeModel && (
+                <div className="mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center gap-2">
+                  <Warning size={18} weight="duotone" />
+                  <span className="text-sm">请先在"模型"标签页中配置并启用一个AI模型</span>
+                </div>
+              )}
+              
               <ScrollArea className="h-[400px] pr-4" ref={scrollRef}>
-                {state.currentConversation.map((message) => (
+                {messages.length === 0 && !isStreaming && (
+                  <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
+                    <Robot size={48} weight="duotone" className="mb-4 opacity-50" />
+                    <p className="text-lg font-medium">开始与 AI 助手对话</p>
+                    <p className="text-sm mt-1">输入您的问题或选择下方的快捷指令</p>
+                  </div>
+                )}
+                {messages.map((message) => (
                   <MessageBubble key={message.id} message={message} />
                 ))}
-                {isTyping && (
+                {/* Streaming response */}
+                {isStreaming && currentResponse && (
+                  <div className="flex justify-start mb-4">
+                    <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-muted">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Robot size={16} weight="duotone" className="text-primary animate-pulse" />
+                        <span className="text-xs font-medium text-primary">OmniCore AI</span>
+                      </div>
+                      <div className="text-sm whitespace-pre-wrap">{currentResponse}</div>
+                    </div>
+                  </div>
+                )}
+                {/* Loading indicator */}
+                {isLoading && !isStreaming && (
                   <div className="flex justify-start mb-4">
                     <div className="bg-muted rounded-2xl px-4 py-3">
                       <div className="flex items-center gap-2">
@@ -342,16 +397,28 @@ export function AIAssistant() {
               </ScrollArea>
               <div className="flex gap-2 mt-4">
                 <Input
-                  placeholder="输入您的问题或指令..."
+                  placeholder={activeModel ? "输入您的问题或指令..." : "请先配置AI模型..."}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  onKeyDown={handleKeyDown}
                   className="flex-1"
+                  disabled={!activeModel || isLoading}
                 />
-                <Button onClick={handleSendMessage} className="gap-2">
-                  <PaperPlaneTilt size={18} weight="fill" />
-                  发送
-                </Button>
+                {isLoading ? (
+                  <Button onClick={abortRequest} variant="destructive" className="gap-2">
+                    <Stop size={18} weight="fill" />
+                    停止
+                  </Button>
+                ) : (
+                  <Button 
+                    onClick={handleSendMessage} 
+                    className="gap-2"
+                    disabled={!activeModel || !inputValue.trim()}
+                  >
+                    <PaperPlaneTilt size={18} weight="fill" />
+                    发送
+                  </Button>
+                )}
               </div>
               <div className="flex flex-wrap gap-2 mt-3">
                 {['查看钱包余额', '创建新交易', '分析风险', 'DeFi策略推荐'].map((suggestion) => (
@@ -383,7 +450,7 @@ export function AIAssistant() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2">
-                {state.memories.map((memory) => (
+                {memories.map((memory) => (
                   <MemoryCard key={memory.id} memory={memory} />
                 ))}
               </div>
@@ -394,15 +461,15 @@ export function AIAssistant() {
                 </div>
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
-                    <div className="text-2xl font-bold text-purple-600">{state.memories.length}</div>
+                    <div className="text-2xl font-bold text-purple-600">{memories.length}</div>
                     <div className="text-xs text-muted-foreground">已学习记忆</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-blue-600">
-                      {state.memories.length > 0
+                      {memories.length > 0
                         ? Math.round(
-                            state.memories.reduce((acc, m) => acc + m.confidence, 0) /
-                              state.memories.length *
+                            memories.reduce((acc, m) => acc + m.confidence, 0) /
+                              memories.length *
                               100
                           )
                         : 0}%
@@ -411,7 +478,7 @@ export function AIAssistant() {
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-green-600">
-                      {state.memories.reduce((acc, m) => acc + m.usageCount, 0)}
+                      {memories.reduce((acc, m) => acc + m.usageCount, 0)}
                     </div>
                     <div className="text-xs text-muted-foreground">总使用次数</div>
                   </div>
@@ -494,46 +561,4 @@ export function AIAssistant() {
       </Tabs>
     </div>
   );
-}
-
-// Helper functions for AI responses
-function generateAIResponse(input: string): string {
-  const lowerInput = input.toLowerCase();
-  
-  if (lowerInput.includes('钱包') || lowerInput.includes('余额') || lowerInput.includes('wallet') || lowerInput.includes('balance')) {
-    return '我已经检查了您的钱包状态。您目前有:\n\n💰 **总资产**: $231,690.75\n\n主要钱包:\n- Treasury Vault: $125,432 (Ethereum)\n- Operating Account: $23,234 (Polygon)\n- DeFi Strategy: $8,024 (Arbitrum)\n\n需要我执行什么操作吗？';
-  }
-  
-  if (lowerInput.includes('交易') || lowerInput.includes('转账') || lowerInput.includes('transaction') || lowerInput.includes('transfer')) {
-    return '我可以帮您创建新交易。请提供以下信息:\n\n1. 发送方钱包\n2. 接收地址\n3. 金额和代币\n4. 交易描述\n\n或者您可以说 "从Treasury Vault转账5000 USDC到供应商"，我会自动解析。';
-  }
-  
-  if (lowerInput.includes('风险') || lowerInput.includes('分析') || lowerInput.includes('risk') || lowerInput.includes('analysis')) {
-    return '🔍 **风险分析报告**\n\n当前待处理交易风险:\n\n⚠️ **高风险** - tx-3 (Operating Account)\n- 大额转账: 25,000 USDT\n- 首次收款地址\n- 建议: 验证收款方身份\n\n✅ **低风险** - tx-1 (Treasury Vault)\n- 已知收款方\n- 常规交易模式\n\n需要我提供更详细的分析吗？';
-  }
-  
-  if (lowerInput.includes('defi') || lowerInput.includes('策略') || lowerInput.includes('收益')) {
-    return '📊 **DeFi 策略建议**\n\n基于您的风险偏好，推荐:\n\n1. **稳定币借贷** (Aave V3)\n   - APY: 5.2%\n   - 风险: 低\n\n2. **ETH 质押** (Lido)\n   - APY: 3.8%\n   - 风险: 低\n\n3. **流动性挖矿** (Uniswap V3)\n   - APY: 12.5%\n   - 风险: 中\n\n需要我帮您配置自动投资策略吗？';
-  }
-  
-  return '感谢您的提问！我是 OmniCore 智能助手，可以帮助您:\n\n• 📊 查询和管理钱包\n• 💸 创建和签署交易\n• 🔍 分析交易风险\n• 📈 管理 DeFi 策略\n• ⚙️ 配置平台设置\n\n请告诉我您需要什么帮助？';
-}
-
-function detectAction(input: string): AIMessage['action'] | undefined {
-  const lowerInput = input.toLowerCase();
-  
-  if (lowerInput.includes('钱包') || lowerInput.includes('余额')) {
-    return { type: 'wallet_query', status: 'completed' };
-  }
-  if (lowerInput.includes('交易') || lowerInput.includes('转账')) {
-    return { type: 'transaction_create', status: 'pending' };
-  }
-  if (lowerInput.includes('风险') || lowerInput.includes('分析')) {
-    return { type: 'risk_analyze', status: 'completed' };
-  }
-  if (lowerInput.includes('defi') || lowerInput.includes('策略')) {
-    return { type: 'defi_manage', status: 'completed' };
-  }
-  
-  return undefined;
 }
