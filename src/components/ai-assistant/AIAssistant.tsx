@@ -233,6 +233,7 @@ export function AIAssistant() {
   const [isConnected, setIsConnected] = useState(false);
   const [connectionChecked, setConnectionChecked] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const previousConnectionRef = useRef<boolean | null>(null);
 
   // Check AI model connection on mount
   useEffect(() => {
@@ -244,9 +245,15 @@ export function AIAssistant() {
       if (activeModel) {
         const available = await checkModelAvailability(activeModel);
         setIsConnected(available);
-        if (available) {
-          toast.success(`已连接到 ${activeModel.name}`);
+        // Only show toast when connection status changes (not on initial mount)
+        if (previousConnectionRef.current !== null && available !== previousConnectionRef.current) {
+          if (available) {
+            toast.success(`已连接到 ${activeModel.name}`);
+          } else {
+            toast.info('AI模型连接已断开，使用模拟模式');
+          }
         }
+        previousConnectionRef.current = available;
       }
       setConnectionChecked(true);
     };

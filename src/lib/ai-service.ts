@@ -81,6 +81,8 @@ async function callOpenAICompatibleAPI(
   modelName: string,
   prompt: string,
   systemPrompt: string,
+  maxTokens: number,
+  temperature: number,
   apiKey?: string
 ): Promise<string> {
   const headers: Record<string, string> = {
@@ -100,8 +102,8 @@ async function callOpenAICompatibleAPI(
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt },
       ],
-      max_tokens: 2048,
-      temperature: 0.7,
+      max_tokens: maxTokens,
+      temperature: temperature,
     }),
   });
 
@@ -116,8 +118,7 @@ async function callOpenAICompatibleAPI(
 // Main AI service function
 export async function sendMessage(
   prompt: string,
-  settings: AIModelSettings | null,
-  conversationHistory: Array<{ role: string; content: string }> = []
+  settings: AIModelSettings | null
 ): Promise<AIResponse> {
   // If no settings or no models configured, use simulated response
   if (!settings || settings.models.length === 0) {
@@ -158,6 +159,8 @@ export async function sendMessage(
         activeModel.modelName,
         prompt,
         systemPrompt,
+        activeModel.maxTokens,
+        activeModel.temperature,
         activeModel.apiKey
       );
     }
