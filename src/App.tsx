@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, ChartPie, BellRinging, Target } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { WalletCard } from '@/components/wallet/WalletCard';
 import { CreateWalletDialog } from '@/components/wallet/CreateWalletDialog';
@@ -12,6 +12,10 @@ import { OmniTokenDashboard } from '@/components/token/OmniTokenDashboard';
 import { OrganizationSettings } from '@/components/organization/OrganizationSettings';
 import { AddressBook } from '@/components/addressbook/AddressBook';
 import { AIAssistant } from '@/components/ai-assistant/AIAssistant';
+import { MarketAnalysis } from '@/components/market-analysis/MarketAnalysis';
+import { PortfolioAnalyticsPanel } from '@/components/portfolio/PortfolioAnalytics';
+import { SmartAlerts } from '@/components/alerts/SmartAlerts';
+import { TradingStrategies } from '@/components/trading/TradingStrategies';
 import {
   generateMockWallets,
   generateMockTransactions,
@@ -109,42 +113,54 @@ function App() {
       
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid lg:grid-cols-12">
             <TabsTrigger value="overview" className="gap-2">
               <ChartLine size={18} weight="duotone" />
-              <span className="hidden sm:inline">Overview</span>
+              <span className="hidden sm:inline">概览</span>
+            </TabsTrigger>
+            <TabsTrigger value="market" className="gap-2">
+              <ChartLine size={18} weight="duotone" />
+              <span className="hidden sm:inline">市场</span>
+            </TabsTrigger>
+            <TabsTrigger value="portfolio" className="gap-2">
+              <ChartPie size={18} weight="duotone" />
+              <span className="hidden sm:inline">组合</span>
             </TabsTrigger>
             <TabsTrigger value="wallets" className="gap-2">
               <Wallet size={18} weight="duotone" />
-              <span className="hidden sm:inline">Wallets</span>
+              <span className="hidden sm:inline">钱包</span>
             </TabsTrigger>
             <TabsTrigger value="transactions" className="gap-2">
               <ArrowsLeftRight size={18} weight="duotone" />
-              <span className="hidden sm:inline">Transactions</span>
+              <span className="hidden sm:inline">交易</span>
             </TabsTrigger>
             <TabsTrigger value="defi" className="gap-2">
-              <ChartLine size={18} weight="duotone" />
+              <Coins size={18} weight="duotone" />
               <span className="hidden sm:inline">DeFi</span>
             </TabsTrigger>
-            <TabsTrigger value="payments" className="gap-2">
-              <CreditCard size={18} weight="duotone" />
-              <span className="hidden sm:inline">Payments</span>
+            <TabsTrigger value="alerts" className="gap-2">
+              <BellRinging size={18} weight="duotone" />
+              <span className="hidden sm:inline">提醒</span>
             </TabsTrigger>
-            <TabsTrigger value="omni" className="gap-2">
-              <Coins size={18} weight="duotone" />
-              <span className="hidden sm:inline">OMNI</span>
+            <TabsTrigger value="strategies" className="gap-2">
+              <Target size={18} weight="duotone" />
+              <span className="hidden sm:inline">策略</span>
             </TabsTrigger>
             <TabsTrigger value="ai-assistant" className="gap-2">
               <Robot size={18} weight="duotone" />
               <span className="hidden sm:inline">AI助手</span>
             </TabsTrigger>
+            <TabsTrigger value="omni" className="gap-2">
+              <Coins size={18} weight="duotone" />
+              <span className="hidden sm:inline">OMNI</span>
+            </TabsTrigger>
             <TabsTrigger value="addressbook" className="gap-2">
               <AddressBookIcon size={18} weight="duotone" />
-              <span className="hidden sm:inline">Contacts</span>
+              <span className="hidden sm:inline">通讯录</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Gear size={18} weight="duotone" />
-              <span className="hidden sm:inline">Settings</span>
+              <span className="hidden sm:inline">设置</span>
             </TabsTrigger>
           </TabsList>
           
@@ -174,6 +190,14 @@ function App() {
             </div>
             
             <DeFiPositions positions={defiPositions} />
+          </TabsContent>
+          
+          <TabsContent value="market" className="space-y-6">
+            <MarketAnalysis />
+          </TabsContent>
+          
+          <TabsContent value="portfolio" className="space-y-6">
+            <PortfolioAnalyticsPanel />
           </TabsContent>
           
           <TabsContent value="wallets" className="space-y-6">
@@ -216,27 +240,12 @@ function App() {
             <DeFiPositions positions={defiPositions} />
           </TabsContent>
           
-          <TabsContent value="payments" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold">Payment Gateway</h2>
-              <Button className="gap-2">
-                <CreditCard size={18} weight="bold" />
-                Create Payment Link
-              </Button>
-            </div>
-            
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="border rounded-lg p-8 text-center text-muted-foreground">
-                <CreditCard size={48} weight="duotone" className="mx-auto mb-4 text-primary" />
-                <p>Accept payments via crypto, credit cards, Alipay, WeChat Pay, and UnionPay</p>
-                <Button className="mt-4">Set Up Payment Gateway</Button>
-              </div>
-              <div className="border rounded-lg p-8 text-center text-muted-foreground">
-                <Coins size={48} weight="duotone" className="mx-auto mb-4 text-accent" />
-                <p>Create payment links and QR codes for instant settlements</p>
-                <Button variant="outline" className="mt-4">View Documentation</Button>
-              </div>
-            </div>
+          <TabsContent value="alerts" className="space-y-6">
+            <SmartAlerts />
+          </TabsContent>
+          
+          <TabsContent value="strategies" className="space-y-6">
+            <TradingStrategies />
           </TabsContent>
           
           <TabsContent value="omni" className="space-y-6">
