@@ -1,4 +1,4 @@
-import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint } from './types';
+import type { Wallet, Transaction, DeFiPosition, PaymentRequest, DCAStrategy, OmniTokenStats, NotificationItem, TokenBalance, AIMessage, AIMemoryItem, AICapability, AIAssistantState, AIModelConfig, AIModelSettings, CustomEndpoint, MarketData, MarketSentiment, PriceHistory, PortfolioAnalytics, PerformancePoint, SmartAlert, TradingStrategy, WhaleMovement, OnChainMetrics } from './types';
 
 export const NETWORKS = {
   ethereum: { name: 'Ethereum', color: '#627EEA', icon: '⟠' },
@@ -638,5 +638,319 @@ export function generateMockAIModelSettings(): AIModelSettings {
     enableLocalProcessing: true,
     enableSecondaryDevelopment: true,
     customEndpoints: generateMockCustomEndpoints(),
+  };
+}
+
+// Financial Intelligent Agent Mock Data - 金融智能体模拟数据
+
+export function generateMockMarketData(): MarketData[] {
+  return [
+    {
+      id: 'market-btc',
+      symbol: 'BTC',
+      name: 'Bitcoin',
+      price: 43256.78,
+      change24h: 1245.32,
+      changePercent24h: 2.96,
+      volume24h: 28456000000,
+      marketCap: 847000000000,
+      high24h: 43890.00,
+      low24h: 41850.00,
+      lastUpdated: Date.now(),
+    },
+    {
+      id: 'market-eth',
+      symbol: 'ETH',
+      name: 'Ethereum',
+      price: 2345.67,
+      change24h: 78.45,
+      changePercent24h: 3.46,
+      volume24h: 12340000000,
+      marketCap: 281000000000,
+      high24h: 2398.00,
+      low24h: 2256.00,
+      lastUpdated: Date.now(),
+    },
+    {
+      id: 'market-bnb',
+      symbol: 'BNB',
+      name: 'BNB',
+      price: 312.45,
+      change24h: -5.23,
+      changePercent24h: -1.65,
+      volume24h: 890000000,
+      marketCap: 48000000000,
+      high24h: 320.00,
+      low24h: 308.00,
+      lastUpdated: Date.now(),
+    },
+    {
+      id: 'market-sol',
+      symbol: 'SOL',
+      name: 'Solana',
+      price: 98.76,
+      change24h: 8.92,
+      changePercent24h: 9.93,
+      volume24h: 2450000000,
+      marketCap: 42000000000,
+      high24h: 102.00,
+      low24h: 88.50,
+      lastUpdated: Date.now(),
+    },
+    {
+      id: 'market-omni',
+      symbol: 'OMNI',
+      name: 'Omni Token',
+      price: 2.45,
+      change24h: 0.12,
+      changePercent24h: 5.15,
+      volume24h: 12500000,
+      marketCap: 245000000,
+      high24h: 2.58,
+      low24h: 2.31,
+      lastUpdated: Date.now(),
+    },
+  ];
+}
+
+export function generateMockMarketSentiment(): MarketSentiment {
+  return {
+    overall: 'bullish',
+    fearGreedIndex: 68,
+    socialMentions: 125400,
+    newsScore: 72,
+    technicalSignals: {
+      rsi: 58.5,
+      macd: 'buy',
+      movingAverage: 'above',
+    },
+  };
+}
+
+export function generateMockPriceHistory(days: number = 30): PriceHistory[] {
+  const history: PriceHistory[] = [];
+  const basePrice = 43000;
+  const now = Date.now();
+  
+  for (let i = days; i >= 0; i--) {
+    const randomChange = (Math.random() - 0.5) * 2000;
+    history.push({
+      timestamp: now - i * 24 * 60 * 60 * 1000,
+      price: basePrice + randomChange + (days - i) * 50,
+      volume: 20000000000 + Math.random() * 10000000000,
+    });
+  }
+  
+  return history;
+}
+
+export function generateMockPortfolioAnalytics(): PortfolioAnalytics {
+  return {
+    totalValue: 231690.75,
+    totalCost: 195000.00,
+    totalPnl: 36690.75,
+    pnlPercent: 18.82,
+    allocation: [
+      { asset: 'Ethereum', symbol: 'ETH', value: 125432.18, percentage: 54.1, color: '#627EEA' },
+      { asset: 'USDC', symbol: 'USDC', value: 50000.00, percentage: 21.6, color: '#2775CA' },
+      { asset: 'OMNI Token', symbol: 'OMNI', value: 24500.00, percentage: 10.6, color: '#8B5CF6' },
+      { asset: 'Polygon', symbol: 'MATIC', value: 23234.42, percentage: 10.0, color: '#8247E5' },
+      { asset: 'Other', symbol: 'OTHER', value: 8524.15, percentage: 3.7, color: '#94A3B8' },
+    ],
+    performanceHistory: generateMockPerformanceHistory(),
+    riskMetrics: {
+      var95: 18500.00,
+      var99: 28200.00,
+      sharpeRatio: 1.85,
+      volatility: 24.5,
+      maxDrawdown: -15.2,
+      beta: 1.12,
+      correlationToBtc: 0.78,
+    },
+  };
+}
+
+function generateMockPerformanceHistory(): PerformancePoint[] {
+  const history: PerformancePoint[] = [];
+  const baseValue = 195000;
+  const now = Date.now();
+  
+  for (let i = 90; i >= 0; i--) {
+    const growth = (90 - i) * 400 + (Math.random() - 0.3) * 5000;
+    history.push({
+      timestamp: now - i * 24 * 60 * 60 * 1000,
+      value: baseValue + growth,
+      pnl: growth,
+    });
+  }
+  
+  return history;
+}
+
+export function generateMockSmartAlerts(): SmartAlert[] {
+  return [
+    {
+      id: 'alert-1',
+      name: 'BTC价格突破',
+      type: 'price',
+      symbol: 'BTC',
+      condition: { operator: 'above', value: 45000 },
+      status: 'active',
+      notificationChannels: ['push', 'email'],
+      createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000,
+      lastCheckedAt: Date.now() - 60 * 1000,
+    },
+    {
+      id: 'alert-2',
+      name: 'ETH跌破支撑',
+      type: 'price',
+      symbol: 'ETH',
+      condition: { operator: 'below', value: 2200 },
+      status: 'active',
+      notificationChannels: ['push'],
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+      lastCheckedAt: Date.now() - 30 * 1000,
+    },
+    {
+      id: 'alert-3',
+      name: '大额转账监控',
+      type: 'whale',
+      condition: { operator: 'above', value: 1000000 },
+      status: 'active',
+      notificationChannels: ['push', 'email', 'webhook'],
+      createdAt: Date.now() - 14 * 24 * 60 * 60 * 1000,
+      lastCheckedAt: Date.now() - 120 * 1000,
+    },
+    {
+      id: 'alert-4',
+      name: 'OMNI暴涨',
+      type: 'price',
+      symbol: 'OMNI',
+      condition: { operator: 'change_percent', value: 20, timeframe: '1h' },
+      status: 'triggered',
+      notificationChannels: ['push'],
+      createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+      triggeredAt: Date.now() - 2 * 60 * 60 * 1000,
+      lastCheckedAt: Date.now() - 2 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockTradingStrategies(): TradingStrategy[] {
+  return [
+    {
+      id: 'strategy-1',
+      name: 'ETH网格交易',
+      type: 'grid',
+      enabled: true,
+      config: {
+        pair: 'ETH/USDC',
+        investmentAmount: 10000,
+        maxPositionSize: 5000,
+        stopLoss: 15,
+        takeProfit: 30,
+        gridLevels: 10,
+      },
+      performance: {
+        totalTrades: 156,
+        winRate: 68.5,
+        totalPnl: 2340.50,
+        averagePnl: 15.00,
+        runningDays: 45,
+      },
+      createdAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+      lastExecutedAt: Date.now() - 4 * 60 * 60 * 1000,
+    },
+    {
+      id: 'strategy-2',
+      name: 'BTC定投策略',
+      type: 'dca',
+      enabled: true,
+      config: {
+        pair: 'BTC/USDC',
+        investmentAmount: 1000,
+        maxPositionSize: 50000,
+        intervalHours: 168,
+      },
+      performance: {
+        totalTrades: 12,
+        winRate: 75.0,
+        totalPnl: 1850.00,
+        averagePnl: 154.17,
+        runningDays: 84,
+      },
+      createdAt: Date.now() - 84 * 24 * 60 * 60 * 1000,
+      lastExecutedAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+    },
+    {
+      id: 'strategy-3',
+      name: '组合再平衡',
+      type: 'rebalance',
+      enabled: false,
+      config: {
+        pair: 'PORTFOLIO',
+        investmentAmount: 100000,
+        maxPositionSize: 100000,
+        rebalanceThreshold: 5,
+      },
+      performance: {
+        totalTrades: 8,
+        winRate: 87.5,
+        totalPnl: 4520.00,
+        averagePnl: 565.00,
+        runningDays: 120,
+      },
+      createdAt: Date.now() - 120 * 24 * 60 * 60 * 1000,
+      lastExecutedAt: Date.now() - 15 * 24 * 60 * 60 * 1000,
+    },
+  ];
+}
+
+export function generateMockWhaleMovements(): WhaleMovement[] {
+  return [
+    {
+      id: 'whale-1',
+      type: 'exchange_outflow',
+      token: 'BTC',
+      amount: '2,500',
+      valueUsd: 108141950,
+      from: 'Binance',
+      to: '0x7a250...dca2',
+      timestamp: Date.now() - 30 * 60 * 1000,
+      significance: 'high',
+    },
+    {
+      id: 'whale-2',
+      type: 'transfer',
+      token: 'ETH',
+      amount: '15,000',
+      valueUsd: 35185050,
+      from: '0x8ba1f...dba7',
+      to: '0x742d3...beef',
+      timestamp: Date.now() - 2 * 60 * 60 * 1000,
+      significance: 'medium',
+    },
+    {
+      id: 'whale-3',
+      type: 'exchange_inflow',
+      token: 'USDT',
+      amount: '50,000,000',
+      valueUsd: 50000000,
+      from: '0x5aae...dead',
+      to: 'Coinbase',
+      timestamp: Date.now() - 4 * 60 * 60 * 1000,
+      significance: 'high',
+    },
+  ];
+}
+
+export function generateMockOnChainMetrics(): OnChainMetrics {
+  return {
+    activeAddresses24h: 1245678,
+    transactionCount24h: 2456789,
+    avgTransactionValue: 2850.45,
+    gasPrice: 35.5,
+    networkHashrate: 450000000,
+    stakingRatio: 26.5,
   };
 }

@@ -239,3 +239,146 @@ export interface CustomEndpoint {
   headers: Record<string, string>;
   enabled: boolean;
 }
+
+// Financial Intelligent Agent Types - 金融智能体类型
+
+export type MarketTrend = 'bullish' | 'bearish' | 'neutral';
+export type AlertType = 'price' | 'whale' | 'contract' | 'volume' | 'news';
+export type AlertStatus = 'active' | 'triggered' | 'expired' | 'disabled';
+export type TradingStrategyType = 'grid' | 'dca' | 'momentum' | 'arbitrage' | 'rebalance';
+
+export interface MarketData {
+  id: string;
+  symbol: string;
+  name: string;
+  price: number;
+  change24h: number;
+  changePercent24h: number;
+  volume24h: number;
+  marketCap: number;
+  high24h: number;
+  low24h: number;
+  lastUpdated: number;
+}
+
+export interface MarketSentiment {
+  overall: MarketTrend;
+  fearGreedIndex: number;
+  socialMentions: number;
+  newsScore: number;
+  technicalSignals: {
+    rsi: number;
+    macd: 'buy' | 'sell' | 'neutral';
+    movingAverage: 'above' | 'below' | 'crossing';
+  };
+}
+
+export interface PriceHistory {
+  timestamp: number;
+  price: number;
+  volume: number;
+}
+
+export interface PortfolioAnalytics {
+  totalValue: number;
+  totalCost: number;
+  totalPnl: number;
+  pnlPercent: number;
+  allocation: AllocationItem[];
+  performanceHistory: PerformancePoint[];
+  riskMetrics: RiskMetrics;
+}
+
+export interface AllocationItem {
+  asset: string;
+  symbol: string;
+  value: number;
+  percentage: number;
+  color: string;
+}
+
+export interface PerformancePoint {
+  timestamp: number;
+  value: number;
+  pnl: number;
+}
+
+export interface RiskMetrics {
+  var95: number;
+  var99: number;
+  sharpeRatio: number;
+  volatility: number;
+  maxDrawdown: number;
+  beta: number;
+  correlationToBtc: number;
+}
+
+export interface SmartAlert {
+  id: string;
+  name: string;
+  type: AlertType;
+  symbol?: string;
+  condition: AlertCondition;
+  status: AlertStatus;
+  notificationChannels: string[];
+  createdAt: number;
+  triggeredAt?: number;
+  lastCheckedAt: number;
+}
+
+export interface AlertCondition {
+  operator: 'above' | 'below' | 'equals' | 'change_percent';
+  value: number;
+  timeframe?: string;
+}
+
+export interface TradingStrategy {
+  id: string;
+  name: string;
+  type: TradingStrategyType;
+  enabled: boolean;
+  config: TradingStrategyConfig;
+  performance: StrategyPerformance;
+  createdAt: number;
+  lastExecutedAt?: number;
+}
+
+export interface TradingStrategyConfig {
+  pair: string;
+  investmentAmount: number;
+  maxPositionSize: number;
+  stopLoss?: number;
+  takeProfit?: number;
+  gridLevels?: number;
+  intervalHours?: number;
+  rebalanceThreshold?: number;
+}
+
+export interface StrategyPerformance {
+  totalTrades: number;
+  winRate: number;
+  totalPnl: number;
+  averagePnl: number;
+  runningDays: number;
+}
+
+export interface WhaleMovement {
+  id: string;
+  type: 'transfer' | 'exchange_inflow' | 'exchange_outflow';
+  token: string;
+  amount: string;
+  valueUsd: number;
+  from: string;
+  to: string;
+  timestamp: number;
+  significance: 'high' | 'medium' | 'low';
+}
+
+export interface OnChainMetrics {
+  activeAddresses24h: number;
+  transactionCount24h: number;
+  avgTransactionValue: number;
+  gasPrice: number;
+  networkHashrate?: number;
+  stakingRatio?: number;
+}
