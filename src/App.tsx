@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Toaster } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot } from '@phosphor-icons/react';
+import { Bell, Wallet, ChartLine, CreditCard, ArrowsLeftRight, Coins, Gear, AddressBook as AddressBookIcon, Robot, Flask, WarningCircle } from '@phosphor-icons/react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { TimeDisplay } from '@/components/dashboard/TimeDisplay';
 import { WalletCard } from '@/components/wallet/WalletCard';
@@ -50,7 +50,22 @@ function App() {
     <div className="min-h-screen bg-background">
       <Toaster position="top-right" />
       
-      <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+      {/* Demo Mode Banner - 演示模式提示 */}
+      <div 
+        className="sticky top-0 z-[60] bg-amber-500/90 text-white py-2 px-4 text-center text-sm"
+        role="alert"
+        aria-label="演示模式提示：当前显示的是模拟数据，无真实后台服务连接"
+      >
+        <div className="container mx-auto flex items-center justify-center gap-2">
+          <Flask size={16} weight="duotone" aria-hidden="true" />
+          <span className="font-medium">演示模式 (Demo Mode)</span>
+          <span className="hidden sm:inline">- 当前显示的是模拟数据，无后台服务连接</span>
+          <span className="sm:hidden">- 模拟数据</span>
+          <WarningCircle size={16} weight="duotone" aria-hidden="true" />
+        </div>
+      </div>
+      
+      <header className="sticky top-[36px] z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xl">
@@ -60,6 +75,15 @@ function App() {
               <h1 className="text-xl font-bold">OmniCore Wallet</h1>
               <p className="text-xs text-muted-foreground">Enterprise Smart Wallet Platform</p>
             </div>
+            {/* Demo Mode Badge */}
+            <Badge 
+              variant="outline" 
+              className="bg-amber-100 text-amber-700 border-amber-300 gap-1 hidden md:flex"
+              aria-label="Demo mode - 演示模式：模拟数据"
+            >
+              <Flask size={12} weight="duotone" aria-hidden="true" />
+              Demo
+            </Badge>
           </div>
           
           <div className="flex items-center gap-3">
