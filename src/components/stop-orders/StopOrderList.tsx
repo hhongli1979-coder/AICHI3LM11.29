@@ -84,8 +84,17 @@ export function StopOrderList({ strategies, stopOrders }: StopOrderListProps) {
   const calculatePriceDistance = (order: StopOrder) => {
     const current = parseFloat(order.currentPrice);
     const trigger = parseFloat(order.triggerPrice);
-    const distance = ((current - trigger) / current) * 100;
-    return distance;
+    
+    // Prevent division by zero
+    if (current === 0) return 0;
+    
+    // For stop-loss: how far current price is above trigger (positive = safe)
+    // For take-profit: how far current price is below trigger (positive = not yet reached)
+    if (order.type === 'stop-loss') {
+      return ((current - trigger) / current) * 100;
+    } else {
+      return ((trigger - current) / current) * 100;
+    }
   };
 
   const activeOrders = stopOrders.filter(o => o.status === 'active');
@@ -236,9 +245,12 @@ export function StopOrderList({ strategies, stopOrders }: StopOrderListProps) {
           <div className="space-y-3">
             {stopOrders.map((order) => {
               const distance = calculatePriceDistance(order);
-              const progressValue = order.type === 'stop-loss' 
-                ? Math.max(0, Math.min(100, (distance + 50) * 2))
-                : Math.max(0, Math.min(100, 100 - (distance + 50) * 2));
+              // Progress bar shows how close the price is to triggering
+              // For stop-loss: 100% when price is at trigger, 0% when far away
+              // For take-profit: same logic
+              // We cap the "safe zone" at 50% distance as full safety
+              const safetyPercentage = Math.min(Math.abs(distance), 50);
+              const progressValue = Math.max(0, Math.min(100, 100 - (safetyPercentage * 2)));
               
               return (
                 <div 

@@ -23,6 +23,9 @@ import { TrendDown, TrendUp, ArrowsClockwise, Plus, Info } from '@phosphor-icons
 import type { StopOrderType, BlockchainNetwork } from '@/lib/types';
 import { NETWORKS } from '@/lib/mock-data';
 
+// Common tokens available for stop orders
+const AVAILABLE_TOKENS = ['ETH', 'BTC', 'USDC', 'USDT', 'MATIC', 'ARB', 'OP', 'AVAX'] as const;
+
 interface CreateStopOrderDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -32,13 +35,13 @@ export function CreateStopOrderDialog({ open, onOpenChange }: CreateStopOrderDia
   const [orderType, setOrderType] = useState<StopOrderType>('stop-loss');
   const [token, setToken] = useState('ETH');
   const [network, setNetwork] = useState<BlockchainNetwork>('ethereum');
-  const [triggerPrice, setTriggerPrice] = useState('');
+  const [triggerValue, setTriggerValue] = useState('');
   const [percentage, setPercentage] = useState([25]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!triggerPrice) {
-      toast.error('请输入触发价格');
+    if (!triggerValue) {
+      toast.error(orderType === 'trailing-stop' ? '请输入回撤百分比' : '请输入触发价格');
       return;
     }
 
@@ -48,14 +51,14 @@ export function CreateStopOrderDialog({ open, onOpenChange }: CreateStopOrderDia
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     toast.success('止损单创建成功', {
-      description: `${getTypeLabel(orderType)}: ${token} @ $${triggerPrice} (${percentage[0]}%)`,
+      description: `${getTypeLabel(orderType)}: ${token} @ ${orderType === 'trailing-stop' ? `${triggerValue}%` : `$${triggerValue}`} (${percentage[0]}%)`,
     });
     
     setIsSubmitting(false);
     onOpenChange(false);
     
     // Reset form
-    setTriggerPrice('');
+    setTriggerValue('');
     setPercentage([25]);
   };
 
@@ -85,8 +88,6 @@ export function CreateStopOrderDialog({ open, onOpenChange }: CreateStopOrderDia
         return <ArrowsClockwise size={24} weight="duotone" className="text-blue-500" />;
     }
   };
-
-  const tokens = ['ETH', 'BTC', 'USDC', 'USDT', 'MATIC', 'ARB', 'OP', 'AVAX'];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -139,7 +140,7 @@ export function CreateStopOrderDialog({ open, onOpenChange }: CreateStopOrderDia
                   <SelectValue placeholder="选择代币" />
                 </SelectTrigger>
                 <SelectContent>
-                  {tokens.map((t) => (
+                  {AVAILABLE_TOKENS.map((t) => (
                     <SelectItem key={t} value={t}>{t}</SelectItem>
                   ))}
                 </SelectContent>
@@ -166,22 +167,22 @@ export function CreateStopOrderDialog({ open, onOpenChange }: CreateStopOrderDia
             </div>
           </div>
 
-          {/* Trigger Price */}
+          {/* Trigger Value */}
           <div className="space-y-2">
-            <Label htmlFor="triggerPrice">
+            <Label htmlFor="triggerValue">
               {orderType === 'trailing-stop' ? '回撤百分比 (%)' : '触发价格 (USD)'}
             </Label>
             <Input
-              id="triggerPrice"
+              id="triggerValue"
               type="number"
               step={orderType === 'trailing-stop' ? '1' : '0.01'}
               placeholder={orderType === 'trailing-stop' ? '10' : '2500.00'}
-              value={triggerPrice}
-              onChange={(e) => setTriggerPrice(e.target.value)}
+              value={triggerValue}
+              onChange={(e) => setTriggerValue(e.target.value)}
             />
             {orderType !== 'trailing-stop' && (
               <p className="text-xs text-muted-foreground">
-                当 {token} 价格{orderType === 'stop-loss' ? '跌至' : '涨至'} ${triggerPrice || '---'} 时触发
+                当 {token} 价格{orderType === 'stop-loss' ? '跌至' : '涨至'} ${triggerValue || '---'} 时触发
               </p>
             )}
           </div>
@@ -224,7 +225,7 @@ export function CreateStopOrderDialog({ open, onOpenChange }: CreateStopOrderDia
               <div className="flex justify-between">
                 <span>{orderType === 'trailing-stop' ? '回撤' : '触发价'}</span>
                 <span className="font-medium text-foreground">
-                  {triggerPrice ? (orderType === 'trailing-stop' ? `${triggerPrice}%` : `$${triggerPrice}`) : '---'}
+                  {triggerValue ? (orderType === 'trailing-stop' ? `${triggerValue}%` : `$${triggerValue}`) : '---'}
                 </span>
               </div>
               <div className="flex justify-between">
