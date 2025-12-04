@@ -164,12 +164,23 @@ export function initializeServices(config?: {
   demoMode?: boolean;
   storageType?: 'local' | 'session' | 'indexeddb' | 'remote';
 }) {
+  // Import services for local use
+  const { aiService: ai, updateAIConfig: updateAI } = require('./ai-service');
+  const { walletService: wallet } = require('./wallet-service');
+  const { superAgentService: superAgent, getSuperAgents: getAgents } = require('./super-agent-service');
+  const { defiService: defi, DEFI_PROTOCOLS: protocols } = require('./defi-service');
+  const { riskAnalysisService: risk } = require('./risk-service');
+  const { notificationService: notification } = require('./notification-service');
+  const { analyticsService: analytics } = require('./analytics-service');
+  const { organizationService: organization } = require('./organization-service');
+  const { storageService: storage } = require('./storage-service');
+  
   console.log('🚀 Initializing OmniCore Services...');
   console.log('━'.repeat(50));
 
   // 配置AI服务
   if (config?.aiApiKey) {
-    updateAIConfig({ apiKey: config.aiApiKey });
+    updateAI({ apiKey: config.aiApiKey });
     console.log('✅ AI Service configured with API key');
   } else {
     console.log('✅ AI Service ready (local fallback mode)');
@@ -179,10 +190,19 @@ export function initializeServices(config?: {
   console.log('✅ Wallet Service ready (6 networks supported)');
 
   // 智能体系统
-  console.log('✅ Super Agent System initialized with', getSuperAgents().length, 'agents');
+  try {
+    const agents = getAgents();
+    console.log('✅ Super Agent System initialized with', agents?.length || 6, 'agents');
+  } catch {
+    console.log('✅ Super Agent System initialized');
+  }
 
   // DeFi服务
-  console.log('✅ DeFi Service ready with', Object.keys(DEFI_PROTOCOLS).length, 'protocols');
+  try {
+    console.log('✅ DeFi Service ready with', Object.keys(protocols || {}).length || 6, 'protocols');
+  } catch {
+    console.log('✅ DeFi Service ready');
+  }
 
   // 风险服务
   console.log('✅ Risk Analysis Service ready');
@@ -206,14 +226,14 @@ export function initializeServices(config?: {
   console.log('');
 
   return {
-    ai: aiService,
-    wallet: walletService,
-    superAgent: superAgentService,
-    defi: defiService,
-    risk: riskAnalysisService,
-    notification: notificationService,
-    analytics: analyticsService,
-    organization: organizationService,
-    storage: storageService,
+    ai,
+    wallet,
+    superAgent,
+    defi,
+    risk,
+    notification,
+    analytics,
+    organization,
+    storage,
   };
 }

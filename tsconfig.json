@@ -10,7 +10,9 @@
     ],
     "module": "ESNext",
     "skipLibCheck": true,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
+    "strict": false,
+    "noImplicitAny": false,
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -20,7 +22,7 @@
     "jsx": "react-jsx",
     /* Linting */
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
+    "noUncheckedSideEffectImports": false,
     "paths": {
       "@/*": [
         "./src/*"

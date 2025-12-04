@@ -20,9 +20,9 @@ import {
   TrendUp,
   Cpu,
   HardDrive,
-  Activity,
-  Queue,
-  Network,
+  Pulse,
+  ListChecks,
+  Graph,
   Sparkle,
 } from '@phosphor-icons/react';
 import {
@@ -37,7 +37,7 @@ function getAgentRoleIcon(role: string) {
     executor: <Lightning size={18} weight="duotone" className="text-blue-500" />,
     analyzer: <ChartLine size={18} weight="duotone" className="text-green-500" />,
     specialist: <Robot size={18} weight="duotone" className="text-amber-500" />,
-    monitor: <Activity size={18} weight="duotone" className="text-pink-500" />,
+    monitor: <Pulse size={18} weight="duotone" className="text-pink-500" />,
   };
   return icons[role] || <Robot size={18} weight="duotone" />;
 }
@@ -265,7 +265,7 @@ function CollaborationView({ session, agents }: CollaborationViewProps) {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-lg flex items-center gap-2">
-              <Network size={20} weight="duotone" className="text-purple-500" />
+              <Graph size={20} weight="duotone" className="text-purple-500" />
               {session.name}
             </CardTitle>
             <CardDescription>
@@ -342,7 +342,7 @@ function SystemHealth({ health }: SystemHealthProps) {
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-green-100">
-              <Activity size={20} weight="duotone" className="text-green-600" />
+              <Pulse size={20} weight="duotone" className="text-green-600" />
             </div>
             <div>
               <div className="text-2xl font-bold">{health.activeConnections}</div>
@@ -356,7 +356,7 @@ function SystemHealth({ health }: SystemHealthProps) {
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-100">
-              <Queue size={20} weight="duotone" className="text-amber-600" />
+              <ListChecks size={20} weight="duotone" className="text-amber-600" />
             </div>
             <div>
               <div className="text-2xl font-bold">{health.queuedTasks}</div>

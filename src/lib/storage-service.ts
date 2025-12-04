@@ -90,10 +90,10 @@ export class StorageService {
 
     switch (this.config.type) {
       case 'local':
-        localStorage.setItem(fullKey, JSON.stringify(storageData));
+        window.localStorage.setItem(fullKey, JSON.stringify(storageData));
         break;
       case 'session':
-        sessionStorage.setItem(fullKey, JSON.stringify(storageData));
+        window.sessionStorage.setItem(fullKey, JSON.stringify(storageData));
         break;
       case 'indexeddb':
         await this.setIndexedDB(fullKey, storageData);
@@ -125,11 +125,11 @@ export class StorageService {
 
     switch (this.config.type) {
       case 'local':
-        const localData = localStorage.getItem(fullKey);
+        const localData = window.localStorage.getItem(fullKey);
         if (localData) storageData = JSON.parse(localData);
         break;
       case 'session':
-        const sessionData = sessionStorage.getItem(fullKey);
+        const sessionData = window.sessionStorage.getItem(fullKey);
         if (sessionData) storageData = JSON.parse(sessionData);
         break;
       case 'indexeddb':
@@ -167,10 +167,10 @@ export class StorageService {
 
     switch (this.config.type) {
       case 'local':
-        localStorage.removeItem(fullKey);
+        window.localStorage.removeItem(fullKey);
         break;
       case 'session':
-        sessionStorage.removeItem(fullKey);
+        window.sessionStorage.removeItem(fullKey);
         break;
       case 'indexeddb':
         await this.deleteIndexedDB(fullKey);
@@ -196,16 +196,16 @@ export class StorageService {
 
     switch (this.config.type) {
       case 'local':
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
+        for (let i = 0; i < window.localStorage.length; i++) {
+          const key = window.localStorage.key(i);
           if (key?.startsWith(prefix)) {
             keys.push(key.slice(prefix.length));
           }
         }
         break;
       case 'session':
-        for (let i = 0; i < sessionStorage.length; i++) {
-          const key = sessionStorage.key(i);
+        for (let i = 0; i < window.sessionStorage.length; i++) {
+          const key = window.sessionStorage.key(i);
           if (key?.startsWith(prefix)) {
             keys.push(key.slice(prefix.length));
           }
@@ -332,12 +332,16 @@ export class StorageService {
   private async setRemote(key: string, value: any): Promise<void> {
     if (!this.config.remoteEndpoint) return;
     
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (this.config.remoteApiKey) {
+      headers['Authorization'] = 'Bearer ' + this.config.remoteApiKey;
+    }
+    
     await fetch(`${this.config.remoteEndpoint}/storage/${encodeURIComponent(key)}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.config.remoteApiKey ? { 'Authorization': `****** } : {}),
-      },
+      headers,
       body: JSON.stringify(value),
     });
   }
@@ -345,10 +349,13 @@ export class StorageService {
   private async getRemote(key: string): Promise<any> {
     if (!this.config.remoteEndpoint) return null;
     
+    const headers: Record<string, string> = {};
+    if (this.config.remoteApiKey) {
+      headers['Authorization'] = 'Bearer ' + this.config.remoteApiKey;
+    }
+    
     const response = await fetch(`${this.config.remoteEndpoint}/storage/${encodeURIComponent(key)}`, {
-      headers: {
-        ...(this.config.remoteApiKey ? { 'Authorization': `****** } : {}),
-      },
+      headers,
     });
 
     if (!response.ok) return null;
@@ -358,21 +365,27 @@ export class StorageService {
   private async deleteRemote(key: string): Promise<void> {
     if (!this.config.remoteEndpoint) return;
     
+    const headers: Record<string, string> = {};
+    if (this.config.remoteApiKey) {
+      headers['Authorization'] = 'Bearer ' + this.config.remoteApiKey;
+    }
+    
     await fetch(`${this.config.remoteEndpoint}/storage/${encodeURIComponent(key)}`, {
       method: 'DELETE',
-      headers: {
-        ...(this.config.remoteApiKey ? { 'Authorization': `****** } : {}),
-      },
+      headers,
     });
   }
 
   private async keysRemote(): Promise<string[]> {
     if (!this.config.remoteEndpoint) return [];
     
+    const headers: Record<string, string> = {};
+    if (this.config.remoteApiKey) {
+      headers['Authorization'] = 'Bearer ' + this.config.remoteApiKey;
+    }
+    
     const response = await fetch(`${this.config.remoteEndpoint}/storage/keys`, {
-      headers: {
-        ...(this.config.remoteApiKey ? { 'Authorization': `****** } : {}),
-      },
+      headers,
     });
 
     if (!response.ok) return [];
@@ -384,7 +397,7 @@ export class StorageService {
 export const storageService = new StorageService();
 
 // 创建不同类型的存储实例
-export const localStorage = new StorageService({ type: 'local', prefix: 'omnicore_' });
+export const localStorageService = new StorageService({ type: 'local', prefix: 'omnicore_' });
 export const sessionStorageService = new StorageService({ type: 'session', prefix: 'omnicore_session_' });
 
 // 导出便捷函数
