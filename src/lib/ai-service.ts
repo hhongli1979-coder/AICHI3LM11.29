@@ -155,9 +155,12 @@ async function callAnthropicAPI(
   signal?: AbortSignal
 ): Promise<AIServiceResponse> {
   try {
+    // Use configurable API version with sensible default
+    const anthropicVersion = model.apiVersion || '2023-06-01';
+    
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'anthropic-version': '2023-06-01',
+      'anthropic-version': anthropicVersion,
     };
 
     if (model.apiKey) {
@@ -235,15 +238,25 @@ export async function testModelConnection(model: AIModelConfig): Promise<{ succe
     // For Ollama, check the /api/tags endpoint
     if (model.provider === 'ollama' || model.provider === 'local') {
       const baseUrl = model.apiEndpoint.replace(/\/api\/(generate|chat)$/, '');
-      const response = await fetch(`${baseUrl}/api/tags`, {
-        method: 'GET',
-        signal: AbortSignal.timeout(5000),
-      });
       
-      if (response.ok) {
-        return { success: true, message: '连接成功' };
+      // Create AbortController with manual timeout for better compatibility
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      try {
+        const response = await fetch(`${baseUrl}/api/tags`, {
+          method: 'GET',
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+        
+        if (response.ok) {
+          return { success: true, message: '连接成功' };
+        }
+        return { success: false, message: `连接失败: ${response.status}` };
+      } finally {
+        clearTimeout(timeoutId);
       }
-      return { success: false, message: `连接失败: ${response.status}` };
     }
 
     // For other providers, try a minimal request
